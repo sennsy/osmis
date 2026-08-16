@@ -1,0 +1,37 @@
+[
+  {
+    "id": "2018-2019",
+    "year": "2018–2019",
+    "theme": "vintage",
+    "coverImage": "/images/periods/2018.jpg",
+    "summary": "Masa awal perintisan dan pembentukan fondasi OSMIS.",
+    "structure": [
+      { "role": "Chairman", "member": "leader-2018" },
+      { "role": "Secretary & Treasurer", "member": "member-sec-2018" },
+      { "role": "Security", "member": "member-secu-2018" },
+      { "role": "Boska", "member": "member-bos-2018" },
+      { "role": "Language", "member": "member-lang-2018" },
+      { "role": "Worship", "member": "member-wor-2018" }
+    ],
+    "programs": ["Perumusan AD/ART", "Muhadharah Perdana", "Class Meeting 1"]
+  },
+  {
+    "id": "2026-2027",
+    "year": "2026–2027",
+    "theme": "modern",
+    "coverImage": "/images/periods/2026.jpg",
+    "summary": "Era digitalisasi dan modernisasi arsip OSMIS.",
+    "structure": [
+      { "role": "Chairman", "member": "leader-2026" },
+      { "role": "Vice Chairman", "member": "member-vice-2026" },
+      { "role": "Secretary & Treasurer", "member": "member-sec-2026" },
+      { "role": "Security", "member": "member-secu-2026" },
+      { "role": "Cleanliness & Sports", "member": "member-clean-2026" },
+      { "role": "Kitchen & Health", "member": "member-kitch-2026" },
+      { "role": "Facilities", "member": "member-fac-2026" },
+      { "role": "Language", "member": "member-lang-2026" },
+      { "role": "Worship", "member": "member-wor-2026" }
+    ],
+    "programs": ["OSMIS Digital Archive", "Matra AI Integration", "Pekan Olahraga Nasional"]
+  }
+]

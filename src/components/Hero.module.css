@@ -1,0 +1,268 @@
+.hero {
+  position: relative;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  overflow: hidden;
+  padding: 0 2rem;
+}
+
+.content {
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 4rem;
+  margin-bottom: 8vh; /* Moves the box up slightly */
+  /* Vintage Sketch Box for the central content */
+  border: 2px solid var(--sketch-line);
+  border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+  background-color: rgba(244, 241, 234, 0.5); /* translucent light */
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  box-shadow: 10px 10px 0px rgba(0,0,0,0.05);
+}
+
+[data-theme='dark'] .content {
+  background-color: rgba(13, 17, 23, 0.5); /* translucent dark */
+  box-shadow: 10px 10px 0px rgba(0, 255, 136, 0.1);
+}
+
+.title {
+  font-size: clamp(4rem, 12vw, 10rem);
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  color: var(--text-color);
+  margin-bottom: -1rem;
+  text-transform: uppercase;
+  /* Apple large text + Genshin Impact cinematic scale */
+}
+
+[data-theme='dark'] .title {
+  /* Cyberpunk glitch hint */
+  text-shadow: 2px 2px 0px rgba(0, 255, 136, 0.5), -2px -2px 0px rgba(255, 230, 0, 0.5);
+}
+
+.subtitle {
+  font-family: var(--font-mono);
+  font-size: clamp(1rem, 2vw, 1.5rem);
+  letter-spacing: 0.3em;
+  opacity: 0.9;
+  background-color: var(--text-color);
+  color: var(--bg-color);
+  padding: 0.2rem 1rem;
+  /* Cyberpunk tech label style */
+  clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+}
+
+.est {
+  font-size: 1rem;
+  letter-spacing: 0.2em;
+  opacity: 0.5;
+  border-bottom: 1px dashed var(--sketch-line);
+  padding-bottom: 0.5rem;
+}
+
+.motto {
+  margin-top: 2rem;
+  font-style: italic;
+  font-size: clamp(1.2rem, 3vw, 2.5rem);
+  color: var(--osmis-green);
+  opacity: 0.9;
+}
+
+.periodBadge {
+  margin-top: 2rem;
+  font-size: 1.5rem;
+}
+
+.divisionLogos {
+  position: absolute;
+  bottom: 4.5rem; /* Place lower, above the scroll button but below the sketch box */
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 1.5rem;
+  z-index: 10;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  max-width: 360px; /* Forces wrap after 4 items (assuming ~330px width for 4 items) */
+}
+
+.divLogoWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 64px;
+  height: 64px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px dashed var(--sketch-line);
+  border-radius: 50%;
+  transition: transform 0.3s ease, background 0.3s ease;
+  backdrop-filter: blur(2px);
+}
+
+.divLogoWrapper:hover {
+  transform: translateY(-5px);
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.divLogo {
+  width: 38px;
+  height: 38px;
+  object-fit: contain;
+  opacity: 0.8;
+  transition: opacity 0.3s;
+}
+
+.divLogoWrapper:hover .divLogo {
+  opacity: 1;
+}
+
+.scrollBtn {
+  position: absolute;
+  bottom: 1.5rem; /* Moved lower to accommodate division logos */
+  left: 50%;
+  transform: translateX(-50%);
+  background: none;
+  border: none;
+  color: var(--text-color);
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.3s, transform 0.3s;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.scrollBtn:hover {
+  opacity: 1;
+  transform: translate(-50%, -10px);
+  color: var(--osmis-green);
+}
+
+/* Decorative crosshairs (Tech aesthetic) */
+.scrollBtn::before, .scrollBtn::after {
+  content: '+';
+  position: absolute;
+  font-family: var(--font-mono);
+  opacity: 0.3;
+}
+.scrollBtn::before { left: -30px; }
+.scrollBtn::after { right: -30px; }
+
+/* Decor */
+.gridLines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* Blueprint Grid is already in globals.css, so we make this a radial gradient vignette */
+  background: radial-gradient(circle at center, transparent 30%, var(--bg-color) 100%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.hexDecoration {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90vw;
+  height: 90vw;
+  max-width: 1000px;
+  max-height: 1000px;
+  background-image: url('data:image/svg+xml,%3Csvg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"%3E%3Cpolygon points="50,5 95,27.5 95,72.5 50,95 5,72.5 5,27.5" fill="none" stroke="currentColor" stroke-width="0.1" opacity="0.15" stroke-dasharray="1 1"/%3E%3C/svg%3E');
+  background-size: cover;
+  z-index: 0;
+  pointer-events: none;
+  animation: slowSpin 120s linear infinite;
+}
+
+.watermark {
+  position: absolute;
+  top: 45%; /* Shifted up slightly to match the content box */
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 50vw;
+  max-width: 600px;
+  opacity: 0.5;
+  z-index: 1; /* Di bawah konten yang z-index 10 */
+  pointer-events: none;
+}
+
+@keyframes slowSpin {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+.typewriter {
+  overflow: hidden;
+  border-right: .15em solid var(--osmis-green);
+  white-space: nowrap;
+  margin: 0 auto;
+  animation: 
+    typingLoop 12s infinite,
+    blink-caret .75s step-end infinite;
+}
+
+@keyframes typingLoop {
+  0% { width: 0; animation-timing-function: steps(40, end); }
+  25% { width: 100%; } /* Finishes typing in 3s */
+  85% { width: 100%; animation-timing-function: steps(40, end); } /* Stays until 10.2s */
+  100% { width: 0; } /* Erases in last 1.8s */
+}
+
+@keyframes blink-caret {
+  from, to { border-color: transparent }
+  50% { border-color: var(--osmis-green); }
+}
+
+.curveLine {
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 100%;
+  height: 12px;
+  fill: none;
+  stroke: var(--osmis-yellow);
+  stroke-width: 8;
+  stroke-linecap: round;
+  stroke-dasharray: 150;
+  stroke-dashoffset: 150;
+  animation: drawCurveLoop 12s infinite;
+  z-index: -1;
+  opacity: 0.8;
+  overflow: visible;
+}
+
+[data-theme='dark'] .curveLine {
+  filter: drop-shadow(0 0 4px var(--osmis-yellow));
+}
+
+@keyframes drawCurveLoop {
+  0%, 25% { stroke-dashoffset: 150; animation-timing-function: ease-in-out; } /* Invisible while typing */
+  35% { stroke-dashoffset: 0; } /* Finishes drawing slightly after text finishes */
+  75% { stroke-dashoffset: 0; animation-timing-function: ease-in-out; } /* Stays visible until 9s */
+  85%, 100% { stroke-dashoffset: 150; } /* Erases before text erases */
+}
+
+@media (max-width: 768px) {
+  .content {
+    padding: 2rem 1rem;
+    border: none;
+    box-shadow: none;
+    background-color: transparent;
+    backdrop-filter: none;
+  }
+}
+
+

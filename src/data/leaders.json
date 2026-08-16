@@ -1,0 +1,18 @@
+[
+  {
+    "id": "leader-2018",
+    "name": "Ahmad Fulan",
+    "periodId": "2018-2019",
+    "photo": "/images/leaders/2018.jpg",
+    "biography": "Ketua pertama OSMIS yang merintis sistem kepengurusan dasar.",
+    "achievements": ["Merumuskan AD/ART pertama", "Membangun sistem keamanan asrama"]
+  },
+  {
+    "id": "leader-2026",
+    "name": "Budi Santoso",
+    "periodId": "2026-2027",
+    "photo": "/images/leaders/2026.jpg",
+    "biography": "Ketua di era modern yang menginisiasi digitalisasi OSMIS.",
+    "achievements": ["Digitalisasi arsip dengan Matra AI", "Optimalisasi divisi Cleanliness & Sports"]
+  }
+]

@@ -1,0 +1,140 @@
+.page {
+  min-height: 100vh;
+  padding: 9rem 2rem 4rem; /* Increased top padding to 9rem to clear the global header */
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+.container {
+  max-width: 1000px;
+  width: 100%;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: start;
+}
+
+@media (max-width: 800px) {
+  .container {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+}
+
+.header {
+  margin-bottom: 2rem;
+  grid-column: 1 / -1;
+}
+
+.backBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-color);
+  text-decoration: none;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+  margin-bottom: 2.5rem; /* Increased margin to create more breathing space */
+}
+
+.backBtn:hover {
+  opacity: 1;
+}
+
+.canvasWrapper {
+  width: 100%;
+  max-width: 420px; /* Constrain width on desktop so it doesn't get too tall */
+  aspect-ratio: 3 / 4;
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+}
+
+.canvas {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: transparent;
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.controlGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.controlGroup label {
+  font-size: 0.85rem;
+  opacity: 0.8;
+  letter-spacing: 0.05em;
+}
+
+.campaignBtn {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  padding: 1rem;
+  color: var(--text-color);
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s;
+}
+
+.campaignBtn:hover {
+  background: rgba(0,0,0,0.02);
+}
+
+.campaignBtn.active {
+  border-color: var(--text-color);
+  background: var(--text-color);
+  color: var(--bg-color);
+}
+
+.uploadBtn {
+  background: transparent;
+  border: 1px dashed var(--border-color);
+  padding: 1rem;
+  color: var(--text-color);
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s;
+  width: 100%;
+}
+
+.uploadBtn:hover {
+  background: rgba(0,0,0,0.02);
+  border-style: solid;
+}
+
+.downloadBtn {
+  background: var(--text-color);
+  color: var(--bg-color);
+  border: none;
+  padding: 1rem;
+  cursor: pointer;
+  text-align: center;
+  transition: opacity 0.2s;
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+}
+
+.downloadBtn:hover {
+  opacity: 0.9;
+}
+
+.controlGroup input[type="range"] {
+  width: 100%;
+  accent-color: var(--text-color);
+}

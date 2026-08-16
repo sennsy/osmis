@@ -1,0 +1,151 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: black;
+  z-index: 99999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.uiContainer {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  pointer-events: auto;
+}
+
+.asciiText {
+  font-family: monospace;
+  font-size: clamp(0.3rem, 1.2vw, 1.2rem);
+  white-space: pre;
+  color: #fff;
+  text-shadow: 0 0 5px #fff, 0 0 10px #fff;
+  margin-bottom: 2rem;
+  line-height: 1.2;
+  text-align: left;
+}
+
+.bootLog {
+  font-family: monospace;
+  font-size: 0.8rem;
+  color: #a1a1aa;
+  margin-bottom: 1rem;
+  text-align: left;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+.phase2Color {
+  color: #0F0;
+  text-shadow: 0 0 5px #0F0, 0 0 10px #0F0;
+}
+
+.welcomeText {
+  font-family: var(--font-mono);
+  font-size: 3rem;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.5em;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.5);
+  animation: flicker 3s infinite, fadeIn 1s ease-out forwards;
+  margin-bottom: 2rem;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+.prompt {
+  color: #0F0;
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  letter-spacing: 0.1em;
+  text-shadow: 0 0 5px #0F0;
+}
+
+.input {
+  background: transparent;
+  border: 1px solid #0F0;
+  color: #0F0;
+  font-family: var(--font-mono);
+  font-size: 1.5rem;
+  padding: 0.5rem 1rem;
+  text-align: center;
+  width: 300px;
+  outline: none;
+  box-shadow: 0 0 10px rgba(0, 255, 0, 0.2);
+  transition: all 0.3s;
+}
+
+.input:focus {
+  box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+  background: rgba(0, 255, 0, 0.1);
+}
+
+.input.error {
+  border-color: #F00;
+  color: #F00;
+  box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+  animation: shake 0.4s;
+}
+
+.closeBtn {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  z-index: 10;
+  background: transparent;
+  border: none;
+  color: #0F0;
+  font-family: var(--font-mono);
+  cursor: pointer;
+  opacity: 0.5;
+  transition: opacity 0.3s;
+}
+
+.closeBtn:hover {
+  opacity: 1;
+  text-shadow: 0 0 5px #0F0;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes flicker {
+  0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% {
+    opacity: 0.99;
+  }
+  20%, 21.999%, 63%, 63.999%, 65%, 69.999% {
+    opacity: 0.4;
+  }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-10px); }
+  75% { transform: translateX(10px); }
+}

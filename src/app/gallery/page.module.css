@@ -1,0 +1,166 @@
+.page {
+  padding: 10rem 0 6rem;
+  min-height: 100vh;
+  background-color: var(--bg-color);
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 4rem;
+  position: relative;
+}
+
+.backBtn {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  opacity: 0.6;
+  transition: opacity 0.3s;
+  font-size: 0.875rem;
+}
+
+.backBtn:hover {
+  opacity: 1;
+}
+
+.header h1 {
+  font-size: 3rem;
+  color: var(--osmis-green);
+}
+
+.filterTabs {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.tabBtn {
+  background-color: transparent;
+  border: 1px solid var(--border-color);
+  padding: 0.5rem 1.5rem;
+  font-size: 0.875rem;
+  color: var(--text-color);
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  opacity: 0.7;
+}
+
+.tabBtn:hover {
+  opacity: 1;
+  background-color: var(--card-bg);
+}
+
+.activeTab {
+  opacity: 1;
+  background-color: var(--osmis-green) !important;
+  color: white !important;
+  border-color: var(--osmis-green) !important;
+}
+
+[data-theme='dark'] .activeTab {
+  color: #000 !important;
+}
+
+/* Pinterest-style Masonry using CSS Columns */
+.masonryGrid {
+  column-count: 1;
+  column-gap: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .masonryGrid {
+    column-count: 2;
+  }
+}
+
+@media (min-width: 1024px) {
+  .masonryGrid {
+    column-count: 3;
+  }
+}
+
+@media (min-width: 1280px) {
+  .masonryGrid {
+    column-count: 4;
+  }
+}
+
+.masonryItem {
+  break-inside: avoid;
+  margin-bottom: 1.5rem;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  background-color: var(--card-bg);
+  padding: 0.5rem;
+  border-radius: 8px;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.masonryItem:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme='dark'] .masonryItem:hover {
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+}
+
+.imageNumber {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  z-index: 2;
+  opacity: 0.8;
+}
+
+.image {
+  width: 100%;
+  height: auto; /* Allow varied heights like Pinterest */
+  min-height: 250px;
+  object-fit: cover;
+  display: block;
+  border-radius: 4px;
+  filter: grayscale(80%) contrast(1.1);
+  transition: filter 0.4s ease;
+  background-color: rgba(0, 0, 0, 0.05); /* Placeholder color */
+}
+
+.masonryItem:hover .image {
+  filter: grayscale(0%) contrast(1);
+}
+
+@media (max-width: 768px) {
+  .page {
+    padding: 6rem 0 4rem; /* Reduce padding on mobile */
+  }
+  .header h1 {
+    font-size: 2.2rem;
+  }
+  .backBtn {
+    position: relative;
+    top: auto;
+    transform: none;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+  }
+}

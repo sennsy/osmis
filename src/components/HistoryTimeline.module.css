@@ -1,0 +1,307 @@
+.section {
+  padding: 8rem 0;
+  position: relative;
+  background-color: transparent; /* rely on body bg */
+}
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.header {
+  margin-bottom: 4rem;
+  text-align: center;
+}
+
+.header h2 {
+  font-size: clamp(2rem, 5vw, 3rem);
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+}
+
+.timelineWrapper {
+  position: relative;
+  margin-bottom: 4rem;
+  overflow-x: auto;
+  padding: 2rem 0;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  cursor: grab;
+}
+
+.timelineWrapper:active {
+  cursor: grabbing;
+}
+
+.timelineWrapper::-webkit-scrollbar {
+  display: none;
+}
+
+.timelineLine {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: var(--sketch-line);
+  border-radius: 5px 2px 4px 1px;
+  transform: rotate(0.2deg);
+  z-index: 1;
+}
+
+.timelineScroller {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+  min-width: 800px;
+}
+
+.timelineNode {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  gap: 1rem;
+  opacity: 0.4;
+  transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.timelineNode:hover {
+  opacity: 0.8;
+  transform: translateY(-2px);
+}
+
+.timelineNode.active {
+  opacity: 1;
+  transform: translateY(-5px);
+}
+
+.nodeDot {
+  width: 16px;
+  height: 16px;
+  border-radius: 2px; /* Square for tech look */
+  transform: rotate(45deg); /* Diamond shape */
+  background-color: var(--bg-color);
+  border: 2px solid var(--text-color);
+  transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.timelineNode.active .nodeDot {
+  background-color: var(--osmis-green);
+  border-color: var(--osmis-green);
+  box-shadow: 0 0 10px var(--osmis-green);
+  transform: rotate(135deg) scale(1.2);
+}
+
+.nodeYear {
+  font-size: 0.875rem;
+  letter-spacing: 0.1em;
+}
+
+.timelineNode.active .nodeYear {
+  color: var(--osmis-green);
+  font-weight: 700;
+}
+
+.periodCard {
+  border: 2px solid var(--sketch-line);
+  border-radius: 255px 15px 225px 15px/15px 225px 15px 255px; /* Sketch box */
+  background-color: var(--card-bg);
+  padding: 3rem;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 8px 8px 0px rgba(0,0,0,0.05);
+}
+
+[data-theme='dark'] .periodCard {
+  box-shadow: 8px 8px 0px rgba(0, 255, 136, 0.1);
+}
+
+.cardInner {
+  position: relative;
+  z-index: 2;
+}
+
+.cardHeader {
+  border-bottom: 2px dashed var(--sketch-line);
+  padding-bottom: 1rem;
+  margin-bottom: 2rem;
+  font-size: 0.75rem;
+  opacity: 0.7;
+  display: flex;
+  justify-content: space-between;
+}
+
+.cardContent {
+  display: flex;
+  gap: 3rem;
+  min-height: 250px;
+}
+
+.cardInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.cardInfo h3 {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  margin-bottom: 0.5rem;
+  color: var(--osmis-green);
+  line-height: 1;
+}
+
+.cardInfo h4 {
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+  letter-spacing: 0.05em;
+  opacity: 0.8;
+  text-transform: uppercase;
+}
+
+.placeholder {
+  font-style: italic;
+  opacity: 0.5;
+  font-family: var(--font-mono);
+}
+
+.cardVisual {
+  flex: 1;
+  border: 2px solid var(--sketch-line);
+  clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px); /* Tech Cutout */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.03);
+  position: relative;
+}
+
+[data-theme='dark'] .cardVisual {
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+.visualImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.imagePlaceholder {
+  font-size: 0.75rem;
+  opacity: 0.4;
+  letter-spacing: 0.1em;
+}
+
+/* Structure Grid (for periods without photos) */
+.structureGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+  max-height: 320px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.structureGrid::-webkit-scrollbar {
+  width: 3px;
+}
+.structureGrid::-webkit-scrollbar-thumb {
+  background: var(--osmis-yellow);
+  border-radius: 2px;
+}
+
+.structureRow {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.6rem 0.9rem;
+  border-left: 2px solid var(--osmis-green);
+  background: rgba(0,0,0,0.02);
+  border-radius: 0 6px 6px 0;
+  transition: border-color 0.2s;
+}
+
+[data-theme='dark'] .structureRow {
+  background: rgba(255,255,255,0.03);
+}
+
+.structureRow:hover {
+  border-color: var(--osmis-yellow);
+}
+
+.structureRole {
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  color: var(--osmis-green);
+  opacity: 0.9;
+}
+
+.structureMembers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.structureMember {
+  font-size: 0.82rem;
+  color: var(--text-color);
+  opacity: 0.85;
+  font-family: var(--font-sans);
+}
+
+.structureMember:not(:last-child)::after {
+  content: ' ·';
+  opacity: 0.4;
+  margin-left: 2px;
+}
+
+.viewBtn {
+  margin-top: 2rem;
+  background: none;
+  border: none;
+  color: var(--text-color);
+  cursor: pointer;
+  opacity: 0.7;
+  transition: all 0.3s;
+  font-size: 0.875rem;
+  display: inline-block;
+}
+
+.viewBtn:hover {
+  opacity: 1;
+  color: var(--osmis-yellow);
+  transform: translateX(5px);
+}
+
+@media (max-width: 768px) {
+  .section {
+    padding: 4rem 0; /* Reduce padding on mobile */
+  }
+  .header {
+    margin-bottom: 2rem;
+  }
+  .timelineWrapper {
+    margin-bottom: 2rem;
+  }
+  .cardContent {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  .cardVisual {
+    min-height: 200px;
+  }
+  .periodCard {
+    padding: 1.5rem;
+  }
+  .cardInfo h3 {
+    font-size: 2.2rem;
+  }
+}
+

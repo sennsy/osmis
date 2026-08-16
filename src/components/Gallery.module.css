@@ -1,0 +1,86 @@
+.section {
+  padding: 8rem 0;
+  background-color: var(--bg-color);
+  border-top: 1px dashed var(--border-color);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.header h2 {
+  font-size: 3rem;
+  color: var(--osmis-green);
+  margin-bottom: 0.5rem;
+}
+
+.masonry {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.imageItem {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  background-color: var(--card-bg);
+  padding: 0.5rem;
+  transition: transform 0.3s;
+}
+
+.imageItem:hover {
+  transform: translateY(-5px);
+}
+
+.imageNumber {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  border: 1px solid var(--border-color);
+  z-index: 2;
+  opacity: 0.8;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  aspect-ratio: 1 / 1;
+  display: block;
+  filter: grayscale(80%) contrast(1.1);
+  transition: filter 0.4s ease;
+}
+
+.imageItem:hover .image {
+  filter: grayscale(0%) contrast(1);
+}
+
+.loadMoreContainer {
+  text-align: center;
+  margin-top: 4rem;
+}
+
+.loadMoreBtn {
+  background: none;
+  border: none;
+  color: var(--text-color);
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.3s;
+}
+
+.loadMoreBtn:hover {
+  opacity: 1;
+}

@@ -1,0 +1,26 @@
+[
+  {
+    "id": "security",
+    "name": "Security",
+    "logo": "/images/divisions/security.png",
+    "description": "Menjaga keamanan dan ketertiban seluruh elemen ma'had.",
+    "philosophy": "Disiplin adalah kunci dari ketenangan.",
+    "responsibilities": ["Patroli malam", "Pengawasan gerbang", "Penegakan kedisiplinan"],
+    "historicalMembers": [
+      { "periodId": "2018-2019", "member": "member-secu-2018" },
+      { "periodId": "2026-2027", "member": "member-secu-2026" }
+    ]
+  },
+  {
+    "id": "language",
+    "name": "Language",
+    "logo": "/images/divisions/language.png",
+    "description": "Meningkatkan kemampuan berbahasa Arab dan Inggris santri.",
+    "philosophy": "Bahasa adalah jendela dunia dan ilmu.",
+    "responsibilities": ["Muhadharah 3 bahasa", "Ilqa' mufrodat", "Language Court"],
+    "historicalMembers": [
+      { "periodId": "2018-2019", "member": "member-lang-2018" },
+      { "periodId": "2026-2027", "member": "member-lang-2026" }
+    ]
+  }
+]

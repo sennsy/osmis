@@ -1,0 +1,391 @@
+.page {
+  width: 100%;
+}
+
+.introSection {
+  padding: 8rem 0;
+  text-align: center;
+  background-color: var(--card-bg);
+  border-top: 2px dashed var(--sketch-line);
+  border-bottom: 2px dashed var(--sketch-line);
+  position: relative;
+}
+
+.introSection::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    linear-gradient(var(--sketch-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--sketch-line) 1px, transparent 1px);
+  background-size: 50px 50px;
+  opacity: 0.1;
+  pointer-events: none;
+}
+
+.introContainer {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 4rem 2rem;
+  position: relative;
+  z-index: 2;
+  background: var(--bg-color);
+  border: 2px solid var(--sketch-line);
+  border-radius: 255px 15px 225px 15px/15px 225px 15px 255px; /* Sketch box */
+  box-shadow: 10px 10px 0px rgba(0,0,0,0.05);
+}
+
+[data-theme='dark'] .introContainer {
+  box-shadow: 10px 10px 0px rgba(0, 255, 136, 0.1);
+}
+
+.introContainer h2 {
+  font-size: 3rem;
+  color: var(--osmis-green);
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+}
+
+.introContainer h3 {
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  letter-spacing: 0.2em;
+  opacity: 0.6;
+}
+
+@media (max-width: 768px) {
+  .introContainer {
+    padding: 2.5rem 1.5rem;
+    border-radius: 15px; /* Simplify border radius for mobile */
+  }
+  .introContainer h2 {
+    font-size: 2.2rem;
+  }
+  .introContainer h3 {
+    font-size: 0.85rem;
+    letter-spacing: 0.15em;
+  }
+}
+
+/* ============ VISI MISI ============ */
+.visiMisiGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.5rem;
+  margin-top: 2.5rem;
+  text-align: left;
+}
+
+@media (max-width: 768px) {
+  .visiMisiGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.visiCard,
+.misiCard {
+  padding: 2rem;
+  border: 1px dashed var(--sketch-line);
+  border-radius: 15px 255px 15px 225px / 225px 15px 255px 15px;
+  background: var(--bg-color);
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.visiCard:hover,
+.misiCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 6px 6px 0 rgba(0,0,0,0.06);
+}
+
+[data-theme='dark'] .visiCard:hover,
+[data-theme='dark'] .misiCard:hover {
+  box-shadow: 6px 6px 0 rgba(0, 255, 136, 0.08);
+}
+
+.vmLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.vmNumber {
+  font-size: 1.5rem;
+  color: var(--osmis-yellow);
+  opacity: 0.5;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.vmTitle {
+  font-size: 0.85rem;
+  letter-spacing: 0.25em;
+  color: var(--osmis-green);
+  text-transform: uppercase;
+  border-bottom: 2px solid var(--osmis-green);
+  padding-bottom: 2px;
+}
+
+.vmText {
+  font-size: 1.15rem;
+  line-height: 1.75;
+  font-style: italic;
+  color: var(--text-color);
+  opacity: 0.9;
+}
+
+.misiList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  padding: 0;
+  margin: 0;
+}
+
+.misiItem {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.misiNum {
+  font-size: 0.75rem;
+  color: var(--osmis-yellow);
+  opacity: 0.7;
+  flex-shrink: 0;
+  padding-top: 3px;
+  letter-spacing: 0.1em;
+}
+
+.misiItem p {
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: var(--text-color);
+  opacity: 0.85;
+}
+
+/* ============ MOTTO EXPLAINER ============ */
+.mottoExplainer {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-top: 2.5rem;
+  padding-top: 2rem;
+  border-top: 1px dashed var(--sketch-line);
+}
+
+@media (max-width: 768px) {
+  .mottoExplainer {
+    grid-template-columns: 1fr;
+  }
+}
+
+.mottoWordCard {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 1.25rem 1.5rem;
+  background: linear-gradient(135deg, var(--card-bg) 0%, var(--bg-color) 100%);
+  border-left: 3px solid var(--osmis-green);
+  border-radius: 0 8px 8px 0;
+  transition: transform 0.25s ease, border-color 0.25s ease;
+  text-align: left;
+}
+
+.mottoWordCard:hover {
+  transform: translateX(4px);
+  border-color: var(--osmis-yellow);
+}
+
+.mottoWordKw {
+  font-size: 1.4rem;
+  font-style: italic;
+  color: var(--osmis-green);
+  letter-spacing: -0.02em;
+}
+
+.mottoWordCard:hover .mottoWordKw {
+  color: var(--osmis-yellow);
+}
+
+.mottoWordDesc {
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: var(--text-color);
+  opacity: 0.75;
+}
+
+.valuesSection {
+  padding: 8rem 0;
+  background-color: transparent;
+  border-top: 2px dashed var(--sketch-line);
+  position: relative;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.valuesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 4rem;
+  text-align: center;
+}
+
+.valueItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  padding: 2rem;
+  border: 1px solid transparent;
+}
+
+.valueItem:hover {
+  transform: translateY(-10px);
+  border: 2px dashed var(--sketch-line);
+  border-radius: 15px;
+  background: var(--card-bg);
+}
+
+.valueItem span {
+  font-family: var(--font-mono);
+  font-size: 2rem;
+  opacity: 0.3;
+  color: var(--osmis-yellow);
+  font-weight: 700;
+}
+
+.valueItem h3 {
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  color: var(--text-color);
+  text-transform: uppercase;
+}
+
+.valueItem:hover h3 {
+  color: var(--osmis-green);
+}
+
+/* ============ FEATURES SECTION ============ */
+.featuresSection {
+  padding: 6rem 2rem;
+  background-color: var(--card-bg);
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+  text-align: center;
+}
+
+.featuresHeader {
+  margin-bottom: 4rem;
+}
+
+.featuresHeader h2 {
+  font-size: 2.5rem;
+  color: var(--text-color);
+  margin-bottom: 1rem;
+}
+
+.featuresHeader p {
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  letter-spacing: 0.1em;
+  opacity: 0.7;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.featuresGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.featureCard {
+  background: var(--bg-color);
+  border: 1px solid var(--border-color);
+  padding: 2.5rem 2rem;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  min-height: 280px;
+}
+
+.featureCard:hover:not(.comingSoonCard) {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.1);
+  border-color: var(--osmis-green);
+}
+
+[data-theme='dark'] .featureCard:hover:not(.comingSoonCard) {
+  box-shadow: 0 10px 30px -10px rgba(0, 255, 136, 0.15);
+}
+
+.featureIcon {
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+  color: var(--osmis-green);
+}
+
+.featureName {
+  font-size: 1.5rem;
+  margin-bottom: 0.75rem;
+  color: var(--text-color);
+}
+
+.featureDesc {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  opacity: 0.7;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.featureBtn {
+  background: var(--text-color);
+  color: var(--bg-color);
+  padding: 0.6rem 1.5rem;
+  border: none;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  width: 100%;
+}
+
+.featureBtn:hover {
+  opacity: 0.9;
+}
+
+.comingSoonCard {
+  opacity: 0.65;
+  border-style: dashed;
+  cursor: not-allowed;
+}
+
+.comingSoonBadge {
+  background: var(--border-color);
+  color: var(--text-color);
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  font-family: var(--font-mono);
+  border-radius: 12px;
+  margin-top: 1rem;
+  letter-spacing: 0.05em;
+}
+
+

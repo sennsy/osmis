@@ -1,0 +1,339 @@
+.section {
+  padding: 8rem 0;
+  position: relative;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.header {
+  margin-bottom: 6rem;
+  text-align: center;
+}
+
+.headerTop {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  opacity: 0.5;
+}
+
+.line {
+  height: 2px;
+  width: 100px;
+  background-color: var(--sketch-line);
+  border-radius: 50%;
+}
+
+.header h2 {
+  font-size: clamp(3rem, 6vw, 5rem);
+  margin-bottom: 1rem;
+  color: var(--osmis-green);
+  text-transform: uppercase;
+}
+
+.header h3 {
+  font-family: var(--font-mono);
+  font-size: 1.5rem;
+  letter-spacing: 0.2em;
+}
+
+.orgHeader {
+  margin-bottom: 4rem;
+  text-align: center;
+}
+
+.orgHeader h4 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+}
+
+.chartWrapper {
+  position: relative;
+  padding: 6rem 2rem;
+  border: 2px solid var(--sketch-line);
+  border-radius: 255px 15px 225px 15px/15px 225px 15px 255px; /* Sketch box */
+  background-color: var(--card-bg);
+  box-shadow: 10px 10px 0px rgba(0,0,0,0.05);
+}
+
+[data-theme='dark'] .chartWrapper {
+  box-shadow: 10px 10px 0px rgba(0, 255, 136, 0.1);
+}
+
+.blueprintGrid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* Use the global blueprint pattern here as a background for the chart */
+  background-image: linear-gradient(var(--sketch-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--sketch-line) 1px, transparent 1px);
+  background-size: 40px 40px;
+  opacity: 0.2;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.leadersBox {
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+  position: relative;
+  z-index: 2;
+  align-items: center;
+}
+
+.leaderCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  transition: transform 0.3s;
+}
+
+.leaderCard:hover {
+  transform: scale(1.02);
+}
+
+.leaderNumber {
+  font-family: var(--font-mono);
+  font-size: 4rem;
+  color: var(--osmis-yellow);
+  opacity: 0.3;
+  position: absolute;
+  top: -30px;
+  left: -20px;
+  z-index: 0;
+  font-weight: 700;
+  /* Cyberpunk glitch hint */
+  text-shadow: 2px 2px 0px rgba(0, 255, 136, 0.3);
+}
+
+.leaderInfo {
+  background-color: var(--card-bg);
+  padding: 2rem 3rem;
+  border: 2px solid var(--sketch-line);
+  clip-path: polygon(20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%, 0 20px);
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+.leaderInfo::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 30px;
+  height: 30px;
+  background-color: var(--osmis-yellow);
+  clip-path: polygon(100% 0, 100% 100%, 0 100%);
+  opacity: 0.8;
+}
+
+.leaderTitle {
+  font-size: 0.875rem;
+  letter-spacing: 0.2em;
+  opacity: 0.7;
+  margin-bottom: 1rem;
+  color: var(--osmis-green);
+  font-weight: 700;
+}
+
+.leaderName {
+  font-size: 2rem;
+  white-space: pre-line;
+  line-height: 1.2;
+}
+
+.leaderLine {
+  width: 2px;
+  height: 4rem;
+  background-color: var(--sketch-line);
+  margin-top: 0;
+  border-left: 2px dashed var(--osmis-green);
+  opacity: 0.5;
+}
+
+.leaderCard:last-child .leaderLine {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .section {
+    padding: 4rem 0; /* Reduce padding on mobile */
+  }
+  .header {
+    margin-bottom: 3rem;
+  }
+  .chartWrapper {
+    padding: 2.5rem 1rem;
+  }
+  .leaderInfo {
+    padding: 1.5rem;
+  }
+  .leaderName {
+    font-size: 1.5rem;
+  }
+  .leadersBox {
+    gap: 3rem; /* Tighter gap */
+  }
+}
+
+/* ==================== BUTTON & MODAL ==================== */
+.viewProgramsBtn {
+  margin-top: 2rem;
+  background: var(--osmis-green);
+  color: var(--bg-color);
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-transform: uppercase;
+}
+
+.viewProgramsBtn:hover {
+  background: var(--osmis-yellow);
+  color: #000;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  animation: fadeIn 0.3s ease;
+}
+
+.modalContent {
+  background: var(--card-bg);
+  width: 100%;
+  max-width: 900px;
+  border: 2px solid var(--sketch-line);
+  border-radius: 15px;
+  padding: 2.5rem;
+  position: relative;
+  box-shadow: 10px 10px 0px rgba(0,0,0,0.1);
+  animation: slideUp 0.3s ease;
+  
+  display: flex;
+  flex-direction: column;
+  max-height: 85vh;
+  overflow: hidden;
+}
+
+[data-theme='dark'] .modalContent {
+  box-shadow: 10px 10px 0px rgba(0, 255, 136, 0.15);
+}
+
+.closeBtn {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  background: none;
+  border: none;
+  color: var(--text-color);
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.3s;
+}
+
+.closeBtn:hover {
+  opacity: 1;
+  color: var(--osmis-green);
+}
+
+.modalTitle {
+  font-size: 1.8rem;
+  color: var(--osmis-green);
+  margin-bottom: 1.5rem;
+  text-transform: uppercase;
+}
+
+.programList {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2rem;
+  align-items: start;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+  padding-right: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .programList {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+.programList::-webkit-scrollbar {
+  width: 6px;
+}
+.programList::-webkit-scrollbar-thumb {
+  background: var(--osmis-yellow);
+  border-radius: 3px;
+}
+
+.programItem {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  padding: 1rem;
+  background: rgba(0,0,0,0.03);
+  border-left: 2px solid var(--osmis-yellow);
+  border-radius: 0 8px 8px 0;
+}
+
+[data-theme='dark'] .programItem {
+  background: rgba(255,255,255,0.03);
+}
+
+.programDot {
+  color: var(--osmis-green);
+  opacity: 0.5;
+  margin-top: 2px;
+}
+
+.programText {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  opacity: 0.9;
+  text-align: left;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}

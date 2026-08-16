@@ -1,0 +1,20 @@
+[
+  {
+    "id": "doc-001",
+    "title": "Proposal Class Meeting 1",
+    "category": "Proposal",
+    "periodId": "2018-2019",
+    "date": "2018-10-15",
+    "fileUrl": "/archives/proposal-cm-2018.pdf",
+    "tags": ["class-meeting", "2018", "proposal"]
+  },
+  {
+    "id": "doc-002",
+    "title": "LPJ Agustusan 2026",
+    "category": "LPJ",
+    "periodId": "2026-2027",
+    "date": "2026-08-25",
+    "fileUrl": "/archives/lpj-agustusan-2026.pdf",
+    "tags": ["agustusan", "2026", "lpj"]
+  }
+]

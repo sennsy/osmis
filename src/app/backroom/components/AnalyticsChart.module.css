@@ -1,0 +1,126 @@
+.chartContainer {
+  margin-top: 2rem;
+  border: 1px solid #27272a;
+  border-radius: 8px;
+  background-color: #09090b;
+  padding: 1.5rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fafafa;
+}
+
+.subtitle {
+  font-size: 0.8rem;
+  color: #a1a1aa;
+  margin-top: 0.25rem;
+}
+
+.tabs {
+  display: flex;
+  gap: 0.25rem;
+  background-color: #18181b; /* Zinc-900 */
+  padding: 0.25rem;
+  border-radius: 6px;
+}
+
+.tabBtn {
+  background: transparent;
+  border: none;
+  color: #a1a1aa;
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.tabBtn:hover {
+  color: #fafafa;
+}
+
+.tabBtn.active {
+  background-color: #27272a;
+  color: #fafafa;
+  font-weight: 500;
+}
+
+.chartArea {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  height: 200px;
+  gap: 1rem;
+  padding-top: 1rem;
+}
+
+.barGroup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  height: 100%;
+}
+
+.barWrapper {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  position: relative;
+}
+
+.bar {
+  width: 60%;
+  min-width: 12px;
+  max-width: 40px;
+  background-color: #fafafa;
+  border-radius: 4px 4px 0 0;
+  transition: height 0.5s ease-out;
+  position: relative;
+  cursor: pointer;
+}
+
+.bar:hover {
+  background-color: #0F0;
+}
+
+.tooltip {
+  position: absolute;
+  top: -25px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #27272a;
+  color: #fafafa;
+  font-size: 0.7rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+  white-space: nowrap;
+}
+
+.bar:hover .tooltip {
+  opacity: 1;
+}
+
+.label {
+  font-size: 0.75rem;
+  color: #a1a1aa;
+  margin-top: 0.5rem;
+  text-align: center;
+}
