@@ -57,14 +57,16 @@
 .chartWrapper {
   position: relative;
   padding: 6rem 2rem;
-  border: 2px solid var(--sketch-line);
-  border-radius: 255px 15px 225px 15px/15px 225px 15px 255px; /* Sketch box */
+  border: 1px solid var(--border-color);
+  border-radius: 24px;
   background-color: var(--card-bg);
-  box-shadow: 10px 10px 0px rgba(0,0,0,0.05);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.05);
 }
 
 [data-theme='dark'] .chartWrapper {
-  box-shadow: 10px 10px 0px rgba(0, 255, 136, 0.1);
+  box-shadow: 0 8px 32px 0 rgba(0, 255, 136, 0.03);
 }
 
 .blueprintGrid {
@@ -122,9 +124,11 @@
 
 .leaderInfo {
   background-color: var(--card-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   padding: 2rem 3rem;
-  border: 2px solid var(--sketch-line);
-  clip-path: polygon(20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%, 0 20px);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
   width: 100%;
   position: relative;
   z-index: 1;
@@ -232,13 +236,15 @@
 
 .modalContent {
   background: var(--card-bg);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   width: 100%;
   max-width: 900px;
-  border: 2px solid var(--sketch-line);
-  border-radius: 15px;
+  border: 1px solid var(--border-color);
+  border-radius: 24px;
   padding: 2.5rem;
   position: relative;
-  box-shadow: 10px 10px 0px rgba(0,0,0,0.1);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.1);
   animation: slideUp 0.3s ease;
   
   display: flex;
@@ -248,7 +254,7 @@
 }
 
 [data-theme='dark'] .modalContent {
-  box-shadow: 10px 10px 0px rgba(0, 255, 136, 0.15);
+  box-shadow: 0 10px 40px rgba(0, 255, 136, 0.05);
 }
 
 .closeBtn {
@@ -325,7 +331,7 @@
   font-size: 0.95rem;
   line-height: 1.5;
   opacity: 0.9;
-  text-align: left;
+  text-align: start;
 }
 
 @keyframes fadeIn {

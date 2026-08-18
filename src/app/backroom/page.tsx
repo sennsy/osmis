@@ -19,6 +19,16 @@ export default function Backroom() {
   // Gallery Edit State
   const [selectedCatId, setSelectedCatId] = useState('');
   const [newPhotoId, setNewPhotoId] = useState('');
+  
+  // Bulk Folder State
+  const [bulkFolderId, setBulkFolderId] = useState('');
+  const [isBulkLoading, setIsBulkLoading] = useState(false);
+  const [bulkMessage, setBulkMessage] = useState<string | null>(null);
+
+  // Create Category State
+  const [newCatNameId, setNewCatNameId] = useState('');
+  const [newCatNameEn, setNewCatNameEn] = useState('');
+  const [newCatNameAr, setNewCatNameAr] = useState('');
 
   // Structure Edit State
   const [selectedDivId, setSelectedDivId] = useState('');
@@ -61,15 +71,106 @@ export default function Backroom() {
     alert('Photo Added!');
   };
 
-  const handleRemovePhoto = (catId: string, photoId: string) => {
-    if(!confirm('Delete this photo?')) return;
+  const handleRemoveCategory = (catId: string) => {
+    if(!confirm('Apakah Anda yakin ingin menghapus kategori ini beserta seluruh fotonya?')) return;
+    const newGallery = data.gallery.filter(cat => cat.id !== catId);
+    updateData({ gallery: newGallery });
+  };
+
+  const handleRenameCategory = (catId: string, currentName: string) => {
+    const newName = prompt('Masukkan nama kategori baru (hanya nama ID):', currentName);
+    if (!newName || !newName.trim() || newName.trim() === currentName) return;
+    
     const newGallery = data.gallery.map(cat => {
       if (cat.id === catId) {
-        return { ...cat, ids: cat.ids.filter(id => id !== photoId) };
+        return { ...cat, name: newName.trim() };
       }
       return cat;
     });
     updateData({ gallery: newGallery });
+  };
+
+  const handleBulkAddFolder = async () => {
+    setBulkMessage(null);
+    if (!selectedCatId) {
+      setBulkMessage('ERROR: Pilih Kategori terlebih dahulu di dropdown atas!');
+      return;
+    }
+    if (!bulkFolderId.trim()) {
+      setBulkMessage('ERROR: Masukkan Folder ID atau URL Folder!');
+      return;
+    }
+
+    setIsBulkLoading(true);
+    try {
+      let finalFolderId = bulkFolderId.trim();
+      if (finalFolderId.includes('folders/')) {
+        finalFolderId = finalFolderId.split('folders/')[1].split('?')[0].split('/')[0];
+      } else if (finalFolderId.includes('id=')) {
+        finalFolderId = finalFolderId.split('id=')[1].split('&')[0];
+      }
+
+      setBulkMessage(`Memuat dari API Drive untuk ID: ${finalFolderId}...`);
+
+      const res = await fetch(`/api/drive/files?folderId=${finalFolderId}`);
+      const dataResponse = await res.json();
+      if (res.ok) {
+        if (!Array.isArray(dataResponse)) {
+          setBulkMessage('ERROR: Respons dari server tidak valid (bukan array).');
+          return;
+        }
+        const imageFiles = dataResponse.filter((f: any) => f.mimeType && f.mimeType.startsWith('image/'));
+        if (imageFiles.length === 0) {
+          const sampleMimes = dataResponse.slice(0, 3).map((f: any) => f.mimeType || 'unknown').join(', ');
+          setBulkMessage(`FAILED: Tidak ada gambar di folder ini! Total file: ${dataResponse.length}. Contoh tipe file: ${sampleMimes}. Folder ID: ${finalFolderId}. (Pastikan isi folder langsung foto, BUKAN sub-folder)`);
+          return;
+        }
+        const newIds = imageFiles.map((f: any) => f.id);
+        const newGallery = data.gallery.map(cat => {
+          if (cat.id === selectedCatId) {
+            const existing = new Set(cat.ids);
+            newIds.forEach((id: string) => existing.add(id));
+            return { ...cat, ids: Array.from(existing) };
+          }
+          return cat;
+        });
+        updateData({ gallery: newGallery });
+        setBulkFolderId('');
+        setBulkMessage(`SUCCESS: Berhasil menambahkan ${newIds.length} foto ke kategori yang dipilih!`);
+      } else {
+        setBulkMessage(`ERROR: ${dataResponse.error || 'Gagal memuat folder dari API.'}`);
+      }
+    } catch (err: any) {
+      setBulkMessage(`NETWORK ERROR: Terjadi kesalahan jaringan atau sistem: ${err.message}`);
+    } finally {
+      setIsBulkLoading(false);
+    }
+  };
+
+  const handleAddCategory = () => {
+    if (!newCatNameId.trim()) {
+      alert('Nama kategori (ID) wajib diisi!');
+      return;
+    }
+    const slug = newCatNameId.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    const newCat = {
+      id: slug,
+      name: newCatNameId.trim(),
+      customNameEn: newCatNameEn.trim() || newCatNameId.trim(),
+      customNameAr: newCatNameAr.trim() || newCatNameId.trim(),
+      ids: []
+    };
+    
+    if (data.gallery.find(c => c.id === slug)) {
+      alert('Kategori dengan nama ini sudah ada!');
+      return;
+    }
+    
+    updateData({ gallery: [...data.gallery, newCat] });
+    setNewCatNameId('');
+    setNewCatNameEn('');
+    setNewCatNameAr('');
+    alert('Kategori Baru Berhasil Dibuat!');
   };
 
   const handleAddMember = () => {
@@ -137,6 +238,61 @@ export default function Backroom() {
           <div className={styles.card}>
             <h2 className={styles.cardTitle}>System Overview</h2>
             <p className={styles.cardDesc}>Data yang Anda ubah di sini akan langsung terlihat di website (disimpan di LocalStorage).</p>
+            
+            <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem', marginBottom: '2rem', background: 'rgba(255,255,255,0.05)', padding: '1rem', borderRadius: '8px' }}>
+              <div style={{ flex: 1 }}>
+                <h3 style={{ fontSize: '1rem', color: 'var(--osmis-yellow)', marginBottom: '0.5rem' }}>Migrasi Data (Vercel Prep)</h3>
+                <p style={{ fontSize: '0.85rem', color: '#a1a1aa', marginBottom: '1rem' }}>Gunakan fitur ini untuk memindahkan data LocalStorage ke komputer/browser lain (terutama setelah deploy ke Vercel).</p>
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                  <button 
+                    className={styles.btnPrimary} 
+                    style={{ background: 'var(--osmis-green)', color: '#000' }}
+                    onClick={() => {
+                      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data));
+                      const downloadAnchorNode = document.createElement('a');
+                      downloadAnchorNode.setAttribute("href", dataStr);
+                      downloadAnchorNode.setAttribute("download", "osmis-data.json");
+                      document.body.appendChild(downloadAnchorNode);
+                      downloadAnchorNode.click();
+                      downloadAnchorNode.remove();
+                    }}
+                  >
+                    Export Data
+                  </button>
+                  <label className={styles.btnSecondary} style={{ cursor: 'pointer', margin: 0, display: 'inline-flex', alignItems: 'center' }}>
+                    Import Data
+                    <input 
+                      type="file" 
+                      accept=".json" 
+                      style={{ display: 'none' }} 
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+                        const reader = new FileReader();
+                        reader.onload = (event) => {
+                          try {
+                            const importedData = JSON.parse(event.target?.result as string);
+                            if (importedData && importedData.gallery && importedData.organization) {
+                              if (confirm('Apakah Anda yakin ingin mengganti SELURUH data dengan data dari file ini?')) {
+                                updateData(importedData);
+                                alert('Data berhasil di-import!');
+                              }
+                            } else {
+                              alert('Format file JSON tidak sesuai dengan standar data OSMIS.');
+                            }
+                          } catch (err) {
+                            alert('Gagal membaca file JSON.');
+                          }
+                        };
+                        reader.readAsText(file);
+                        e.target.value = '';
+                      }}
+                    />
+                  </label>
+                </div>
+              </div>
+            </div>
+
             <div className={styles.statsGrid}>
               <div className={styles.statBox}>
                 <div className={styles.statLabel}>Galeri Kategori</div>
@@ -182,7 +338,7 @@ export default function Backroom() {
             <h2 className={styles.cardTitle}>Manajemen Galeri</h2>
             <p className={styles.cardDesc}>Tambah Google Drive ID foto ke kategori tertentu.</p>
             
-            <div className={styles.formGroup} style={{ marginBottom: '2rem', display: 'flex', gap: '1rem', alignItems: 'flex-end' }}>
+            <div className={styles.formGroup} style={{ marginBottom: '1rem', display: 'flex', gap: '1rem', alignItems: 'flex-end' }}>
               <div style={{ flex: 1 }}>
                 <label>Pilih Kategori</label>
                 <select className={styles.input} style={{ marginTop: '0.5rem' }} value={selectedCatId} onChange={e => setSelectedCatId(e.target.value)}>
@@ -191,10 +347,27 @@ export default function Backroom() {
                 </select>
               </div>
               <div style={{ flex: 2 }}>
-                <label>Drive Image ID</label>
+                <label>Drive Image ID (Satu per satu)</label>
                 <input type="text" className={styles.input} style={{ marginTop: '0.5rem' }} value={newPhotoId} onChange={e => setNewPhotoId(e.target.value)} placeholder="1A2B3C4D..." />
               </div>
               <button className={styles.btnPrimary} onClick={handleAddPhoto}>Tambah Foto</button>
+            </div>
+
+            <div className={styles.formGroup} style={{ marginBottom: '2rem', display: 'flex', flexWrap: 'wrap', gap: '1rem', alignItems: 'flex-end', background: 'rgba(255,255,255,0.05)', padding: '1rem', borderRadius: '8px' }}>
+              <div style={{ flex: '1 1 100%', display: 'flex', gap: '1rem', alignItems: 'flex-end' }}>
+                <div style={{ flex: 1 }}>
+                  <label style={{ color: 'var(--osmis-yellow)' }}>[ BARU ] Drive Folder ID (Bulk Import)</label>
+                  <input type="text" className={styles.input} style={{ marginTop: '0.5rem' }} value={bulkFolderId} onChange={e => setBulkFolderId(e.target.value)} placeholder="Folder ID..." />
+                </div>
+                <button className={styles.btnPrimary} onClick={handleBulkAddFolder} disabled={isBulkLoading} style={{ background: 'var(--osmis-yellow)', color: '#000' }}>
+                  {isBulkLoading ? 'Memuat...' : 'Tambah 1 Folder'}
+                </button>
+              </div>
+              {bulkMessage && (
+                <div style={{ width: '100%', padding: '0.8rem', background: bulkMessage.startsWith('SUCCESS') ? 'rgba(0,255,0,0.1)' : 'rgba(255,0,0,0.1)', color: bulkMessage.startsWith('SUCCESS') ? '#aaffaa' : '#ffaaaa', borderRadius: '4px', borderLeft: `4px solid ${bulkMessage.startsWith('SUCCESS') ? '#00ff00' : '#ff0000'}`, fontFamily: 'monospace', whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>
+                  {bulkMessage}
+                </div>
+              )}
             </div>
 
             <table className={styles.table}>
@@ -202,7 +375,7 @@ export default function Backroom() {
                 <tr>
                   <th>Kategori</th>
                   <th>Total Foto</th>
-                  <th>Aksi (Hapus Foto Terakhir)</th>
+                  <th>Aksi</th>
                 </tr>
               </thead>
               <tbody>
@@ -211,18 +384,49 @@ export default function Backroom() {
                     <td>{cat.name}</td>
                     <td>{cat.ids.length}</td>
                     <td>
-                      <button 
-                        className={styles.btnDanger} 
-                        disabled={cat.ids.length === 0}
-                        onClick={() => handleRemovePhoto(cat.id, cat.ids[cat.ids.length - 1])}
-                      >
-                        Hapus 1 Foto
-                      </button>
+                      <div style={{ display: 'flex', gap: '0.5rem' }}>
+                        <button 
+                          className={styles.btnPrimary} 
+                          style={{ padding: '0.4rem 0.8rem', fontSize: '0.9rem' }}
+                          onClick={() => handleRenameCategory(cat.id, cat.name)}
+                        >
+                          Ganti Nama
+                        </button>
+                        <button 
+                          className={styles.btnDanger} 
+                          style={{ padding: '0.4rem 0.8rem', fontSize: '0.9rem' }}
+                          onClick={() => handleRemoveCategory(cat.id)}
+                        >
+                          Hapus Kategori
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
+            
+            <div style={{ marginTop: '3rem', paddingTop: '2rem', borderTop: '2px dashed rgba(255,255,255,0.1)' }}>
+              <h3 className={styles.cardTitle} style={{ fontSize: '1.2rem' }}>[ BARU ] Buat Kategori Baru</h3>
+              <p className={styles.cardDesc}>Tambahkan kategori galeri secara dinamis beserta terjemahannya.</p>
+              
+              <div className={styles.formGroup} style={{ display: 'flex', gap: '1rem', alignItems: 'flex-end', background: 'rgba(255,255,255,0.02)', padding: '1.5rem', borderRadius: '8px' }}>
+                <div style={{ flex: 1 }}>
+                  <label>Nama (ID) *</label>
+                  <input type="text" className={styles.input} style={{ marginTop: '0.5rem' }} value={newCatNameId} onChange={e => setNewCatNameId(e.target.value)} placeholder="Contoh: Baksos 2025" />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <label>Terjemahan (EN)</label>
+                  <input type="text" className={styles.input} style={{ marginTop: '0.5rem' }} value={newCatNameEn} onChange={e => setNewCatNameEn(e.target.value)} placeholder="Contoh: Social Event" />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <label>Terjemahan (AR)</label>
+                  <input type="text" className={styles.input} style={{ marginTop: '0.5rem' }} value={newCatNameAr} onChange={e => setNewCatNameAr(e.target.value)} placeholder="Opsional..." dir="rtl" />
+                </div>
+                <button className={styles.btnPrimary} onClick={handleAddCategory} style={{ background: 'var(--osmis-green)', color: '#000' }}>Buat Kategori</button>
+              </div>
+            </div>
+            
           </div>
         );
 

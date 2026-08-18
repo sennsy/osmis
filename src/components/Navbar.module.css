@@ -87,14 +87,16 @@
   align-items: center;
   gap: 3rem;
   background: var(--card-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   padding: 0.5rem 2rem;
-  border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
-  border: 1px solid var(--sketch-line);
-  box-shadow: 4px 4px 0px rgba(0,0,0,0.05);
+  border-radius: 24px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.05);
 }
 
 [data-theme='dark'] .desktopNav {
-  box-shadow: 4px 4px 0px rgba(0, 255, 136, 0.1);
+  box-shadow: 0 4px 16px rgba(0, 255, 136, 0.05);
 }
 
 .navLinks {
@@ -136,7 +138,7 @@
   display: flex;
   align-items: center;
   gap: 1.5rem;
-  border-left: 1px dashed var(--sketch-line);
+  border-left: 1px solid var(--border-color);
   padding-left: 1.5rem;
 }
 
@@ -184,9 +186,11 @@
     top: 100%;
     left: 0;
     width: 100%;
-    background-color: var(--bg-color);
+    background-color: var(--card-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     padding: 2rem;
-    border-bottom: 2px dashed var(--sketch-line);
+    border-bottom: 1px solid var(--border-color);
   }
   
   .mobileNavLinks {
@@ -208,6 +212,6 @@
     display: flex;
     gap: 2rem;
     padding-top: 1rem;
-    border-top: 1px solid var(--sketch-line);
+    border-top: 1px solid var(--border-color);
   }
 }

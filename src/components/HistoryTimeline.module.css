@@ -108,17 +108,19 @@
 }
 
 .periodCard {
-  border: 2px solid var(--sketch-line);
-  border-radius: 255px 15px 225px 15px/15px 225px 15px 255px; /* Sketch box */
+  border: 1px solid var(--border-color);
+  border-radius: 24px;
   background-color: var(--card-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   padding: 3rem;
   position: relative;
   overflow: hidden;
-  box-shadow: 8px 8px 0px rgba(0,0,0,0.05);
+  box-shadow: 0 8px 32px 0 rgba(0,0,0,0.05);
 }
 
 [data-theme='dark'] .periodCard {
-  box-shadow: 8px 8px 0px rgba(0, 255, 136, 0.1);
+  box-shadow: 0 8px 32px 0 rgba(0, 255, 136, 0.05);
 }
 
 .cardInner {
@@ -172,13 +174,14 @@
 
 .cardVisual {
   flex: 1;
-  border: 2px solid var(--sketch-line);
-  clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px); /* Tech Cutout */
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: rgba(0, 0, 0, 0.03);
   position: relative;
+  overflow: hidden;
 }
 
 [data-theme='dark'] .cardVisual {

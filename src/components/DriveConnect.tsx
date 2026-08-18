@@ -30,16 +30,18 @@ export default function DriveConnect() {
     window.location.href = '/api/auth/login';
   };
 
-  const fetchFiles = async (silent = false) => {
+  const fetchFiles = async (silent = false, targetFolderId?: string) => {
     if (!silent) setLoading(true);
     setError('');
+    const idToFetch = targetFolderId || searchFolder;
     try {
-      const res = await fetch(`/api/drive/files?folderId=${searchFolder}`);
+      const res = await fetch(`/api/drive/files?folderId=${idToFetch}`);
       const data = await res.json();
       
       if (res.ok) {
         setFiles(data);
         setConnected(true);
+        if (targetFolderId) setSearchFolder(targetFolderId);
       } else {
         if (!silent) setError(data.error || 'Failed to fetch files');
         if (res.status === 401) setConnected(false);
@@ -52,13 +54,13 @@ export default function DriveConnect() {
   };
 
   return (
-    <div style={{ background: '#f5f5f4', padding: '1.5rem', borderRadius: '12px', border: '1px solid #e5e7eb' }}>
+    <div style={{ background: 'var(--card-bg)', padding: '1.5rem', borderRadius: '12px', border: '1px solid var(--border-color)', color: 'var(--text-color)' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
         <div>
           <h3 className="mono-font" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <Database size={18} /> Google Drive API Integration
           </h3>
-          <p style={{ fontSize: '0.9rem', color: '#6b7280', marginTop: '0.25rem' }}>
+          <p style={{ fontSize: '0.9rem', opacity: 0.7, marginTop: '0.25rem' }}>
             {connected 
               ? 'Status: Terhubung ke Google Drive API' 
               : 'Otentikasi OAuth 2.0 untuk mengakses File ID Drive.'}
@@ -73,7 +75,7 @@ export default function DriveConnect() {
             {loading ? 'Menghubungkan...' : 'Hubungkan Google Drive'}
           </button>
         ) : (
-          <div style={{ color: '#10b981', display: 'flex', alignItems: 'center', gap: '0.5rem' }} className="mono-font">
+          <div style={{ color: 'var(--osmis-green)', display: 'flex', alignItems: 'center', gap: '0.5rem' }} className="mono-font">
             <CheckCircle size={18} /> Connected
           </div>
         )}
@@ -96,14 +98,14 @@ export default function DriveConnect() {
             </button>
           </div>
 
-          <div style={{ background: 'white', borderRadius: '8px', border: '1px solid #e5e7eb', maxHeight: '400px', overflowY: 'auto' }}>
+          <div style={{ background: 'var(--bg-color)', borderRadius: '8px', border: '1px solid var(--border-color)', maxHeight: '400px', overflowY: 'auto' }}>
             {loading ? (
-              <div style={{ padding: '2rem', textAlign: 'center', color: '#6b7280' }}>Loading files from Google Drive...</div>
+              <div style={{ padding: '2rem', textAlign: 'center', opacity: 0.6 }}>Loading files from Google Drive...</div>
             ) : files.length === 0 ? (
-              <div style={{ padding: '2rem', textAlign: 'center', color: '#6b7280' }}>Tidak ada file di folder ini.</div>
+              <div style={{ padding: '2rem', textAlign: 'center', opacity: 0.6 }}>Tidak ada file di folder ini.</div>
             ) : (
-              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
-                <thead style={{ background: '#f9fafb', borderBottom: '1px solid #e5e7eb', textAlign: 'left' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem', color: 'var(--text-color)' }}>
+                <thead style={{ background: 'rgba(0,0,0,0.05)', borderBottom: '1px solid var(--border-color)', textAlign: 'left' }}>
                   <tr>
                     <th style={{ padding: '0.75rem 1rem', fontWeight: 500 }}>Name</th>
                     <th style={{ padding: '0.75rem 1rem', fontWeight: 500 }}>ID</th>
@@ -113,15 +115,24 @@ export default function DriveConnect() {
                 </thead>
                 <tbody>
                   {files.map(file => (
-                    <tr key={file.id} style={{ borderBottom: '1px solid #e5e7eb' }}>
-                      <td style={{ padding: '0.75rem 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                        {file.mimeType === 'application/vnd.google-apps.folder' ? <Folder size={16} color="#3b82f6"/> : <File size={16} color="#6b7280"/>}
-                        {file.name}
+                    <tr key={file.id} style={{ borderBottom: '1px solid var(--border-color)' }}>
+                      <td 
+                        style={{ padding: '0.75rem 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: file.mimeType === 'application/vnd.google-apps.folder' ? 'pointer' : 'default' }}
+                        onClick={() => {
+                          if (file.mimeType === 'application/vnd.google-apps.folder') {
+                            fetchFiles(false, file.id);
+                          }
+                        }}
+                      >
+                        {file.mimeType === 'application/vnd.google-apps.folder' ? <Folder size={16} color="var(--osmis-green)"/> : <File size={16} style={{ opacity: 0.6 }}/>}
+                        <span style={{ textDecoration: file.mimeType === 'application/vnd.google-apps.folder' ? 'underline' : 'none', color: file.mimeType === 'application/vnd.google-apps.folder' ? 'var(--osmis-green)' : 'inherit' }}>
+                          {file.name}
+                        </span>
                       </td>
                       <td style={{ padding: '0.75rem 1rem' }} className="mono-font">
-                        <code style={{ background: '#f3f4f6', padding: '2px 6px', borderRadius: '4px', fontSize: '0.8rem' }}>{file.id}</code>
+                        <code style={{ background: 'rgba(0,0,0,0.1)', padding: '2px 6px', borderRadius: '4px', fontSize: '0.8rem' }}>{file.id}</code>
                       </td>
-                      <td style={{ padding: '0.75rem 1rem', color: '#6b7280', fontSize: '0.8rem' }}>
+                      <td style={{ padding: '0.75rem 1rem', opacity: 0.6, fontSize: '0.8rem' }}>
                         {file.mimeType.replace('application/vnd.google-apps.', '')}
                       </td>
                       <td style={{ padding: '0.75rem 1rem' }}>
@@ -130,7 +141,7 @@ export default function DriveConnect() {
                             navigator.clipboard.writeText(file.id);
                             alert('ID Copied!');
                           }}
-                          style={{ background: 'none', border: '1px solid #d1d5db', padding: '4px 8px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.8rem' }}
+                          style={{ background: 'none', border: '1px solid var(--border-color)', color: 'var(--text-color)', padding: '4px 8px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.8rem' }}
                         >
                           Copy ID
                         </button>

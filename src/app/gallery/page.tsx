@@ -64,9 +64,13 @@ export default function FullGalleryPage() {
           <h1 className="display-font">{t.archiveTitle}</h1>
           <p className="mono-font" style={{ marginTop: '1rem', color: 'var(--osmis-yellow)', letterSpacing: '0.1em' }}>
             {activeCategory === 'all' ? t.allCategories : (
-              galleryCategories.find(c => c.id === activeCategory) ? 
-                (t as any)[`cat${galleryCategories.find(c => c.id === activeCategory)!.id.charAt(0).toUpperCase() + galleryCategories.find(c => c.id === activeCategory)!.id.slice(1)}`] || galleryCategories.find(c => c.id === activeCategory)?.name.toUpperCase() 
-                : ''
+              (() => {
+                const cat = galleryCategories.find(c => c.id === activeCategory);
+                if (!cat) return '';
+                if (language === 'en' && (cat as any).customNameEn) return (cat as any).customNameEn;
+                if (language === 'ar' && (cat as any).customNameAr) return (cat as any).customNameAr;
+                return (t as any)[`cat${cat.id.charAt(0).toUpperCase() + cat.id.slice(1)}`] || cat.name.toUpperCase();
+              })()
             )}
           </p>
           
@@ -79,13 +83,16 @@ export default function FullGalleryPage() {
             </button>
             {galleryCategories.map(cat => {
               const catKey = `cat${cat.id.charAt(0).toUpperCase() + cat.id.slice(1)}`;
+              let displayName = (t as any)[catKey] || cat.name.toUpperCase();
+              if (language === 'en' && (cat as any).customNameEn) displayName = (cat as any).customNameEn;
+              if (language === 'ar' && (cat as any).customNameAr) displayName = (cat as any).customNameAr;
               return (
                 <button 
                   key={cat.id}
                   className={`${styles.tabBtn} ${activeCategory === cat.id ? styles.activeTab : ''} mono-font`}
                   onClick={() => setActiveCategory(cat.id)}
                 >
-                  {(t as any)[catKey] || cat.name.toUpperCase()}
+                  {displayName}
                 </button>
               );
             })}

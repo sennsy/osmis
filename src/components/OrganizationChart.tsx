@@ -117,7 +117,7 @@ export default function OrganizationChart() {
                           {progGroup.items.map((item: string, itemIdx: number) => (
                             <div key={itemIdx} className={styles.programItem}>
                               <span className={styles.programDot}>▪</span>
-                              <span className={styles.programText} style={{ textAlign: language === 'ar' ? 'right' : 'left' }}>{item}</span>
+                              <span className={styles.programText}>{item}</span>
                             </div>
                           ))}
                         </div>

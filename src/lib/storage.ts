@@ -52,10 +52,21 @@ export function useOsmisData() {
   useEffect(() => {
     const loadData = () => {
       const overrides = getStoredOverrides();
+      
+      let mergedGallery = overrides.gallery || initialGallery;
+      if (overrides.gallery) {
+        // Ensure any new categories added to code are included
+        initialGallery.forEach(initialCat => {
+          if (!overrides.gallery!.find(c => c.id === initialCat.id)) {
+            mergedGallery.push(initialCat);
+          }
+        });
+      }
+
       setData({
         organization: overrides.organization || initialOrg,
         periods: overrides.periods || initialPeriods,
-        gallery: overrides.gallery || initialGallery,
+        gallery: mergedGallery,
         socialMedia: overrides.socialMedia || { instagram: 'harmatra_id' }
       });
       setIsLoaded(true);
