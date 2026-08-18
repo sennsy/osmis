@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 import { searchMatraAI } from '../../../lib/matra-ai';
 
-const GROQ_API_KEY = process.env.GROQ_API_KEY;
 export async function POST(req: Request) {
+  const GROQ_API_KEY = process.env.GROQ_API_KEY;
   try {
     const { messages, localData } = await req.json();
 
