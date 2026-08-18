@@ -3,6 +3,10 @@ import { searchMatraAI } from '../../../lib/matra-ai';
 
 export async function POST(req: Request) {
   const GROQ_API_KEY = process.env.GROQ_API_KEY;
+  if (!GROQ_API_KEY) {
+    return NextResponse.json({ error: 'Kunci API Groq (GROQ_API_KEY) belum terpasang di Vercel.' }, { status: 500 });
+  }
+  
   try {
     const { messages, localData } = await req.json();
 
@@ -81,9 +85,9 @@ Instruksi:
     });
 
     if (!response.ok) {
-      const errorData = await response.json();
+      const errorData = await response.json().catch(() => ({}));
       console.error("Groq API Error:", errorData);
-      return NextResponse.json({ error: 'Gagal menghubungi server kecerdasan.' }, { status: 500 });
+      return NextResponse.json({ error: `Groq Error: ${errorData.error?.message || response.statusText}` }, { status: 500 });
     }
 
     const data = await response.json();
