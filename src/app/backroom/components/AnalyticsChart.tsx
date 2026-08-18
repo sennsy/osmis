@@ -56,35 +56,39 @@ export default function AnalyticsChart() {
     <div className={styles.chartContainer}>
       <div className={styles.header}>
         <div>
-          <h3 className={styles.title}>Visitor Traffic</h3>
-          <p className={styles.subtitle}>Mock analytics data overview</p>
-        </div>
-        <div className={styles.tabs}>
-          <button className={`${styles.tabBtn} ${period === 'daily' ? styles.active : ''}`} onClick={() => setPeriod('daily')}>Daily</button>
-          <button className={`${styles.tabBtn} ${period === 'weekly' ? styles.active : ''}`} onClick={() => setPeriod('weekly')}>Weekly</button>
-          <button className={`${styles.tabBtn} ${period === 'monthly' ? styles.active : ''}`} onClick={() => setPeriod('monthly')}>Monthly</button>
-          <button className={`${styles.tabBtn} ${period === 'yearly' ? styles.active : ''}`} onClick={() => setPeriod('yearly')}>Yearly</button>
+          <h3 className={styles.title}>Visitor Traffic (Real-time)</h3>
+          <p className={styles.subtitle}>Powered by Vercel Web Analytics</p>
         </div>
       </div>
 
-      <div className={styles.chartArea}>
-        {data.map((item, idx) => {
-          const heightPercent = (item.value / maxValue) * 100;
-          return (
-            <div key={idx} className={styles.barGroup}>
-              <div className={styles.barWrapper}>
-                <div 
-                  className={styles.bar} 
-                  style={{ height: `${heightPercent}%` }}
-                  title={`${item.value} visitors`}
-                >
-                  <span className={styles.tooltip}>{item.value}</span>
-                </div>
-              </div>
-              <span className={styles.label}>{item.label}</span>
-            </div>
-          );
-        })}
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '4rem 1rem', textAlign: 'center' }}>
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--osmis-green)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: '1rem' }}>
+          <path d="M3 3v18h18" />
+          <path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3" />
+        </svg>
+        <h4 style={{ fontSize: '1.25rem', color: '#fff', marginBottom: '0.5rem' }}>Data Analitik Aktif</h4>
+        <p style={{ color: '#a1a1aa', maxWidth: '400px', marginBottom: '1.5rem', lineHeight: '1.5' }}>
+          Website ini sekarang menggunakan sistem pelacakan otomatis dari Vercel. Untuk melihat jumlah pengunjung asli, negara asal, dan halaman yang paling sering dibuka, silakan buka Dashboard Vercel Anda.
+        </p>
+        <a 
+          href="https://vercel.com/dashboard" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          style={{
+            background: '#fff',
+            color: '#000',
+            padding: '0.75rem 1.5rem',
+            borderRadius: '6px',
+            fontWeight: '600',
+            textDecoration: 'none',
+            display: 'inline-block',
+            transition: 'background 0.2s ease'
+          }}
+          onMouseOver={(e) => e.currentTarget.style.background = '#e5e5e5'}
+          onMouseOut={(e) => e.currentTarget.style.background = '#fff'}
+        >
+          Lihat Analitik Pengunjung di Vercel
+        </a>
       </div>
     </div>
   );
