@@ -69,15 +69,16 @@ export default function MatraChat() {
       });
 
       if (!res.ok) {
-        throw new Error('Gagal menghubungi API');
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.error || `Server Error ${res.status}`);
       }
 
       const data = await res.json();
       const assistantResponse = data.choices?.[0]?.message?.content || "Maaf, saya tidak mengerti maksud Anda.";
       
       setMessages(prev => [...prev, { role: 'assistant', content: assistantResponse }]);
-    } catch (err) {
-      setMessages(prev => [...prev, { role: 'assistant', content: "Terjadi kesalahan pada sistem. Mohon coba lagi nanti." }]);
+    } catch (err: any) {
+      setMessages(prev => [...prev, { role: 'assistant', content: `Terjadi kesalahan: ${err.message}. (Pastikan API Key sudah dimasukkan ke Vercel dan server di-redeploy)` }]);
     } finally {
       setIsLoading(false);
     }
