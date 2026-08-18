@@ -69,7 +69,7 @@ Instruksi:
 
     // Construct the payload for Groq
     const groqPayload = {
-      model: "mixtral-8x7b-32768", // highly stable model on Groq
+      model: "llama-3.3-70b-versatile", // latest stable model on Groq
       messages: [systemPrompt, ...messages],
       temperature: 0.7,
       max_tokens: 1024,
