@@ -69,7 +69,7 @@ Instruksi:
 
     // Construct the payload for Groq
     const groqPayload = {
-      model: "llama-3.3-70b-versatile", // latest stable model on Groq
+      model: "openai/gpt-oss-120b",
       messages: [systemPrompt, ...messages],
       temperature: 0.7,
       max_tokens: 1024,
