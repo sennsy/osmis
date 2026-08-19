@@ -15,7 +15,9 @@ export type OsmisDataOverrides = {
   gallery?: typeof initialGallery;
   socialMedia?: {
     instagram: string;
+    tiktok: string;
   };
+  tiktokFolders?: { id: string; name: string; folderId: string }[];
 };
 
 // Global event name for syncing updates across components
@@ -44,7 +46,8 @@ export function useOsmisData() {
     organization: initialOrg,
     periods: initialPeriods,
     gallery: initialGallery,
-    socialMedia: { instagram: 'harmatra_id' }
+    socialMedia: { instagram: 'harmatra_id', tiktok: 'osmis_official' },
+    tiktokFolders: [] as { id: string; name: string; folderId: string }[]
   });
   
   const [isLoaded, setIsLoaded] = useState(false);
@@ -67,7 +70,12 @@ export function useOsmisData() {
         organization: overrides.organization || initialOrg,
         periods: overrides.periods || initialPeriods,
         gallery: mergedGallery,
-        socialMedia: overrides.socialMedia || { instagram: 'harmatra_id' }
+        socialMedia: overrides.socialMedia || { instagram: 'harmatra_id', tiktok: 'osmis_official' },
+        tiktokFolders: overrides.tiktokFolders || [
+          { id: '1', name: 'Kegiatan', folderId: '' },
+          { id: '2', name: 'Kajian', folderId: '' },
+          { id: '3', name: 'Hiburan', folderId: '' }
+        ]
       });
       setIsLoaded(true);
     };

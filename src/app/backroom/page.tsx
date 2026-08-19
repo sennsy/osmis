@@ -526,6 +526,47 @@ export default function Backroom() {
           </div>
         );
 
+      case 'tiktok':
+        return (
+          <div className={styles.card}>
+            <h2 className={styles.cardTitle}>TikTok Video Folders</h2>
+            <p className={styles.cardDesc}>Atur Folder ID Google Drive untuk setiap kategori video di halaman profil ala TikTok.</p>
+            
+            <table className={styles.table}>
+              <thead>
+                <tr>
+                  <th>Kategori</th>
+                  <th>Folder ID</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.tiktokFolders?.map(folder => (
+                  <tr key={folder.id}>
+                    <td>{folder.name}</td>
+                    <td>{folder.folderId || '- Kosong -'}</td>
+                    <td>
+                      <button 
+                        className={styles.btnPrimary} 
+                        style={{ padding: '0.4rem 0.8rem', fontSize: '0.9rem' }}
+                        onClick={() => {
+                          const newId = prompt(`Masukkan Folder ID Google Drive untuk kategori ${folder.name}:`, folder.folderId);
+                          if (newId !== null) {
+                            const newFolders = data.tiktokFolders?.map(f => f.id === folder.id ? { ...f, folderId: newId.trim() } : f);
+                            updateData({ tiktokFolders: newFolders });
+                          }
+                        }}
+                      >
+                        Edit Folder ID
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        );
+
       default:
         return <div>Fitur belum diimplementasi di prototype ini.</div>;
     }
@@ -554,6 +595,7 @@ export default function Backroom() {
           <button className={`${styles.navItem} ${activeTab === 'drive' ? styles.active : ''}`} onClick={() => setActiveTab('drive')}>Drive API</button>
           <button className={`${styles.navItem} ${activeTab === 'sosmed' ? styles.active : ''}`} onClick={() => setActiveTab('sosmed')}>Sosial Media</button>
           <button className={`${styles.navItem} ${activeTab === 'galeri' ? styles.active : ''}`} onClick={() => setActiveTab('galeri')}>Galeri</button>
+          <button className={`${styles.navItem} ${activeTab === 'tiktok' ? styles.active : ''}`} onClick={() => setActiveTab('tiktok')}>TikTok (Video)</button>
           <button className={`${styles.navItem} ${activeTab === 'pengurus' ? styles.active : ''}`} onClick={() => setActiveTab('pengurus')}>Divisi & Pengurus</button>
         </nav>
 
