@@ -71,7 +71,12 @@ export default function DivisionCards() {
                                 {h.image && (
                                   <div 
                                     style={{ position: 'relative', cursor: 'pointer' }}
-                                    onClick={(e) => { e.stopPropagation(); setPhotoModalData({ image: h.image, name: language === 'ar' && h.nameAr ? h.nameAr : h.name, role: (t as any).divLeader || "KETUA DIVISI" }); }}
+                                    onClick={(e) => { 
+                                      e.stopPropagation(); 
+                                      const divName = div.nameKey ? (t as any)[div.nameKey] : div.name;
+                                      const roleStr = language === 'ar' ? `رئيس قسم ${divName}` : language === 'en' ? `HEAD OF ${divName}` : `KETUA ${divName}`;
+                                      setPhotoModalData({ image: h.image, name: language === 'ar' && h.nameAr ? h.nameAr : h.name, role: roleStr }); 
+                                    }}
                                   >
                                     <img src={getImageUrl(h.image)} alt={h.name} style={{ width: '48px', height: '48px', borderRadius: '50%', objectFit: 'cover', objectPosition: 'top', border: '1px solid var(--border-color)' }} onError={(e) => (e.currentTarget.style.display = 'none')} />
                                     <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(0,0,0,0.4)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0, transition: 'opacity 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.opacity = '1'} onMouseLeave={(e) => e.currentTarget.style.opacity = '0'}>
@@ -94,7 +99,12 @@ export default function DivisionCards() {
                                 {m.image && (
                                   <div 
                                     style={{ position: 'relative', cursor: 'pointer' }}
-                                    onClick={(e) => { e.stopPropagation(); setPhotoModalData({ image: m.image, name: language === 'ar' && m.nameAr ? m.nameAr : m.name, role: (t as any).members || "ANGGOTA" }); }}
+                                    onClick={(e) => { 
+                                      e.stopPropagation(); 
+                                      const divName = div.nameKey ? (t as any)[div.nameKey] : div.name;
+                                      const roleStr = language === 'ar' ? `عضو ${divName}` : language === 'en' ? `MEMBER OF ${divName}` : `ANGGOTA ${divName}`;
+                                      setPhotoModalData({ image: m.image, name: language === 'ar' && m.nameAr ? m.nameAr : m.name, role: roleStr }); 
+                                    }}
                                   >
                                     <img src={getImageUrl(m.image)} alt={m.name} style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover', objectPosition: 'top', border: '1px solid var(--border-color)' }} onError={(e) => (e.currentTarget.style.display = 'none')} />
                                     <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(0,0,0,0.4)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0, transition: 'opacity 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.opacity = '1'} onMouseLeave={(e) => e.currentTarget.style.opacity = '0'}>
