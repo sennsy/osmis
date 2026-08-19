@@ -178,10 +178,17 @@ export default function Backroom() {
     const newOrg = { ...data.organization };
     newOrg.divisions = newOrg.divisions.map(div => {
       if (div.id === selectedDivId) {
-        return {
-          ...div,
-          members: [...div.members, { name: newMemberName.trim(), nameAr: '', image: newMemberImage.trim() || 'https://via.placeholder.com/150' }]
-        };
+        if (newMemberType === 'head') {
+          return {
+            ...div,
+            heads: [...(div.heads || []), { name: newMemberName.trim(), nameAr: '', image: newMemberImage.trim() || 'https://via.placeholder.com/150' }]
+          };
+        } else {
+          return {
+            ...div,
+            members: [...div.members, { name: newMemberName.trim(), nameAr: '', image: newMemberImage.trim() || 'https://via.placeholder.com/150' }]
+          };
+        }
       }
       return div;
     });
@@ -191,44 +198,75 @@ export default function Backroom() {
     alert('Member Added!');
   };
 
-  const handleRemoveMember = (divId: string, memberIdx: number) => {
-    if(!confirm('Remove member?')) return;
+  const handleRemovePerson = (type: 'member'|'head'|'leadership-member', id: string, idx: number) => {
+    if(!confirm('Remove this person?')) return;
     const newOrg = { ...data.organization };
-    newOrg.divisions = newOrg.divisions.map(div => {
-      if (div.id === divId) {
-        const newMembers = [...div.members];
-        newMembers.splice(memberIdx, 1);
-        return { ...div, members: newMembers };
-      }
-      return div;
-    });
+    if (type === 'member' || type === 'head') {
+      newOrg.divisions = newOrg.divisions.map(div => {
+        if (div.id === id) {
+          const arr = type === 'member' ? [...div.members] : [...(div.heads || [])];
+          arr.splice(idx, 1);
+          return type === 'member' ? { ...div, members: arr } : { ...div, heads: arr };
+        }
+        return div;
+      });
+    } else if (type === 'leadership-member') {
+      const roleIdx = parseInt(id);
+      const role = { ...newOrg.leadership[roleIdx] };
+      const arr = [...(role.members || [])];
+      arr.splice(idx, 1);
+      role.members = arr;
+      newOrg.leadership[roleIdx] = role;
+    }
     updateData({ organization: newOrg });
   };
 
-  const handleSaveMember = () => {
-    if (!editingMember) return;
-    const { divId, idx } = editingMember;
+  const handleSaveEdit = () => {
+    if (!editingTarget) return;
+    const { type, id, idx } = editingTarget;
     const newOrg = { ...data.organization };
-    newOrg.divisions = newOrg.divisions.map(div => {
-      if (div.id === divId) {
-        const newMembers = [...div.members];
-        newMembers[idx] = { 
-          ...newMembers[idx],
-          name: editMemberName.trim(), 
-          image: editMemberImage.trim() || 'https://via.placeholder.com/150' 
-        };
-        return { ...div, members: newMembers };
-      }
-      return div;
-    });
+    
+    if (type === 'member' || type === 'head') {
+      newOrg.divisions = newOrg.divisions.map(div => {
+        if (div.id === id) {
+          const arr = type === 'member' ? [...div.members] : [...(div.heads || [])];
+          arr[idx] = { 
+            ...arr[idx],
+            name: editMemberName.trim(), 
+            image: editMemberImage.trim() || 'https://via.placeholder.com/150' 
+          };
+          return type === 'member' ? { ...div, members: arr } : { ...div, heads: arr };
+        }
+        return div;
+      });
+    } else if (type === 'leadership') {
+      const roleIdx = parseInt(id);
+      newOrg.leadership[roleIdx] = {
+        ...newOrg.leadership[roleIdx],
+        name: editMemberName.trim(),
+        image: editMemberImage.trim() || 'https://via.placeholder.com/150'
+      };
+    } else if (type === 'leadership-member') {
+      const roleIdx = parseInt(id);
+      const role = { ...newOrg.leadership[roleIdx] };
+      const arr = [...(role.members || [])];
+      arr[idx] = {
+        ...arr[idx],
+        name: editMemberName.trim(),
+        image: editMemberImage.trim() || 'https://via.placeholder.com/150'
+      };
+      role.members = arr;
+      newOrg.leadership[roleIdx] = role;
+    }
+    
     updateData({ organization: newOrg });
-    setEditingMember(null);
+    setEditingTarget(null);
   };
 
-  const startEditMember = (divId: string, idx: number, currentName: string, currentImage: string) => {
-    setEditingMember({ divId, idx });
-    setEditMemberName(currentName);
-    setEditMemberImage(currentImage);
+  const startEdit = (type: 'member'|'head'|'leadership'|'leadership-member', id: string, idx: number, currentName: string, currentImage: string) => {
+    setEditingTarget({ type, id, idx });
+    setEditMemberName(currentName || '');
+    setEditMemberImage(currentImage || '');
   };
 
   const renderContent = () => {
@@ -448,19 +486,26 @@ export default function Backroom() {
       case 'pengurus':
         return (
           <div className={styles.card}>
-            <h2 className={styles.cardTitle}>Struktur Divisi</h2>
-            <p className={styles.cardDesc}>Kelola anggota setiap divisi. Anda bisa menambah, mengubah, atau menghapus anggota.</p>
+            <h2 className={styles.cardTitle}>Struktur Organisasi</h2>
+            <p className={styles.cardDesc}>Kelola anggota bagian inti dan setiap divisi. Anda bisa menambah, mengubah, atau menghapus anggota.</p>
 
             <div className={styles.formGroup} style={{ marginBottom: '2rem', display: 'flex', gap: '1rem', alignItems: 'flex-end' }}>
               <div style={{ flex: 1 }}>
-                <label>Pilih Divisi</label>
+                <label>Pilih Divisi (Untuk Tambah Baru)</label>
                 <select className={styles.input} style={{ marginTop: '0.5rem' }} value={selectedDivId} onChange={e => setSelectedDivId(e.target.value)}>
                   <option value="">-- Pilih --</option>
                   {data.organization.divisions.map(div => <option key={div.id} value={div.id}>{div.name}</option>)}
                 </select>
               </div>
+              <div style={{ flex: 0.8 }}>
+                <label>Posisi</label>
+                <select className={styles.input} style={{ marginTop: '0.5rem' }} value={newMemberType} onChange={e => setNewMemberType(e.target.value as 'member' | 'head')}>
+                  <option value="member">Anggota</option>
+                  <option value="head">Kepala Divisi</option>
+                </select>
+              </div>
               <div style={{ flex: 1 }}>
-                <label>Nama Anggota</label>
+                <label>Nama Lengkap</label>
                 <input type="text" className={styles.input} style={{ marginTop: '0.5rem' }} value={newMemberName} onChange={e => setNewMemberName(e.target.value)} placeholder="Nama Lengkap" />
               </div>
               <div style={{ flex: 1 }}>
@@ -470,63 +515,128 @@ export default function Backroom() {
               <button className={styles.btnPrimary} onClick={handleAddMember}>Tambah</button>
             </div>
 
-            {data.organization.divisions.map(div => (
-              <div key={div.id} style={{ marginBottom: '2rem' }}>
-                <h3 style={{ fontSize: '1rem', borderBottom: '1px solid #27272a', paddingBottom: '0.5rem', marginBottom: '1rem' }}>{div.name}</h3>
-                <table className={styles.table}>
-                  <tbody>
-                    {div.members.map((m, idx) => {
-                      const isEditing = editingMember?.divId === div.id && editingMember?.idx === idx;
-                      
-                      if (isEditing) {
-                        return (
-                          <tr key={idx}>
+            <div style={{ marginBottom: '3rem' }}>
+              <h3 style={{ fontSize: '1.25rem', color: 'var(--osmis-green)', marginBottom: '1rem' }}>BAGIAN INTI</h3>
+              {data.organization.leadership.map((role, roleIdx) => (
+                <div key={roleIdx} style={{ marginBottom: '1.5rem', paddingLeft: '1rem', borderLeft: '2px solid var(--border-color)' }}>
+                  <h4 style={{ fontSize: '0.95rem', marginBottom: '0.5rem', color: 'var(--osmis-yellow)' }}>{role.title}</h4>
+                  <table className={styles.table}>
+                    <tbody>
+                      {role.name && (
+                        <tr>
+                          {editingTarget?.type === 'leadership' && editingTarget.id === roleIdx.toString() ? (
                             <td colSpan={2}>
                               <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                                <input 
-                                  type="text" 
-                                  className={styles.input} 
-                                  value={editMemberName} 
-                                  onChange={e => setEditMemberName(e.target.value)} 
-                                  placeholder="Nama Lengkap"
-                                  style={{ flex: 1 }}
-                                />
-                                <input 
-                                  type="text" 
-                                  className={styles.input} 
-                                  value={editMemberImage} 
-                                  onChange={e => setEditMemberImage(e.target.value)} 
-                                  placeholder="Image URL / Drive ID"
-                                  style={{ flex: 1 }}
-                                />
-                                <button className={styles.btnPrimary} onClick={handleSaveMember}>Simpan</button>
-                                <button className={styles.btnSecondary} onClick={() => setEditingMember(null)} style={{ border: 'none', background: 'transparent', color: '#a1a1aa', cursor: 'pointer' }}>Batal</button>
+                                <input type="text" className={styles.input} value={editMemberName} onChange={e => setEditMemberName(e.target.value)} placeholder="Nama Lengkap" style={{ flex: 1 }} />
+                                <input type="text" className={styles.input} value={editMemberImage} onChange={e => setEditMemberImage(e.target.value)} placeholder="Image URL / Drive ID" style={{ flex: 1 }} />
+                                <button className={styles.btnPrimary} onClick={handleSaveEdit}>Simpan</button>
+                                <button className={styles.btnSecondary} onClick={() => setEditingTarget(null)} style={{ border: 'none', background: 'transparent', color: '#a1a1aa', cursor: 'pointer' }}>Batal</button>
                               </div>
                             </td>
-                          </tr>
-                        );
-                      }
-                      
-                      return (
-                        <tr key={idx}>
-                          <td>{m.name}</td>
-                          <td style={{ textAlign: 'right', display: 'flex', justifyContent: 'flex-end', gap: '0.5rem' }}>
-                            <button 
-                              className={styles.btnSecondary} 
-                              onClick={() => startEditMember(div.id, idx, m.name, m.image || '')}
-                              style={{ border: '1px solid #52525b', background: 'transparent', color: '#fafafa', padding: '0.25rem 0.75rem', borderRadius: '4px', fontSize: '0.75rem', cursor: 'pointer' }}
-                            >
-                              Edit
-                            </button>
-                            <button className={styles.btnDanger} onClick={() => handleRemoveMember(div.id, idx)}>Hapus</button>
-                          </td>
+                          ) : (
+                            <>
+                              <td>{role.name}</td>
+                              <td style={{ textAlign: 'right', display: 'flex', justifyContent: 'flex-end', gap: '0.5rem' }}>
+                                <button className={styles.btnSecondary} onClick={() => startEdit('leadership', roleIdx.toString(), 0, role.name!, role.image || '')} style={{ border: '1px solid #52525b', background: 'transparent', color: '#fafafa', padding: '0.25rem 0.75rem', borderRadius: '4px', fontSize: '0.75rem', cursor: 'pointer' }}>Edit</button>
+                              </td>
+                            </>
+                          )}
                         </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            ))}
+                      )}
+                      
+                      {role.members?.map((m, idx) => (
+                        <tr key={idx}>
+                          {editingTarget?.type === 'leadership-member' && editingTarget.id === roleIdx.toString() && editingTarget.idx === idx ? (
+                            <td colSpan={2}>
+                              <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                                <input type="text" className={styles.input} value={editMemberName} onChange={e => setEditMemberName(e.target.value)} placeholder="Nama Lengkap" style={{ flex: 1 }} />
+                                <input type="text" className={styles.input} value={editMemberImage} onChange={e => setEditMemberImage(e.target.value)} placeholder="Image URL / Drive ID" style={{ flex: 1 }} />
+                                <button className={styles.btnPrimary} onClick={handleSaveEdit}>Simpan</button>
+                                <button className={styles.btnSecondary} onClick={() => setEditingTarget(null)} style={{ border: 'none', background: 'transparent', color: '#a1a1aa', cursor: 'pointer' }}>Batal</button>
+                              </div>
+                            </td>
+                          ) : (
+                            <>
+                              <td>{m.name}</td>
+                              <td style={{ textAlign: 'right', display: 'flex', justifyContent: 'flex-end', gap: '0.5rem' }}>
+                                <button className={styles.btnSecondary} onClick={() => startEdit('leadership-member', roleIdx.toString(), idx, m.name, m.image || '')} style={{ border: '1px solid #52525b', background: 'transparent', color: '#fafafa', padding: '0.25rem 0.75rem', borderRadius: '4px', fontSize: '0.75rem', cursor: 'pointer' }}>Edit</button>
+                                <button className={styles.btnDanger} onClick={() => handleRemovePerson('leadership-member', roleIdx.toString(), idx)}>Hapus</button>
+                              </td>
+                            </>
+                          )}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ))}
+            </div>
+
+            <div>
+              <h3 style={{ fontSize: '1.25rem', color: 'var(--osmis-green)', marginBottom: '1rem' }}>KEPALA & ANGGOTA DIVISI</h3>
+              {data.organization.divisions.map(div => (
+                <div key={div.id} style={{ marginBottom: '2.5rem' }}>
+                  <h4 style={{ fontSize: '1rem', borderBottom: '1px solid #27272a', paddingBottom: '0.5rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <img src={div.icon} alt={div.name} width={24} height={24} style={{ filter: 'brightness(0) invert(1)' }} />
+                    {div.name}
+                  </h4>
+                  <table className={styles.table}>
+                    <tbody>
+                      {/* HEADS */}
+                      {div.heads?.map((h, idx) => (
+                        <tr key={`head-${idx}`}>
+                          {editingTarget?.type === 'head' && editingTarget.id === div.id && editingTarget.idx === idx ? (
+                            <td colSpan={2}>
+                              <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                                <input type="text" className={styles.input} value={editMemberName} onChange={e => setEditMemberName(e.target.value)} placeholder="Nama Kepala" style={{ flex: 1 }} />
+                                <input type="text" className={styles.input} value={editMemberImage} onChange={e => setEditMemberImage(e.target.value)} placeholder="Image URL / Drive ID" style={{ flex: 1 }} />
+                                <button className={styles.btnPrimary} onClick={handleSaveEdit}>Simpan</button>
+                                <button className={styles.btnSecondary} onClick={() => setEditingTarget(null)} style={{ border: 'none', background: 'transparent', color: '#a1a1aa', cursor: 'pointer' }}>Batal</button>
+                              </div>
+                            </td>
+                          ) : (
+                            <>
+                              <td>
+                                <span style={{ color: 'var(--osmis-yellow)', fontSize: '0.7rem', border: '1px solid var(--osmis-yellow)', padding: '2px 4px', borderRadius: '4px', marginRight: '0.5rem' }}>KEPALA</span>
+                                {h.name}
+                              </td>
+                              <td style={{ textAlign: 'right', display: 'flex', justifyContent: 'flex-end', gap: '0.5rem' }}>
+                                <button className={styles.btnSecondary} onClick={() => startEdit('head', div.id, idx, h.name, h.image || '')} style={{ border: '1px solid #52525b', background: 'transparent', color: '#fafafa', padding: '0.25rem 0.75rem', borderRadius: '4px', fontSize: '0.75rem', cursor: 'pointer' }}>Edit</button>
+                                <button className={styles.btnDanger} onClick={() => handleRemovePerson('head', div.id, idx)}>Hapus</button>
+                              </td>
+                            </>
+                          )}
+                        </tr>
+                      ))}
+                      
+                      {/* MEMBERS */}
+                      {div.members.map((m, idx) => (
+                        <tr key={`member-${idx}`}>
+                          {editingTarget?.type === 'member' && editingTarget.id === div.id && editingTarget.idx === idx ? (
+                            <td colSpan={2}>
+                              <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                                <input type="text" className={styles.input} value={editMemberName} onChange={e => setEditMemberName(e.target.value)} placeholder="Nama Lengkap" style={{ flex: 1 }} />
+                                <input type="text" className={styles.input} value={editMemberImage} onChange={e => setEditMemberImage(e.target.value)} placeholder="Image URL / Drive ID" style={{ flex: 1 }} />
+                                <button className={styles.btnPrimary} onClick={handleSaveEdit}>Simpan</button>
+                                <button className={styles.btnSecondary} onClick={() => setEditingTarget(null)} style={{ border: 'none', background: 'transparent', color: '#a1a1aa', cursor: 'pointer' }}>Batal</button>
+                              </div>
+                            </td>
+                          ) : (
+                            <>
+                              <td>{m.name}</td>
+                              <td style={{ textAlign: 'right', display: 'flex', justifyContent: 'flex-end', gap: '0.5rem' }}>
+                                <button className={styles.btnSecondary} onClick={() => startEdit('member', div.id, idx, m.name, m.image || '')} style={{ border: '1px solid #52525b', background: 'transparent', color: '#fafafa', padding: '0.25rem 0.75rem', borderRadius: '4px', fontSize: '0.75rem', cursor: 'pointer' }}>Edit</button>
+                                <button className={styles.btnDanger} onClick={() => handleRemovePerson('member', div.id, idx)}>Hapus</button>
+                              </td>
+                            </>
+                          )}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ))}
+            </div>
           </div>
         );
 
