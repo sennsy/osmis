@@ -45,7 +45,7 @@ export default function TikTokFeed({ videos, initialIndex, onClose }: { videos: 
                 Using the uc?export=download hack for Drive videos. */}
             <div className={styles.videoWrapper} style={{ position: 'relative', width: '100%', height: '100%' }}>
               <video 
-                src={`/api/drive/video/${video.id}`}
+                src={`https://drive.google.com/uc?export=download&id=${video.id}`}
                 className={styles.feedVideo}
                 autoPlay={index === currentIndex}
                 loop
