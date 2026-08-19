@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/logo_utama.png">
     <title>HTS - Hari Tanpa Spek</title>
     <style>
         body {
@@ -28,8 +29,10 @@
         #gameWrapper {
             width: 800px;
             height: 300px;
-            position: relative;
-            transform-origin: center center;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform-origin: top left;
         }
 
         #gameCanvas {
@@ -212,7 +215,13 @@
             const scaleY = window.innerHeight / 300;
             const scale = Math.min(scaleX, scaleY) * 0.95;
             
+            // To properly center it when scaling from top left:
+            const scaledWidth = 800 * scale;
+            const scaledHeight = 300 * scale;
+            wrapper.style.left = `calc(50% - ${scaledWidth / 2}px)`;
+            wrapper.style.top = `calc(50% - ${scaledHeight / 2}px)`;
             wrapper.style.transform = `scale(${scale})`;
+            wrapper.style.transformOrigin = "top left";
         }
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
