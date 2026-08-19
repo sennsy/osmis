@@ -12,7 +12,7 @@ import styles from './Navbar.module.css';
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { theme, setTheme } = useTheme();
+  const { theme, setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const { language, setLanguage, t } = useLanguage();
   const pathname = usePathname();
@@ -81,11 +81,14 @@ export default function Navbar() {
               <span className="mono-font">{t.langName}</span>
             </button>
             <button 
-              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} 
+              onClick={() => {
+                const current = theme === 'system' ? resolvedTheme : theme;
+                setTheme(current === 'dark' ? 'light' : 'dark');
+              }} 
               className={styles.iconBtn}
               aria-label="Toggle Theme"
             >
-              {mounted && (theme === 'dark' ? <Moon size={16} /> : <Sun size={16} />)}
+              {mounted && ((theme === 'system' ? resolvedTheme : theme) === 'dark' ? <Moon size={16} /> : <Sun size={16} />)}
             </button>
           </div>
         </div>
@@ -113,8 +116,11 @@ export default function Navbar() {
             <button onClick={handleLanguageChange} className={styles.iconBtn}>
               <Globe size={18} /> <span className="mono-font">{t.langName}</span>
             </button>
-            <button onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} className={styles.iconBtn}>
-              {mounted && (theme === 'dark' ? <><Moon size={18} /> Dark</> : <><Sun size={18} /> Light</>)}
+            <button onClick={() => {
+              const current = theme === 'system' ? resolvedTheme : theme;
+              setTheme(current === 'dark' ? 'light' : 'dark');
+            }} className={styles.iconBtn}>
+              {mounted && ((theme === 'system' ? resolvedTheme : theme) === 'dark' ? <><Moon size={18} /> Dark</> : <><Sun size={18} /> Light</>)}
             </button>
           </div>
         </div>
