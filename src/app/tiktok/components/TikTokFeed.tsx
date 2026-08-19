@@ -44,24 +44,15 @@ export default function TikTokFeed({ videos, initialIndex, onClose }: { videos: 
             {/* We try to use HTML5 video for autoplay and seamless loop. 
                 Using the uc?export=download hack for Drive videos. */}
             <div className={styles.videoWrapper} style={{ position: 'relative', width: '100%', height: '100%' }}>
-              <video 
-                src={`https://drive.google.com/uc?export=download&id=${video.id}`}
+              <iframe
+                src={`https://drive.google.com/file/d/${video.id}/preview?autoplay=1`}
+                width="100%"
+                height="100%"
+                allow="autoplay"
+                frameBorder="0"
                 className={styles.feedVideo}
-                autoPlay={index === currentIndex}
-                loop
-                playsInline
-                muted={false}
-                controls={false}
-                onClick={(e) => {
-                  const v = e.currentTarget;
-                  if (v.paused) v.play();
-                  else v.pause();
-                }}
-                onWaiting={(e) => e.currentTarget.parentElement?.classList.add(styles.isLoading)}
-                onPlaying={(e) => e.currentTarget.parentElement?.classList.remove(styles.isLoading)}
-                onCanPlay={(e) => e.currentTarget.parentElement?.classList.remove(styles.isLoading)}
+                style={{ border: 'none' }}
               />
-              <div className={styles.videoLoader}></div>
             </div>
             
             {/* TikTok Overlay UI */}
