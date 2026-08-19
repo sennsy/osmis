@@ -44,7 +44,7 @@ export default function TikTokFeed({ videos, initialIndex, onClose }: { videos: 
             {/* We try to use HTML5 video for autoplay and seamless loop. 
                 Using the uc?export=download hack for Drive videos. */}
             <video 
-              src={`https://drive.google.com/uc?export=download&id=${video.id}`}
+              src={`/api/drive/video/${video.id}`}
               className={styles.feedVideo}
               autoPlay={index === currentIndex}
               loop
