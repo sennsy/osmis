@@ -71,7 +71,7 @@ export default function TikTokPage() {
 
         <p className={styles.bio}>
           Akun resmi OSMIS (Organisasi Santri Ma'had Imam Syafi'i)<br/>
-          Angkatan 10
+          Angkatan 11
         </p>
 
         <div className={styles.actionButtons}>
