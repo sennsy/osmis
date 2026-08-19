@@ -27,9 +27,15 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
   }
 
   try {
+    const rangeHeader = request.headers.get("range");
+    const driveHeaders: Record<string, string> = {};
+    if (rangeHeader) {
+      driveHeaders["Range"] = rangeHeader;
+    }
+
     const response = await drive.files.get(
       { fileId: resolvedParams.id, alt: "media", auth: authClient },
-      { responseType: "stream" }
+      { responseType: "stream", headers: driveHeaders, validateStatus: (status) => status >= 200 && status < 300 }
     );
 
     // Node.js Readable stream to Web ReadableStream
@@ -41,12 +47,15 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       }
     });
 
+    const responseHeaders = new Headers();
+    if (response.headers["content-type"]) responseHeaders.set("Content-Type", response.headers["content-type"]);
+    if (response.headers["content-length"]) responseHeaders.set("Content-Length", response.headers["content-length"]);
+    if (response.headers["content-range"]) responseHeaders.set("Content-Range", response.headers["content-range"]);
+    responseHeaders.set("Accept-Ranges", "bytes");
+
     return new NextResponse(stream, {
-      headers: {
-        "Content-Type": response.headers["content-type"] || "video/mp4",
-        "Accept-Ranges": "bytes",
-        "Content-Length": response.headers["content-length"] || "",
-      }
+      status: response.status,
+      headers: responseHeaders,
     });
   } catch (error: any) {
     console.error("Video proxy error:", error);
