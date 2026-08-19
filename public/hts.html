@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTS - Hari Tanpa Spek</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f7f7f7;
+            overflow: hidden;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #535353;
+            transition: background-color 2s ease;
+        }
+
+        body.sad-mode {
+            background-color: #1a1a1a;
+            color: #a0a0a0;
+        }
+
+        #gameWrapper {
+            width: 800px;
+            height: 300px;
+            position: relative;
+            transform-origin: center center;
+        }
+
+        #gameCanvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        #uiLayer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        #messageText {
+            font-size: 20px;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 2s ease-in-out;
+            margin-top: -100px;
+            color: #535353;
+        }
+
+        body.sad-mode #messageText {
+            color: #fff;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+        }
+
+        .fade-in {
+            opacity: 1 !important;
+        }
+
+        #gameOverScreen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0);
+            transition: background-color 3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 20;
+            pointer-events: none;
+        }
+
+        #gameOverScreen.active {
+            background-color: rgba(0, 0, 0, 1);
+            pointer-events: auto;
+        }
+
+        #gameOverText {
+            font-size: 20px;
+            text-align: center;
+            max-width: 600px;
+            line-height: 1.6;
+            opacity: 0;
+            transition: opacity 2s ease 1s;
+            padding: 20px;
+            color: #ccc;
+        }
+
+        #gameOverScreen.active #gameOverText {
+            opacity: 1;
+        }
+
+        #restartBtn {
+            margin-top: 30px;
+            padding: 12px 24px;
+            background-color: transparent;
+            border: 1px solid #555;
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            opacity: 0;
+            transition: opacity 2s ease 2s, background-color 0.3s, border-color 0.3s;
+            pointer-events: none;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        #gameOverScreen.active #restartBtn {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        #restartBtn:hover {
+            background-color: #fff;
+            color: #000;
+            border-color: #fff;
+        }
+
+        #scoreDisplay {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 24px;
+            font-weight: bold;
+            z-index: 5;
+            letter-spacing: 2px;
+        }
+
+        /* Mobile Back Button */
+        #backToHubBtn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 30;
+            color: #535353;
+            text-decoration: none;
+            font-size: 14px;
+            border: 1px solid #535353;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: transparent;
+            transition: all 0.3s;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body.sad-mode #backToHubBtn {
+            color: white;
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        #backToHubBtn:hover {
+            background: #535353;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+
+    <a href="index.html" id="backToHubBtn">← Kembali ke Hub</a>
+
+    <div id="gameWrapper">
+        <canvas id="gameCanvas" width="800" height="300"></canvas>
+
+        <div id="scoreDisplay">HI 00000 00000</div>
+
+        <div id="uiLayer">
+            <div id="messageText" class="hidden">Pencet untuk kembali atau menyerah</div>
+        </div>
+
+        <div id="gameOverScreen" class="hidden">
+            <div id="gameOverText">
+                "Pada akhirnya, sejauh apa pun kamu berlari dan sekeras apa pun kamu menghindar...<br>
+                Tidak Semua Orang yang Kamu Sukai Itu Menyukaimu Kembali."<br><br>
+                <i>Biarkan hujan menghapus jejak yang tak pernah bisa kau raih.</i>
+            </div>
+            <button id="restartBtn">Mulai Lagi</button>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        const messageText = document.getElementById('messageText');
+        const gameOverScreen = document.getElementById('gameOverScreen');
+        const restartBtn = document.getElementById('restartBtn');
+
+        function resizeCanvas() {
+            const wrapper = document.getElementById('gameWrapper');
+            const scaleX = window.innerWidth / 800;
+            const scaleY = window.innerHeight / 300;
+            const scale = Math.min(scaleX, scaleY) * 0.95;
+            
+            wrapper.style.transform = `scale(${scale})`;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        const bgm = new Audio();
+        bgm.src = "dino sad.mp3";
+        bgm.loop = true;
+
+        const dinoImg = new Image();
+        dinoImg.src = 'dino.png';
+
+        const SCORE_SPEED = 38.45;
+        const TARGET_AUDIO_SCORE = 1124;
+        const TARGET_CLIMAX_SCORE = 1346;
+        const GRAVITY = 2500;
+        const JUMP_FORCE = 800;
+        const GROUND_Y = 250;
+
+        const STATES = { PLAYING: 0, HEARTBREAK: 1, RETREATING: 2, GAMEOVER: 3 };
+
+        function formatScore(score) {
+            return Math.floor(score).toString().padStart(5, '0');
+        }
+
+        class Game {
+            constructor() { this.reset(); }
+            reset() {
+                this.state = STATES.PLAYING;
+                this.score = 0;
+                this.highScore = localStorage.getItem('hts_highscore') || 0;
+                this.lastTime = performance.now();
+                this.scrollSpeed = 500;
+                this.audioPlayed = false;
+                this.climaxTriggered = false;
+                this.canRetreat = false;
+
+                this.player = {
+                    x: 50,
+                    y: GROUND_Y - 44,
+                    width: 40,
+                    height: 44,
+                    vy: 0,
+                    isJumping: false,
+                    facingLeft: false
+                };
+
+                this.obstacles = [];
+                this.obstacleTimer = 0;
+                this.particles = [];
+
+                this.couple = { x: 900, y: GROUND_Y - 44, width: 40, height: 44, visible: false };
+
+                bgm.pause();
+                bgm.currentTime = 0;
+
+                document.getElementById('gameOverText').innerHTML = `
+            "Pada akhirnya, sejauh apa pun kamu berlari dan sekeras apa pun kamu menghindar...<br>
+            Tidak Semua Orang yang Kamu Sukai Itu Menyukaimu Kembali."<br><br>
+            <i>Biarkan hujan menghapus jejak yang tak pernah bisa kau raih.</i>
+        `;
+                document.body.classList.remove('sad-mode');
+                messageText.classList.add('hidden');
+                messageText.classList.remove('fade-in');
+                gameOverScreen.classList.add('hidden');
+                gameOverScreen.classList.remove('active');
+            }
+
+            jump() {
+                if (this.state === STATES.PLAYING) {
+                    if (!this.player.isJumping) {
+                        this.player.vy = -JUMP_FORCE;
+                        this.player.isJumping = true;
+                    }
+                } else if (this.state === STATES.HEARTBREAK) {
+                    this.triggerRetreat();
+                }
+            }
+
+            triggerRetreat() {
+                if (this.state === STATES.HEARTBREAK && this.canRetreat) {
+                    this.state = STATES.RETREATING;
+                    this.player.facingLeft = true;
+                    messageText.classList.remove('fade-in');
+                    setTimeout(() => messageText.classList.add('hidden'), 2000);
+                }
+            }
+
+            spawnObstacle() {
+                this.obstacles.push({
+                    x: canvas.width + 50,
+                    y: GROUND_Y - 40, // Cactus height
+                    width: 20,
+                    height: 40,
+                    passed: false
+                });
+            }
+
+            spawnRain() {
+                for (let i = 0; i < 150; i++) {
+                    this.particles.push({
+                        x: Math.random() * canvas.width,
+                        y: Math.random() * canvas.height,
+                        length: Math.random() * 20 + 10,
+                        speed: Math.random() * 500 + 300
+                    });
+                }
+            }
+
+            updateRain(dt) {
+                this.particles.forEach(p => {
+                    p.y += p.speed * dt;
+                    p.x -= p.speed * 0.1 * dt;
+                    if (p.y > canvas.height) {
+                        p.y = -20;
+                        p.x = Math.random() * canvas.width + 50;
+                    }
+                });
+            }
+
+            update(dt) {
+                if (this.state === STATES.GAMEOVER) return;
+
+                if (this.state === STATES.PLAYING) {
+                    this.score += SCORE_SPEED * dt;
+                    if (this.score > this.highScore) {
+                        this.highScore = this.score;
+                        localStorage.setItem('hts_highscore', this.highScore);
+                    }
+                    scoreDisplay.innerText = `HI ${formatScore(this.highScore)}  ${formatScore(this.score)}`;
+
+                    if (this.score >= TARGET_AUDIO_SCORE && !this.audioPlayed) {
+                        this.audioPlayed = true;
+                        bgm.volume = 0;
+                        bgm.play().then(() => {
+                            let vol = 0;
+                            const fadeInterval = setInterval(() => {
+                                vol += 0.05;
+                                if (vol >= 1) {
+                                    bgm.volume = 1;
+                                    clearInterval(fadeInterval);
+                                } else {
+                                    bgm.volume = vol;
+                                }
+                            }, 50); // 50ms * 20 steps = 1000ms
+                        }).catch(e => console.log("Audio blocked."));
+                    }
+
+                    if (this.score >= TARGET_CLIMAX_SCORE && !this.climaxTriggered) {
+                        this.score = TARGET_CLIMAX_SCORE;
+                        scoreDisplay.innerText = `HI ${formatScore(this.highScore)}  ${formatScore(TARGET_CLIMAX_SCORE)}`;
+                        this.state = STATES.HEARTBREAK;
+                        this.climaxTriggered = true;
+
+                        this.player.y = GROUND_Y - this.player.height;
+                        this.player.vy = 0;
+                        this.player.isJumping = false;
+
+                        document.body.classList.add('sad-mode');
+                        this.spawnRain();
+                        this.couple.visible = true;
+                        this.couple.x = 400; // spawn closer to player
+
+                        messageText.classList.remove('hidden');
+                        setTimeout(() => messageText.classList.add('fade-in'), 100);
+
+                        this.canRetreat = false;
+                        setTimeout(() => { this.canRetreat = true; }, 5000);
+                        return;
+                    }
+
+                    this.player.vy += GRAVITY * dt;
+                    this.player.y += this.player.vy * dt;
+                    if (this.player.y >= GROUND_Y - this.player.height) {
+                        this.player.y = GROUND_Y - this.player.height;
+                        this.player.vy = 0;
+                        this.player.isJumping = false;
+                    }
+
+                    this.obstacleTimer += dt;
+                    if (this.obstacleTimer > 0.8 + Math.random() * 0.8) {
+                        this.spawnObstacle();
+                        this.obstacleTimer = 0;
+                    }
+
+                    for (let i = this.obstacles.length - 1; i >= 0; i--) {
+                        let obs = this.obstacles[i];
+                        obs.x -= this.scrollSpeed * dt;
+
+                        if (this.player.x < obs.x + obs.width - 10 &&
+                            this.player.x + this.player.width - 10 > obs.x &&
+                            this.player.y < obs.y + obs.height - 10 &&
+                            this.player.y + this.player.height - 10 > obs.y) {
+
+                            this.state = STATES.GAMEOVER;
+                            document.getElementById('gameOverText').innerHTML = "<h1>GAME OVER</h1>";
+                            gameOverScreen.classList.remove('hidden');
+                            setTimeout(() => gameOverScreen.classList.add('active'), 100);
+                            return;
+                        }
+
+                        if (obs.x + obs.width < 0) {
+                            this.obstacles.splice(i, 1);
+                        }
+                    }
+                } else if (this.state === STATES.HEARTBREAK) {
+                    this.updateRain(dt);
+                } else if (this.state === STATES.RETREATING) {
+                    this.updateRain(dt);
+                    this.player.x -= 20 * dt; // slow walk backwards
+                    this.player.y = GROUND_Y - this.player.height;
+
+                    this.player.y += Math.sin(Date.now() / 150) * 2; // slower bobbing
+
+                    if (this.player.x <= -this.player.width) {
+                        this.state = STATES.GAMEOVER;
+                        gameOverScreen.classList.remove('hidden');
+                        setTimeout(() => gameOverScreen.classList.add('active'), 100);
+                        let fadeAudio = setInterval(() => {
+                            if (bgm.volume > 0.05) bgm.volume -= 0.05;
+                            else {
+                                bgm.pause();
+                                bgm.volume = 1;
+                                clearInterval(fadeAudio);
+                            }
+                        }, 200);
+                    }
+                }
+            }
+
+            draw() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                ctx.fillStyle = this.state === STATES.PLAYING ? '#535353' : '#333';
+                ctx.fillRect(0, GROUND_Y, canvas.width, 1);
+
+                ctx.fillStyle = this.state === STATES.PLAYING ? '#535353' : '#333';
+                for (let i = 0; i < 20; i++) {
+                    ctx.fillRect((i * 40) + ((this.state === STATES.PLAYING ? -Date.now() * 0.5 : 0) % 40), GROUND_Y + 5 + (i % 3) * 2, 2, 2);
+                }
+
+                ctx.fillStyle = this.state === STATES.PLAYING ? '#535353' : '#222';
+                this.obstacles.forEach(obs => {
+                    ctx.fillRect(obs.x + 6, obs.y, 8, obs.height);
+                    ctx.fillRect(obs.x, obs.y + 10, 6, 12);
+                    ctx.fillRect(obs.x + 14, obs.y + 5, 6, 12);
+                    ctx.fillRect(obs.x, obs.y + 22, 20, 4);
+                });
+
+                ctx.save();
+                ctx.translate(this.player.x + this.player.width / 2, this.player.y + this.player.height / 2);
+                if (this.player.facingLeft) {
+                    ctx.scale(-1, 1);
+                    if (this.state === STATES.RETREATING) {
+                        ctx.rotate(-Math.PI / 8);
+                    }
+                }
+
+                if (dinoImg.complete && dinoImg.naturalWidth !== 0) {
+                    // Adjust drawing to keep aspect ratio or just fill rect.
+                    // dino.png looks like a square, drawing it as 44x44
+                    ctx.drawImage(dinoImg, -22, -22, 44, 44);
+                } else {
+                    ctx.fillStyle = this.state === STATES.PLAYING ? '#535353' : '#444';
+                    ctx.fillRect(-20, -22, 40, 44);
+
+                    const bgColor = this.state === STATES.PLAYING ? '#f7f7f7' : '#1a1a1a';
+                    ctx.fillStyle = bgColor;
+                    ctx.fillRect(-20, -22, 15, 15); // neck
+                    ctx.fillRect(-5, 10, 10, 12); // leg gap
+                    ctx.fillRect(-20, 5, 10, 17); // under tail
+                    ctx.fillRect(10, -10, 10, 4); // mouth
+
+                    ctx.fillRect(5, -15, 4, 4); // eye
+                }
+
+                ctx.restore();
+
+                if (this.couple.visible) {
+                    if (dinoImg.complete && dinoImg.naturalWidth !== 0) {
+                        // Male Dino (facing right)
+                        ctx.drawImage(dinoImg, this.couple.x, GROUND_Y - 44, 44, 44);
+
+                        // Female Dino (facing left, pink bow)
+                        ctx.save();
+                        ctx.translate(this.couple.x + 50 + 22, GROUND_Y - 44 + 22);
+                        ctx.scale(-1, 1);
+                        ctx.drawImage(dinoImg, -22, -22, 44, 44);
+
+                        // Pink Bow
+                        ctx.fillStyle = '#ffb6c1';
+                        ctx.fillRect(-15, -24, 8, 8); // left loop
+                        ctx.fillRect(-1, -24, 8, 8); // right loop
+                        ctx.fillStyle = '#ff69b4';
+                        ctx.fillRect(-5, -22, 4, 4); // center knot
+                        ctx.restore();
+                    }
+
+                    ctx.fillStyle = '#e74c3c';
+                    ctx.font = '20px sans-serif';
+                    ctx.fillText('❤', this.couple.x + 20, GROUND_Y - 60);
+                }
+
+                if (this.particles.length > 0) {
+                    ctx.strokeStyle = 'rgba(200, 200, 200, 0.4)';
+                    ctx.lineWidth = 1;
+                    ctx.beginPath();
+                    this.particles.forEach(p => {
+                        ctx.moveTo(p.x, p.y);
+                        ctx.lineTo(p.x - p.length * 0.1, p.y + p.length);
+                    });
+                    ctx.stroke();
+                }
+            }
+
+            loop(timestamp) {
+                if (!this.lastTime) this.lastTime = timestamp;
+                const dt = (timestamp - this.lastTime) / 1000;
+                this.lastTime = timestamp;
+
+                if (dt < 0.1) {
+                    this.update(dt);
+                    this.draw();
+                }
+                requestAnimationFrame((ts) => this.loop(ts));
+            }
+        }
+
+        const game = new Game();
+        requestAnimationFrame((ts) => game.loop(ts));
+
+        function handleInput(e) {
+            if (e.code === 'Space' || e.type === 'mousedown' || e.type === 'touchstart') {
+                e.preventDefault();
+                game.jump();
+            }
+        }
+
+        window.addEventListener('keydown', handleInput);
+        canvas.addEventListener('mousedown', handleInput);
+        canvas.addEventListener('touchstart', handleInput, { passive: false });
+
+        restartBtn.addEventListener('click', () => {
+            game.reset();
+        });
+
+    </script>
+</body>
+
+</html>
