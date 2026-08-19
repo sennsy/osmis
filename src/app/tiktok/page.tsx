@@ -50,7 +50,7 @@ export default function TikTokPage() {
           <img src="/logo_utama.png" alt="Profile" className={styles.avatar} />
         </div>
         <h1 className={styles.username}>@{data.socialMedia?.tiktok || 'osmis_official'}</h1>
-        <h2 className={styles.displayName}>{data.organization.name}</h2>
+        <h2 className={styles.displayName}>OSMIS Official</h2>
         
         <div className={styles.stats}>
           <div className={styles.statItem}>
@@ -68,7 +68,7 @@ export default function TikTokPage() {
         </div>
 
         <p className={styles.bio}>
-          Akun resmi {data.organization.name} ({data.organization.nameAr})<br/>
+          Akun resmi OSMIS (Organisasi Santri Ma'had Imam Syafi'i)<br/>
           Angkatan 10
         </p>
 
