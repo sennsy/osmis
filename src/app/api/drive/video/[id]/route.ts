@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { google } from "googleapis";
 import { getSession } from "../../../../../lib/session";
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const resolvedParams = await params;
   const session = await getSession();
   
   const drive = google.drive({ version: "v3" });
@@ -27,7 +28,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 
   try {
     const response = await drive.files.get(
-      { fileId: params.id, alt: "media", auth: authClient },
+      { fileId: resolvedParams.id, alt: "media", auth: authClient },
       { responseType: "stream" }
     );
 
