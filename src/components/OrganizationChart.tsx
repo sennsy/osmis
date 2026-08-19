@@ -2,18 +2,20 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X } from 'lucide-react';
+import { X, Maximize2 } from 'lucide-react';
 import { useLanguage } from './LanguageProvider';
 import { useOsmisData } from '../lib/storage';
 import styles from './OrganizationChart.module.css';
 import { getImageUrl } from '../utils/driveImages';
 import { toArabicNumerals } from '../utils/arabicNumerals';
+import PhotoModal from './PhotoModal';
 
 export default function OrganizationChart() {
   const { t, language } = useLanguage();
   const { data } = useOsmisData();
   const organization = data.organization;
   const [modalLeaderIdx, setModalLeaderIdx] = useState<number | null>(null);
+  const [photoModalData, setPhotoModalData] = useState<{image: string, name: string, role: string} | null>(null);
 
   const activeLeader = modalLeaderIdx !== null ? organization.leadership[modalLeaderIdx] : null;
 
@@ -45,7 +47,17 @@ export default function OrganizationChart() {
                   <p className={`${styles.leaderTitle} mono-font`}>{leader.titleKey ? (t as any)[leader.titleKey] : leader.title}</p>
                   {leader.name && (
                     <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginTop: '8px' }}>
-                      {leader.image && <img src={getImageUrl(leader.image)} alt={leader.name} style={{ width: '64px', height: '64px', borderRadius: '50%', objectFit: 'cover', objectPosition: 'top', border: '1px solid var(--border-color)' }} onError={(e) => (e.currentTarget.style.display = 'none')} />}
+                      {leader.image && (
+                        <div 
+                          style={{ position: 'relative', cursor: 'pointer' }}
+                          onClick={() => setPhotoModalData({ image: leader.image, name: language === 'ar' && leader.nameAr ? leader.nameAr : leader.name, role: leader.titleKey ? (t as any)[leader.titleKey] : leader.title })}
+                        >
+                          <img src={getImageUrl(leader.image)} alt={leader.name} style={{ width: '64px', height: '64px', borderRadius: '50%', objectFit: 'cover', objectPosition: 'top', border: '1px solid var(--border-color)' }} onError={(e) => (e.currentTarget.style.display = 'none')} />
+                          <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(0,0,0,0.4)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0, transition: 'opacity 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.opacity = '1'} onMouseLeave={(e) => e.currentTarget.style.opacity = '0'}>
+                            <Maximize2 size={20} color="#fff" />
+                          </div>
+                        </div>
+                      )}
                       <h5 className={`${styles.leaderName} display-font`} style={{ margin: 0 }}>{language === 'ar' && leader.nameAr ? leader.nameAr : leader.name}</h5>
                     </div>
                   )}
@@ -53,7 +65,17 @@ export default function OrganizationChart() {
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '8px' }}>
                       {leader.members.map((m: any, i: number) => (
                         <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                          {m.image && <img src={getImageUrl(m.image)} alt={m.name} style={{ width: '48px', height: '48px', borderRadius: '50%', objectFit: 'cover', objectPosition: 'top', border: '1px solid var(--border-color)' }} onError={(e) => (e.currentTarget.style.display = 'none')} />}
+                          {m.image && (
+                            <div 
+                              style={{ position: 'relative', cursor: 'pointer' }}
+                              onClick={() => setPhotoModalData({ image: m.image, name: language === 'ar' && m.nameAr ? m.nameAr : m.name, role: leader.titleKey ? (t as any)[leader.titleKey] : leader.title })}
+                            >
+                              <img src={getImageUrl(m.image)} alt={m.name} style={{ width: '48px', height: '48px', borderRadius: '50%', objectFit: 'cover', objectPosition: 'top', border: '1px solid var(--border-color)' }} onError={(e) => (e.currentTarget.style.display = 'none')} />
+                              <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(0,0,0,0.4)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0, transition: 'opacity 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.opacity = '1'} onMouseLeave={(e) => e.currentTarget.style.opacity = '0'}>
+                                <Maximize2 size={16} color="#fff" />
+                              </div>
+                            </div>
+                          )}
                           <h5 className={`${styles.leaderName} display-font`} style={{ margin: 0, fontSize: '1.2rem' }}>{language === 'ar' && m.nameAr ? m.nameAr : m.name}</h5>
                         </div>
                       ))}
@@ -136,6 +158,14 @@ export default function OrganizationChart() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <PhotoModal 
+        isOpen={!!photoModalData} 
+        onClose={() => setPhotoModalData(null)} 
+        image={photoModalData?.image || ''} 
+        name={photoModalData?.name || ''} 
+        role={photoModalData?.role} 
+      />
     </section>
   );
 }

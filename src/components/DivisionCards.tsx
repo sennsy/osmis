@@ -2,12 +2,13 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X } from 'lucide-react';
+import { X, Maximize2 } from 'lucide-react';
 import { useLanguage } from './LanguageProvider';
 import { useOsmisData } from '../lib/storage';
 import styles from './DivisionCards.module.css';
 import { getImageUrl } from '../utils/driveImages';
 import { toArabicNumerals } from '../utils/arabicNumerals';
+import PhotoModal from './PhotoModal';
 
 export default function DivisionCards() {
   const { t, language } = useLanguage();
@@ -16,6 +17,7 @@ export default function DivisionCards() {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [modalDivId, setModalDivId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'programs' | 'rules'>('programs');
+  const [photoModalData, setPhotoModalData] = useState<{image: string, name: string, role: string} | null>(null);
 
   const activeDivForModal = organization.divisions.find((d: any) => d.id === modalDivId);
 
@@ -66,7 +68,17 @@ export default function DivisionCards() {
                           <ul style={{ listStyle: 'none', padding: 0 }}>
                             {div.heads.map((h, i) => (
                               <li key={i} style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
-                                {h.image && <img src={getImageUrl(h.image)} alt={h.name} style={{ width: '48px', height: '48px', borderRadius: '50%', objectFit: 'cover', objectPosition: 'top', border: '1px solid var(--border-color)' }} onError={(e) => (e.currentTarget.style.display = 'none')} />}
+                                {h.image && (
+                                  <div 
+                                    style={{ position: 'relative', cursor: 'pointer' }}
+                                    onClick={(e) => { e.stopPropagation(); setPhotoModalData({ image: h.image, name: language === 'ar' && h.nameAr ? h.nameAr : h.name, role: (t as any).divLeader || "KETUA DIVISI" }); }}
+                                  >
+                                    <img src={getImageUrl(h.image)} alt={h.name} style={{ width: '48px', height: '48px', borderRadius: '50%', objectFit: 'cover', objectPosition: 'top', border: '1px solid var(--border-color)' }} onError={(e) => (e.currentTarget.style.display = 'none')} />
+                                    <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(0,0,0,0.4)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0, transition: 'opacity 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.opacity = '1'} onMouseLeave={(e) => e.currentTarget.style.opacity = '0'}>
+                                      <Maximize2 size={16} color="#fff" />
+                                    </div>
+                                  </div>
+                                )}
                                 <span>{language === 'ar' && h.nameAr ? h.nameAr : h.name}</span>
                               </li>
                             ))}
@@ -79,7 +91,17 @@ export default function DivisionCards() {
                             {div.members.map((m, i) => (
                               <li key={i} style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
                                 <span className="mono-font opacity-50">{language === 'ar' ? toArabicNumerals((i + 1).toString().padStart(2, '0')) : (i + 1).toString().padStart(2, '0')}</span> 
-                                {m.image && <img src={getImageUrl(m.image)} alt={m.name} style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover', objectPosition: 'top', border: '1px solid var(--border-color)' }} onError={(e) => (e.currentTarget.style.display = 'none')} />}
+                                {m.image && (
+                                  <div 
+                                    style={{ position: 'relative', cursor: 'pointer' }}
+                                    onClick={(e) => { e.stopPropagation(); setPhotoModalData({ image: m.image, name: language === 'ar' && m.nameAr ? m.nameAr : m.name, role: (t as any).members || "ANGGOTA" }); }}
+                                  >
+                                    <img src={getImageUrl(m.image)} alt={m.name} style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover', objectPosition: 'top', border: '1px solid var(--border-color)' }} onError={(e) => (e.currentTarget.style.display = 'none')} />
+                                    <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(0,0,0,0.4)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0, transition: 'opacity 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.opacity = '1'} onMouseLeave={(e) => e.currentTarget.style.opacity = '0'}>
+                                      <Maximize2 size={14} color="#fff" />
+                                    </div>
+                                  </div>
+                                )}
                                 <span>{language === 'ar' && m.nameAr ? m.nameAr : m.name}</span>
                               </li>
                             ))}
@@ -198,6 +220,14 @@ export default function DivisionCards() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <PhotoModal 
+        isOpen={!!photoModalData} 
+        onClose={() => setPhotoModalData(null)} 
+        image={photoModalData?.image || ''} 
+        name={photoModalData?.name || ''} 
+        role={photoModalData?.role} 
+      />
     </section>
   );
 }
