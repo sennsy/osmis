@@ -7,7 +7,7 @@ import { organization as initialOrg } from '../data/organization';
 import { periods as initialPeriods } from '../data/periods';
 import { galleryCategories as initialGallery } from '../data/gallery';
 
-const STORAGE_KEY = 'osmis_data_overrides';
+const STORAGE_KEY = 'osmis_data_overrides_v2';
 
 export type OsmisDataOverrides = {
   organization?: typeof initialOrg;
