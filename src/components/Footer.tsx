@@ -45,6 +45,7 @@ export default function Footer() {
   const [isLineVisible, setIsLineVisible] = React.useState(false);
   const [lineActive, setLineActive] = React.useState(false);
   const [isDetailOpen, setIsDetailOpen] = React.useState(false);
+  const [isWebLinksOpen, setIsWebLinksOpen] = React.useState(false);
 
   const currentQuote = quotes[quoteIndex];
 
@@ -184,6 +185,15 @@ export default function Footer() {
                   </a>
                 </li>
                 <li>
+                  <button onClick={() => setIsWebLinksOpen(true)} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0.8, transition: 'opacity 0.2s', background: 'none', border: 'none', color: 'inherit', cursor: 'pointer', padding: 0 }} onMouseOver={(e) => e.currentTarget.style.opacity = '1'} onMouseOut={(e) => e.currentTarget.style.opacity = '0.8'} title="Tautan Web">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <line x1="2" y1="12" x2="22" y2="12"></line>
+                      <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                    </svg>
+                  </button>
+                </li>
+                <li>
                   <a href="mailto:imamsyafiiosmis@gmail.com" target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0.8, transition: 'opacity 0.2s', color: 'inherit' }} onMouseOver={(e) => e.currentTarget.style.opacity = '1'} onMouseOut={(e) => e.currentTarget.style.opacity = '0.8'} title="Email">
                     <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
@@ -232,6 +242,78 @@ export default function Footer() {
             </div>
             <button 
               onClick={() => setIsDetailOpen(false)}
+              style={{
+                padding: '0.75rem 2rem', background: 'var(--text-color)', color: 'var(--bg-color)',
+                border: 'none', borderRadius: '2rem', cursor: 'pointer', fontWeight: 'bold',
+                fontFamily: 'inherit', letterSpacing: '0.05em', transition: 'opacity 0.2s'
+              }}
+              onMouseOver={e => e.currentTarget.style.opacity = '0.9'}
+              onMouseOut={e => e.currentTarget.style.opacity = '1'}
+            >
+              Tutup
+            </button>
+          </div>
+        </div>
+      )}
+
+      {isWebLinksOpen && (
+        <div style={{
+          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, 
+          backgroundColor: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(5px)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          zIndex: 9999, padding: '1rem'
+        }} onClick={() => setIsWebLinksOpen(false)}>
+          <div style={{
+            background: 'var(--card-bg)', border: '1px solid var(--border-color)',
+            padding: '2rem', borderRadius: '1rem', maxWidth: '400px', width: '100%',
+            textAlign: 'center', color: 'var(--text-color)'
+          }} onClick={e => e.stopPropagation()}>
+            <h3 style={{ marginBottom: '1.5rem', fontSize: '1.25rem' }} className="mono-font">Tautan Web Terkait</h3>
+            
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '2rem' }}>
+              <a 
+                href="https://harmatra.netlify.app" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                  padding: '1rem', background: 'var(--bg-color)', borderRadius: '0.5rem',
+                  border: '1px solid var(--border-color)', color: 'inherit', textDecoration: 'none',
+                  transition: 'background 0.2s'
+                }}
+                onMouseOver={e => e.currentTarget.style.background = 'rgba(128,128,128,0.1)'}
+                onMouseOut={e => e.currentTarget.style.background = 'var(--bg-color)'}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+                  <span style={{ fontWeight: 'bold' }}>Web Angkatan</span>
+                </div>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+              </a>
+
+              <a 
+                href="https://isb.ponpes.id/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                  padding: '1rem', background: 'var(--bg-color)', borderRadius: '0.5rem',
+                  border: '1px solid var(--border-color)', color: 'inherit', textDecoration: 'none',
+                  transition: 'background 0.2s'
+                }}
+                onMouseOver={e => e.currentTarget.style.background = 'rgba(128,128,128,0.1)'}
+                onMouseOut={e => e.currentTarget.style.background = 'var(--bg-color)'}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+                  <span style={{ fontWeight: 'bold' }}>Web Pondok</span>
+                </div>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+              </a>
+            </div>
+
+            <button 
+              onClick={() => setIsWebLinksOpen(false)}
               style={{
                 padding: '0.75rem 2rem', background: 'var(--text-color)', color: 'var(--bg-color)',
                 border: 'none', borderRadius: '2rem', cursor: 'pointer', fontWeight: 'bold',
