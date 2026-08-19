@@ -4,12 +4,14 @@ import React, { useState, useEffect } from 'react';
 import { useOsmisData } from '../../lib/storage';
 import styles from './TikTok.module.css';
 
+import TikTokFeed from './components/TikTokFeed';
+
 export default function TikTokPage() {
   const { data, isLoaded } = useOsmisData();
   const [activeTab, setActiveTab] = useState<string>('1');
   const [videos, setVideos] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [playingVideoUrl, setPlayingVideoUrl] = useState<string | null>(null);
+  const [playingIndex, setPlayingIndex] = useState<number | null>(null);
 
   const activeFolder = data.tiktokFolders?.find(f => f.id === activeTab);
 
@@ -97,8 +99,8 @@ export default function TikTokPage() {
         ) : videos.length === 0 ? (
           <div className={styles.emptyState}>Tidak ada video di folder ini.</div>
         ) : (
-          videos.map(video => (
-            <div key={video.id} className={styles.videoCard} onClick={() => setPlayingVideoUrl(video.webViewLink)}>
+          videos.map((video, index) => (
+            <div key={video.id} className={styles.videoCard} onClick={() => setPlayingIndex(index)}>
               {video.thumbnailLink ? (
                 <img src={video.thumbnailLink.replace('=s220', '=s600')} alt={video.name} className={styles.thumbnail} />
               ) : (
@@ -121,18 +123,12 @@ export default function TikTokPage() {
         )}
       </div>
 
-      {playingVideoUrl && (
-        <div className={styles.playerModal} onClick={() => setPlayingVideoUrl(null)}>
-          <button className={styles.closeBtn} onClick={() => setPlayingVideoUrl(null)}>✕</button>
-          <div className={styles.iframeWrapper} onClick={e => e.stopPropagation()}>
-            <iframe 
-              src={playingVideoUrl.replace('/view', '/preview')} 
-              className={styles.iframe}
-              allow="autoplay"
-              allowFullScreen
-            ></iframe>
-          </div>
-        </div>
+      {playingIndex !== null && (
+        <TikTokFeed 
+          videos={videos} 
+          initialIndex={playingIndex} 
+          onClose={() => setPlayingIndex(null)} 
+        />
       )}
     </div>
   );
