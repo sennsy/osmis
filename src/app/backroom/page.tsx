@@ -34,9 +34,11 @@ export default function Backroom() {
   const [selectedDivId, setSelectedDivId] = useState('');
   const [newMemberName, setNewMemberName] = useState('');
   const [newMemberImage, setNewMemberImage] = useState('');
+  const [newMemberType, setNewMemberType] = useState<'member' | 'head'>('member');
   
   // Editing existing member state
-  const [editingMember, setEditingMember] = useState<{ divId: string, idx: number } | null>(null);
+  const [editingTarget, setEditingTarget] = useState<{ type: 'member'|'head'|'leadership'|'leadership-member', id: string, idx: number } | null>(null);
+  const [editingMember, setEditingMember] = useState<{ divId: string, idx: number } | null>(null); // Keep for backwards compat if needed somewhere else
   const [editMemberName, setEditMemberName] = useState('');
   const [editMemberImage, setEditMemberImage] = useState('');
 
@@ -245,7 +247,7 @@ export default function Backroom() {
         ...newOrg.leadership[roleIdx],
         name: editMemberName.trim(),
         image: editMemberImage.trim() || 'https://via.placeholder.com/150'
-      };
+      } as any;
     } else if (type === 'leadership-member') {
       const roleIdx = parseInt(id);
       const role = { ...newOrg.leadership[roleIdx] };
