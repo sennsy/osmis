@@ -54,7 +54,7 @@ export default function Backroom() {
   const totalPhotos = data.gallery.reduce((acc, cat) => acc + cat.ids.length, 0);
 
   const handleSaveSosmed = () => {
-    updateData({ socialMedia: { instagram: editSosmed || data.socialMedia.instagram } });
+    updateData({ socialMedia: { instagram: editSosmed || data.socialMedia.instagram, tiktok: data.socialMedia.tiktok || '' } });
     alert('Social Media Updated!');
   };
 
@@ -315,20 +315,35 @@ export default function Backroom() {
         return (
           <div className={styles.card}>
             <h2 className={styles.cardTitle}>Pengaturan Sosial Media</h2>
-            <p className={styles.cardDesc}>Ubah ID/Username Instagram yang terhubung ke website.</p>
-            <div className={styles.formGroup}>
+            <p className={styles.cardDesc}>Ubah ID/Username yang terhubung ke website.</p>
+            <div className={styles.formGroup} style={{ marginBottom: '1rem' }}>
               <label>Instagram Username (tanpa @)</label>
               <div style={{ display: 'flex', gap: '1rem', marginTop: '0.5rem' }}>
                 <input 
                   type="text" 
                   className={styles.input} 
-                  defaultValue={data.socialMedia.instagram}
+                  value={editSosmed}
                   onChange={(e) => setEditSosmed(e.target.value)}
-                  placeholder="e.g. harmatra_id"
+                  placeholder={data.socialMedia.instagram}
                 />
-                <button className={styles.btnPrimary} onClick={handleSaveSosmed}>Simpan</button>
               </div>
             </div>
+            <div className={styles.formGroup}>
+              <label>TikTok Username (tanpa @)</label>
+              <div style={{ display: 'flex', gap: '1rem', marginTop: '0.5rem' }}>
+                <input 
+                  type="text" 
+                  className={styles.input} 
+                  defaultValue={data.socialMedia.tiktok || ''}
+                  onChange={(e) => {
+                    // Update temporarily in UI, we'll save together
+                    data.socialMedia.tiktok = e.target.value;
+                  }}
+                  placeholder="e.g. osmis_official"
+                />
+              </div>
+            </div>
+            <button className={styles.btnPrimary} style={{ marginTop: '1rem' }} onClick={handleSaveSosmed}>Simpan Semua</button>
           </div>
         );
 
