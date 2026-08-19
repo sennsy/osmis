@@ -412,11 +412,11 @@ export const organization = {
       name: "KEAMANAN",
       icon: "/amn.png",
       heads: [
-        { name: "Khadafi Agista Musyafa", nameAr: "قذافي أغيستا مشفع", image: "https://drive.google.com/uc?export=view&id=1XYkeqQdUVTuicB3WT-t9XwUN1xwg0V8i" }
+        { name: "Khadafi Agista Musyafa", nameAr: "قذافي أغيستا مشفع", image: "https://drive.google.com/uc?export=view&id=1xKyKAp0WbGYF2-qvsIoCOg0rzMZ8-eZY" }
       ],
       members: [
-        { name: "Faqihuddin Rahman", nameAr: "فقيه الدين رحمن", image: "https://drive.google.com/uc?export=view&id=1ZGyjtWir9-XEsbJRRy17cyN_4OZ_Jm_3" },
-        { name: "Maulana Zaidan Nugroho", nameAr: "مولانا زيدان نوغروهو", image: "https://drive.google.com/uc?export=view&id=1pYM0jdVnvEl2UW9fkL2WwgGtBaXJDSha" },
+        { name: "Faqihuddin Rahman", nameAr: "فقيه الدين رحمن", image: "https://drive.google.com/uc?export=view&id=1jLSwhl7qnJY9FjbHkJCcehiSxaysidQr" },
+        { name: "Maulana Zaidan Nugroho", nameAr: "مولانا زيدان نوغروهو", image: "https://drive.google.com/uc?export=view&id=1ORdRddb0LlJpx_UXtZiw5WyUw--HPyq0" },
         { name: "Yahya bin Abu Muhammad", nameAr: "يحيى بن أبو محمد", image: "https://drive.google.com/uc?export=view&id=12SvP2y355hwcvRxRMSP-D_mw8Rdp9zau" }
       ],
       programs: [
@@ -632,13 +632,13 @@ o Malam: 10 menit sebelum azan Isya berkumandang. (5)`,
       name: "IBADAH",
       icon: "/ibadah.png",
       heads: [
-        { name: "Muhammad Tegar Bimantoro", nameAr: "محمد تغار بيمانتورو", image: "https://drive.google.com/uc?export=view&id=1KjNfAPKhvDgDbEx8bFYhsVJt4945NJmp" }
+        { name: "Muhammad Tegar Bimantoro", nameAr: "محمد تغار بيمانتورو", image: "https://drive.google.com/uc?export=view&id=1hCI8v1kxVgx_DvkCfu5AbPMmCdDdClA9" }
       ],
       members: [
         { name: "Zakaria Akhsya", nameAr: "زكريا أخشى", image: "https://drive.google.com/uc?export=view&id=1DxqMfD7mujAkKna9cPpaaDnqA0mVhvez" },
-        { name: "Abdillah Muhsin Al Ansori", nameAr: "عبد الله محسن الأنصاري", image: "https://drive.google.com/uc?export=view&id=1yn5xlFgrtZklRrE9JUJ6tF7EjS51-Juw" },
+        { name: "Abdillah Muhsin Al Ansori", nameAr: "عبد الله محسن الأنصاري", image: "https://drive.google.com/uc?export=view&id=1UGEbWz-W6NpoGNtZnndpSUF6B71w8ME5" },
         { name: "Haidar Muafa", nameAr: "حيدر معافى", image: "https://drive.google.com/uc?export=view&id=1fAKsD4YD4tCuszBZU-A2CgCcjJC1VfTU" },
-        { name: "Abdul Mumin", nameAr: "عبد المؤمن", image: "https://drive.google.com/uc?export=view&id=1uJfjlmIAc2RdyjFdVljvzxiCJmdccJ-h" }
+        { name: "Abdul Mumin", nameAr: "عبد المؤمن", image: "https://drive.google.com/uc?export=view&id=1ApvxKNli7JNxRqUXx_DLns1Mx-SW3G7T" }
       ],
       programs: [
         {
@@ -856,13 +856,13 @@ o Malam: 10 menit sebelum azan Isya berkumandang. (5)`,
       name: "KEBERSIHAN & OLAHRAGA",
       icon: "/kebersihan dan olahraga.png",
       heads: [
-        { name: "Raykhan Dwi Fardani", nameAr: "ريحان دوي فرداني", image: "https://drive.google.com/uc?export=view&id=1f-_IpxkIpI_v5Dx3oqmi2U7AWzYphdJr" }
+        { name: "Raykhan Dwi Fardani", nameAr: "ريحان دوي فرداني", image: "https://drive.google.com/uc?export=view&id=1M0Gi3RDoOv91eiKmPPFc-V4r2OGxJl-V" }
       ],
       members: [
-        { name: "Muhammad Said Mahfouz", nameAr: "محمد سعيد محفوظ", image: "https://drive.google.com/uc?export=view&id=1Zi0n8IsEHqbAzapp-tbEiYn_gVbhbgai" },
+        { name: "Muhammad Said Mahfouz", nameAr: "محمد سعيد محفوظ", image: "https://drive.google.com/uc?export=view&id=1NaUESmfWgW2tr8tsdAZAxS_U_0CcqLtV" },
         { name: "Lukman Athaillah Artundaya", nameAr: "لقمان عطاء الله أرتوندايا", image: "https://drive.google.com/uc?export=view&id=1Pna6GTb3Dpr6fqNpQHKMObdRexqBGsSB" },
         { name: "khairul azzam", nameAr: "خير العزام", image: "https://drive.google.com/uc?export=view&id=1ZuAv8hE-1AgNbCn9oXQlw6_GuAA1EWfi" },
-        { name: "Nawaf Hafid Kautsar", nameAr: "نواف حافظ كوثر", image: "https://drive.google.com/uc?export=view&id=1Qfb7osAtebA1-xiM53FytdyXmVEiGHyr" }
+        { name: "Nawaf Hafid Kautsar", nameAr: "نواف حافظ كوثر", image: "https://drive.google.com/uc?export=view&id=1ufnlHfPhO-5tqMMm8z7aZvzbzdgzaHOS" }
       ],
       programs: [
         {
@@ -1117,7 +1117,7 @@ o Malam: 10 menit sebelum azan Isya berkumandang. (5)`,
       members: [
         { name: "Fathlih Dhifan", nameAr: "فضلح ضيفان", image: "https://drive.google.com/uc?export=view&id=1nVOiGGTk2aLT0XjgoFLCdZqyQIsN6PW4" },
         { name: "Mustofa Al Ghifari", nameAr: "مصطفى الغفاري", image: "https://drive.google.com/uc?export=view&id=1ZCLd73_I14gGEjbdVxFSgNQNz5to94PZ" },
-        { name: "Fajar Maulana Aris", nameAr: "فجر مولانا آريس", image: "https://drive.google.com/uc?export=view&id=1yjxQ3LLX46fm7oeDnDI2_nDssHl6DtKC" }
+        { name: "Fajar Maulana Aris", nameAr: "فجر مولانا آريس", image: "https://drive.google.com/uc?export=view&id=1uAQn2GnwQ-vpFBl3u4ObV1BQ2N0ChQnr" }
       ],
       programs: [
         {
@@ -1291,7 +1291,7 @@ Malam: 45 menit setelah qism dapur mulai membagikan makan (minggu: 16.50-17.20)`
       ],
       members: [
         { name: "Hariz Al Atsary", nameAr: "حريز الأثري", image: "https://drive.google.com/uc?export=view&id=196BoKe-Z9TkkF9lu5L_A3ivM6O-BVzF7" },
-        { name: "Dharma Adhyaksa", nameAr: "دارما أدياكسا", image: "https://drive.google.com/uc?export=view&id=1Bc48Unx0kQKUA8fjx3O0OMpRH9y22XNg" },
+        { name: "Dharma Adhyaksa", nameAr: "دارما أدياكسا", image: "https://drive.google.com/uc?export=view&id=14U2XA1siOVuuXdM5MCbox1pvbOKumHpC" },
         { name: "Farhan Ismail", nameAr: "فرحان إسماعيل", image: "https://drive.google.com/uc?export=view&id=1ssnzIsQpt2Di0-qS4Zt5IGRtDEVD8Ru1" }
       ],
       programs: [
@@ -1487,7 +1487,7 @@ Malam: 45 menit setelah qism dapur mulai membagikan makan (minggu: 16.50-17.20)`
       name: "SARANA & PRASARANA",
       icon: "/sarpras.png",
       heads: [
-        { name: "Simbian Mahesa Naszhwi", nameAr: "سيمبيان ماهيسا ناشوي", image: "https://drive.google.com/uc?export=view&id=1PbXh1k0xwGEH1BCoKWTGYzFigKYrOXuy" }
+        { name: "Simbian Mahesa Naszhwi", nameAr: "سيمبيان ماهيسا ناشوي", image: "https://drive.google.com/uc?export=view&id=1_Kb2BvdziOXHP0Wa0BP3odpVNp6Bdxs7" }
       ],
       members: [
         { name: "Faishal Syarif Putra Aji", nameAr: "فيصل شريف فوترا آجي", image: "https://drive.google.com/uc?export=view&id=1SvpCqsyzNFcr4IzQSobtbuF4aBkhMvmJ" }
