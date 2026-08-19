@@ -83,7 +83,7 @@ export default function TikTokFeed({ videos, initialIndex, onClose }: { videos: 
                   if (navigator.share) {
                     navigator.share({
                       title: 'Video OSMIS Official',
-                      text: \`Tonton video "\${video.name.replace(".mp4", "")}" dari OSMIS Official!\`,
+                      text: `Tonton video "${video.name.replace(".mp4", "")}" dari OSMIS Official!`,
                       url: window.location.href,
                     }).catch(console.error);
                   } else {
