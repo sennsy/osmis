@@ -30,6 +30,28 @@ export default function FullGalleryPage() {
 
   const visibleIds = displayedIds.slice(0, visibleCount);
 
+  const [cols, setCols] = useState<number>(4);
+
+  React.useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 640) setCols(1);
+      else if (window.innerWidth < 1024) setCols(2);
+      else if (window.innerWidth < 1280) setCols(3);
+      else setCols(4);
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const columns = React.useMemo(() => {
+    const colsArray = Array.from({ length: cols }, () => [] as {id: string, index: number}[]);
+    visibleIds.forEach((id, index) => {
+      colsArray[index % cols].push({ id, index });
+    });
+    return colsArray;
+  }, [visibleIds, cols]);
+
   React.useEffect(() => {
     setVisibleCount(20);
   }, [activeCategory]);
@@ -99,24 +121,28 @@ export default function FullGalleryPage() {
           </div>
         </div>
 
-        <div className={styles.masonryGrid}>
-          {visibleIds.map((id, index) => (
-            <div 
-              key={id} 
-              className={styles.masonryItem}
-              onClick={() => openLightbox(index)}
-              style={{ cursor: 'pointer' }}
-            >
-              <div className={styles.imageNumber}>
-                <span className="mono-font">{language === 'ar' ? toArabicNumerals((index + 1).toString().padStart(2, '0')) : (index + 1).toString().padStart(2, '0')}</span>
-              </div>
-              <img 
-                src={getImageUrl(id)} 
-                alt={`OSMIS Gallery ${index + 1}`} 
-                loading="lazy"
-                className={styles.image}
-                onError={(e) => (e.currentTarget.style.display = 'none')}
-              />
+        <div className={styles.masonryGridWrapper}>
+          {columns.map((col, colIndex) => (
+            <div key={colIndex} className={styles.masonryCol}>
+              {col.map(item => (
+                <div 
+                  key={item.id} 
+                  className={styles.masonryItem}
+                  onClick={() => openLightbox(item.index)}
+                  style={{ cursor: 'pointer' }}
+                >
+                  <div className={styles.imageNumber}>
+                    <span className="mono-font">{language === 'ar' ? toArabicNumerals((item.index + 1).toString().padStart(2, '0')) : (item.index + 1).toString().padStart(2, '0')}</span>
+                  </div>
+                  <img 
+                    src={getImageUrl(item.id)} 
+                    alt={`OSMIS Gallery ${item.index + 1}`} 
+                    loading="lazy"
+                    className={styles.image}
+                    onError={(e) => (e.currentTarget.style.display = 'none')}
+                  />
+                </div>
+              ))}
             </div>
           ))}
         </div>

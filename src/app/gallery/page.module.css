@@ -74,33 +74,21 @@
   color: #000 !important;
 }
 
-/* Pinterest-style Masonry using CSS Columns */
-.masonryGrid {
-  column-count: 1;
-  column-gap: 1.5rem;
+.masonryGridWrapper {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
 }
 
-@media (min-width: 640px) {
-  .masonryGrid {
-    column-count: 2;
-  }
-}
-
-@media (min-width: 1024px) {
-  .masonryGrid {
-    column-count: 3;
-  }
-}
-
-@media (min-width: 1280px) {
-  .masonryGrid {
-    column-count: 4;
-  }
+.masonryCol {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
 .masonryItem {
   break-inside: avoid;
-  margin-bottom: 1.5rem;
   position: relative;
   overflow: hidden;
   border: 1px solid var(--border-color);
