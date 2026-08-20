@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React, { useState } from 'react';
 import Hero from '../components/Hero';
 import HistoryTimeline from '../components/HistoryTimeline';
 import OrganizationChart from '../components/OrganizationChart';
@@ -13,6 +13,7 @@ import { Camera, Sparkles, Gamepad2, Languages, Clock } from 'lucide-react';
 
 export default function Home() {
   const { t } = useLanguage();
+  const [isGameModalOpen, setIsGameModalOpen] = useState(false);
 
   return (
     <div className={styles.page}>
@@ -116,38 +117,20 @@ export default function Home() {
             </button>
           </div>
 
-          {/* Card 3: Game GMWST */}
+          {/* Card 3: Games Arcade */}
           <div className={styles.featureCard}>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
               <div className={styles.featureIcon}>
                 <Gamepad2 size={40} strokeWidth={1.5} />
               </div>
-              <h3 className="display-font styles.featureName">GMWST</h3>
-              <p className={styles.featureDesc}>Gemme Wong Sing Tulus (Game Interaktif)</p>
+              <h3 className="display-font styles.featureName">OSMIS Games</h3>
+              <p className={styles.featureDesc}>Kumpulan Mini Games Seru</p>
             </div>
             <button 
               className={styles.featureBtn}
-              onClick={() => window.location.href = '/hts.html'}
+              onClick={() => setIsGameModalOpen(true)}
             >
-              [ Mainkan ]
-            </button>
-          </div>
-
-          {/* Card 4: Game MGB */}
-          <div className={styles.featureCard}>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              <div className={styles.featureIcon} style={{ opacity: 0.5 }}>
-                <Clock size={40} strokeWidth={1.5} />
-              </div>
-              <h3 className="display-font styles.featureName" style={{ opacity: 0.5 }}>MGB</h3>
-              <p className={styles.featureDesc} style={{ opacity: 0.5 }}>Mas Gagian Bali (Game Mendatang)</p>
-            </div>
-            <button 
-              className={styles.featureBtn}
-              style={{ cursor: 'not-allowed', opacity: 0.5 }}
-              disabled
-            >
-              [ Coming Soon ]
+              [ Pilih Game ]
             </button>
           </div>
 
@@ -169,6 +152,104 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Game Selection Modal */}
+      {isGameModalOpen && (
+        <div 
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100vw',
+            height: '100vh',
+            background: 'rgba(0, 0, 0, 0.6)',
+            backdropFilter: 'blur(5px)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: 9999,
+            padding: '1rem'
+          }}
+          onClick={() => setIsGameModalOpen(false)}
+        >
+          <div 
+            style={{
+              background: 'var(--card-bg)',
+              border: '1px solid var(--border-color)',
+              borderRadius: '1.5rem',
+              padding: '2rem',
+              width: '100%',
+              maxWidth: '500px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '1.5rem',
+              boxShadow: '0 20px 40px rgba(0,0,0,0.3)'
+            }}
+            onClick={e => e.stopPropagation()}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <h2 className="display-font" style={{ fontSize: '1.5rem' }}>OSMIS Games</h2>
+              <button 
+                onClick={() => setIsGameModalOpen(false)}
+                style={{ background: 'none', border: 'none', color: 'var(--text-color)', cursor: 'pointer', opacity: 0.7 }}
+              >
+                Tutup ✕
+              </button>
+            </div>
+            
+            {/* Game 1 */}
+            <div 
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '1rem',
+                padding: '1rem',
+                borderRadius: '1rem',
+                border: '1px solid var(--border-color)',
+                background: 'var(--bg-color)',
+                cursor: 'pointer',
+                transition: 'border-color 0.2s'
+              }}
+              onClick={() => window.location.href = '/hts.html'}
+              onMouseOver={e => e.currentTarget.style.borderColor = 'var(--text-color)'}
+              onMouseOut={e => e.currentTarget.style.borderColor = 'var(--border-color)'}
+            >
+              <div style={{ padding: '1rem', background: 'rgba(255,255,255,0.05)', borderRadius: '0.75rem' }}>
+                <Gamepad2 size={28} />
+              </div>
+              <div style={{ flex: 1 }}>
+                <h4 className="display-font" style={{ fontSize: '1.1rem', marginBottom: '0.25rem' }}>GMWST</h4>
+                <p style={{ fontSize: '0.85rem', opacity: 0.7 }}>Gemme Wong Sing Tulus</p>
+              </div>
+              <span style={{ fontSize: '0.8rem', opacity: 0.5 }}>Mainkan ↗</span>
+            </div>
+
+            {/* Game 2 */}
+            <div 
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '1rem',
+                padding: '1rem',
+                borderRadius: '1rem',
+                border: '1px solid var(--border-color)',
+                background: 'var(--bg-color)',
+                opacity: 0.5,
+                cursor: 'not-allowed'
+              }}
+            >
+              <div style={{ padding: '1rem', background: 'rgba(255,255,255,0.05)', borderRadius: '0.75rem' }}>
+                <Clock size={28} />
+              </div>
+              <div style={{ flex: 1 }}>
+                <h4 className="display-font" style={{ fontSize: '1.1rem', marginBottom: '0.25rem' }}>MGB</h4>
+                <p style={{ fontSize: '0.85rem', opacity: 0.7 }}>Mas Gagian Bali</p>
+              </div>
+              <span style={{ fontSize: '0.8rem', opacity: 0.5 }}>Coming Soon</span>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
