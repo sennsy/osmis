@@ -79,6 +79,7 @@ export default function Hero() {
         muted
         playsInline
         onEnded={() => setShowVideo(false)}
+        onError={() => setShowVideo(false)}
       />
       <img 
         src="/logo_utama.png" 
