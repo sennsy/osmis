@@ -448,6 +448,44 @@ export default function Backroom() {
                           Ganti Nama
                         </button>
                         <button 
+                          className={styles.btnSecondary} 
+                          style={{ padding: '0.4rem 0.8rem', fontSize: '0.9rem', background: '#3f3f46', borderColor: '#52525b' }}
+                          onClick={async () => {
+                            const newFolder = prompt(`Ganti ID Folder untuk kategori "${cat.name}"\n(PERHATIAN: Ini akan mengganti seluruh foto lama dengan foto dari folder baru)\n\nMasukkan ID Folder Google Drive:`);
+                            if (!newFolder || !newFolder.trim()) return;
+
+                            let finalFolderId = newFolder.trim();
+                            if (finalFolderId.includes('folders/')) {
+                              finalFolderId = finalFolderId.split('folders/')[1].split('?')[0].split('/')[0];
+                            } else if (finalFolderId.includes('id=')) {
+                              finalFolderId = finalFolderId.split('id=')[1].split('&')[0];
+                            }
+
+                            alert('Sedang memuat foto dari Drive... Mohon tunggu (Jangan tutup halaman ini).');
+                            try {
+                              const res = await fetch(`/api/drive/files?folderId=${finalFolderId}`);
+                              const dataResponse = await res.json();
+                              if (res.ok) {
+                                if (!Array.isArray(dataResponse)) throw new Error('Format data tidak valid');
+                                const imageFiles = dataResponse.filter((f: any) => f.mimeType && f.mimeType.startsWith('image/'));
+                                if (imageFiles.length === 0) throw new Error('Tidak ada file gambar di folder ini.');
+                                
+                                const newIds = imageFiles.map((f: any) => f.id);
+                                updateData({ 
+                                  gallery: data.gallery.map(c => c.id === cat.id ? { ...c, ids: newIds } : c) 
+                                });
+                                alert(`Berhasil! ${newIds.length} foto baru telah menggantikan foto lama.`);
+                              } else {
+                                throw new Error(dataResponse.error || 'Gagal dari API');
+                              }
+                            } catch (err: any) {
+                              alert(`ERROR: ${err.message}`);
+                            }
+                          }}
+                        >
+                          Ganti ID Folder
+                        </button>
+                        <button 
                           className={styles.btnDanger} 
                           style={{ padding: '0.4rem 0.8rem', fontSize: '0.9rem' }}
                           onClick={() => handleRemoveCategory(cat.id)}
