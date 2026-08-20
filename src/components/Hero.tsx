@@ -73,7 +73,7 @@ export default function Hero() {
       
       <video
         ref={videoRef}
-        src="/video_utama.mp4"
+        src="/video_utama.mp4?v=2"
         className={`${styles.watermarkMedia} ${showVideo ? styles.visible : styles.hidden}`}
         autoPlay
         muted
