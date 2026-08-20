@@ -265,6 +265,37 @@ export default function Backroom() {
     setEditingTarget(null);
   };
 
+  const handleChangeName = (type: 'member'|'head'|'leadership'|'leadership-member', id: string, idx: number, currentName: string) => {
+    const newName = prompt('Masukkan nama baru:', currentName);
+    if (!newName || newName.trim() === '') return;
+    
+    const newOrg = { ...data.organization };
+    if (type === 'member' || type === 'head') {
+      newOrg.divisions = newOrg.divisions.map(div => {
+        if (div.id === id) {
+          const arr = type === 'member' ? [...div.members] : [...(div.heads || [])];
+          arr[idx] = { ...arr[idx], name: newName.trim() };
+          return type === 'member' ? { ...div, members: arr } : { ...div, heads: arr };
+        }
+        return div;
+      });
+    } else if (type === 'leadership') {
+      const roleIdx = parseInt(id);
+      newOrg.leadership[roleIdx] = {
+        ...newOrg.leadership[roleIdx],
+        name: newName.trim()
+      } as any;
+    } else if (type === 'leadership-member') {
+      const roleIdx = parseInt(id);
+      const role = { ...newOrg.leadership[roleIdx] };
+      const arr = [...(role.members || [])];
+      arr[idx] = { ...arr[idx], name: newName.trim() };
+      role.members = arr;
+      newOrg.leadership[roleIdx] = role;
+    }
+    updateData({ organization: newOrg });
+  };
+
   const startEdit = (type: 'member'|'head'|'leadership'|'leadership-member', id: string, idx: number, currentName: string, currentImage: string) => {
     setEditingTarget({ type, id, idx });
     setEditMemberName(currentName || '');
@@ -577,7 +608,8 @@ export default function Backroom() {
                             <>
                               <td>{role.name}</td>
                               <td style={{ textAlign: 'right', display: 'flex', justifyContent: 'flex-end', gap: '0.5rem' }}>
-                                <button className={styles.btnSecondary} onClick={() => startEdit('leadership', roleIdx.toString(), 0, role.name!, role.image || '')} style={{ border: '1px solid #52525b', background: 'transparent', color: '#fafafa', padding: '0.25rem 0.75rem', borderRadius: '4px', fontSize: '0.75rem', cursor: 'pointer' }}>Edit</button>
+                                <button className={styles.btnSecondary} onClick={() => handleChangeName('leadership', roleIdx.toString(), 0, role.name!)} style={{ border: '1px solid #52525b', background: 'transparent', color: '#fafafa', padding: '0.25rem 0.75rem', borderRadius: '4px', fontSize: '0.75rem', cursor: 'pointer' }}>Ganti Nama</button>
+                                <button className={styles.btnSecondary} onClick={() => startEdit('leadership', roleIdx.toString(), 0, role.name!, role.image || '')} style={{ border: '1px solid #52525b', background: 'transparent', color: '#fafafa', padding: '0.25rem 0.75rem', borderRadius: '4px', fontSize: '0.75rem', cursor: 'pointer' }}>Edit Foto</button>
                               </td>
                             </>
                           )}
@@ -599,7 +631,8 @@ export default function Backroom() {
                             <>
                               <td>{m.name}</td>
                               <td style={{ textAlign: 'right', display: 'flex', justifyContent: 'flex-end', gap: '0.5rem' }}>
-                                <button className={styles.btnSecondary} onClick={() => startEdit('leadership-member', roleIdx.toString(), idx, m.name, m.image || '')} style={{ border: '1px solid #52525b', background: 'transparent', color: '#fafafa', padding: '0.25rem 0.75rem', borderRadius: '4px', fontSize: '0.75rem', cursor: 'pointer' }}>Edit</button>
+                                <button className={styles.btnSecondary} onClick={() => handleChangeName('leadership-member', roleIdx.toString(), idx, m.name)} style={{ border: '1px solid #52525b', background: 'transparent', color: '#fafafa', padding: '0.25rem 0.75rem', borderRadius: '4px', fontSize: '0.75rem', cursor: 'pointer' }}>Ganti Nama</button>
+                                <button className={styles.btnSecondary} onClick={() => startEdit('leadership-member', roleIdx.toString(), idx, m.name, m.image || '')} style={{ border: '1px solid #52525b', background: 'transparent', color: '#fafafa', padding: '0.25rem 0.75rem', borderRadius: '4px', fontSize: '0.75rem', cursor: 'pointer' }}>Edit Foto</button>
                                 <button className={styles.btnDanger} onClick={() => handleRemovePerson('leadership-member', roleIdx.toString(), idx)}>Hapus</button>
                               </td>
                             </>
@@ -641,7 +674,8 @@ export default function Backroom() {
                                 {h.name}
                               </td>
                               <td style={{ textAlign: 'right', display: 'flex', justifyContent: 'flex-end', gap: '0.5rem' }}>
-                                <button className={styles.btnSecondary} onClick={() => startEdit('head', div.id, idx, h.name, h.image || '')} style={{ border: '1px solid #52525b', background: 'transparent', color: '#fafafa', padding: '0.25rem 0.75rem', borderRadius: '4px', fontSize: '0.75rem', cursor: 'pointer' }}>Edit</button>
+                                <button className={styles.btnSecondary} onClick={() => handleChangeName('head', div.id, idx, h.name)} style={{ border: '1px solid #52525b', background: 'transparent', color: '#fafafa', padding: '0.25rem 0.75rem', borderRadius: '4px', fontSize: '0.75rem', cursor: 'pointer' }}>Ganti Nama</button>
+                                <button className={styles.btnSecondary} onClick={() => startEdit('head', div.id, idx, h.name, h.image || '')} style={{ border: '1px solid #52525b', background: 'transparent', color: '#fafafa', padding: '0.25rem 0.75rem', borderRadius: '4px', fontSize: '0.75rem', cursor: 'pointer' }}>Edit Foto</button>
                                 <button className={styles.btnDanger} onClick={() => handleRemovePerson('head', div.id, idx)}>Hapus</button>
                               </td>
                             </>
@@ -665,7 +699,8 @@ export default function Backroom() {
                             <>
                               <td>{m.name}</td>
                               <td style={{ textAlign: 'right', display: 'flex', justifyContent: 'flex-end', gap: '0.5rem' }}>
-                                <button className={styles.btnSecondary} onClick={() => startEdit('member', div.id, idx, m.name, m.image || '')} style={{ border: '1px solid #52525b', background: 'transparent', color: '#fafafa', padding: '0.25rem 0.75rem', borderRadius: '4px', fontSize: '0.75rem', cursor: 'pointer' }}>Edit</button>
+                                <button className={styles.btnSecondary} onClick={() => handleChangeName('member', div.id, idx, m.name)} style={{ border: '1px solid #52525b', background: 'transparent', color: '#fafafa', padding: '0.25rem 0.75rem', borderRadius: '4px', fontSize: '0.75rem', cursor: 'pointer' }}>Ganti Nama</button>
+                                <button className={styles.btnSecondary} onClick={() => startEdit('member', div.id, idx, m.name, m.image || '')} style={{ border: '1px solid #52525b', background: 'transparent', color: '#fafafa', padding: '0.25rem 0.75rem', borderRadius: '4px', fontSize: '0.75rem', cursor: 'pointer' }}>Edit Foto</button>
                                 <button className={styles.btnDanger} onClick={() => handleRemovePerson('member', div.id, idx)}>Hapus</button>
                               </td>
                             </>
