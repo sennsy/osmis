@@ -158,8 +158,8 @@ export default function FullGalleryPage() {
           <h3 className="mono-font" style={{ fontSize: '1rem', marginBottom: '1rem', color: 'var(--osmis-yellow)' }}>Panduan Menyimpan Gambar</h3>
           <p style={{ fontSize: '0.9rem', lineHeight: 1.6 }}>
             1. Klik gambar yang ingin disimpan.<br/>
-            2. Pada tampilan penuh, klik ikon <strong>"Buka Resolusi Penuh"</strong> di kanan atas.<br/>
-            3. Setelah terbuka di tab baru, tekan & tahan gambar (di HP) atau klik kanan (di PC), lalu pilih <strong>"Simpan Gambar" / "Save Image"</strong>.
+            2. Pada tampilan penuh, klik ikon <strong>Download (Tanda Panah ke Bawah)</strong> di pojok kanan atas.<br/>
+            3. Gambar akan otomatis tersimpan / diunduh ke perangkat Anda.
           </p>
         </div>
 
