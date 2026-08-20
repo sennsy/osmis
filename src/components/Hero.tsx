@@ -8,17 +8,19 @@ import styles from './Hero.module.css';
 
 export default function Hero() {
   const { t, language } = useLanguage();
-  const [showVideo, setShowVideo] = useState(true);
+  const [videoPlaying, setVideoPlaying] = useState(false);
   const heroRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting) {
-        setShowVideo(true);
         if (videoRef.current) {
           videoRef.current.currentTime = 0;
-          videoRef.current.play().catch(e => console.log('Autoplay blocked:', e));
+          videoRef.current.play().catch(e => {
+            console.log('Autoplay blocked:', e);
+            setVideoPlaying(false);
+          });
         }
       }
     }, { threshold: 0.3 });
@@ -75,18 +77,19 @@ export default function Hero() {
         ref={videoRef}
         src="/video_utama.mp4"
         className={styles.watermarkMedia}
-        style={{ opacity: showVideo ? 0.5 : 0 }}
+        style={{ opacity: videoPlaying ? 0.5 : 0 }}
         autoPlay
         muted
         playsInline
-        onEnded={() => setShowVideo(false)}
-        onError={() => setShowVideo(false)}
+        onPlaying={() => setVideoPlaying(true)}
+        onEnded={() => setVideoPlaying(false)}
+        onError={() => setVideoPlaying(false)}
       />
       <img 
         src="/logo_utama.png" 
         alt="Watermark OSMIS" 
         className={styles.watermarkMedia}
-        style={{ opacity: !showVideo ? 0.5 : 0 }}
+        style={{ opacity: !videoPlaying ? 0.5 : 0 }}
       />
     </section>
   );
