@@ -9,7 +9,7 @@ import { useLanguage } from '../components/LanguageProvider';
 import styles from './page.module.css';
 
 import Gallery from '../components/Gallery';
-import { Camera, Sparkles } from 'lucide-react';
+import { Camera, Sparkles, Gamepad2, Languages, Clock } from 'lucide-react';
 
 export default function Home() {
   const { t } = useLanguage();
@@ -113,6 +113,58 @@ export default function Home() {
               onClick={() => window.location.href = '/mbti'}
             >
               [ Buka Tes ]
+            </button>
+          </div>
+
+          {/* Card 3: Game GMWST */}
+          <div className={styles.featureCard}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <div className={styles.featureIcon}>
+                <Gamepad2 size={40} strokeWidth={1.5} />
+              </div>
+              <h3 className="display-font styles.featureName">GMWST</h3>
+              <p className={styles.featureDesc}>Gemme Wong Sing Tulus (Game Interaktif)</p>
+            </div>
+            <button 
+              className={styles.featureBtn}
+              onClick={() => window.location.href = '/hts.html'}
+            >
+              [ Mainkan ]
+            </button>
+          </div>
+
+          {/* Card 4: Game MGB */}
+          <div className={styles.featureCard}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <div className={styles.featureIcon} style={{ opacity: 0.5 }}>
+                <Clock size={40} strokeWidth={1.5} />
+              </div>
+              <h3 className="display-font styles.featureName" style={{ opacity: 0.5 }}>MGB</h3>
+              <p className={styles.featureDesc} style={{ opacity: 0.5 }}>Mas Gagian Bali (Game Mendatang)</p>
+            </div>
+            <button 
+              className={styles.featureBtn}
+              style={{ cursor: 'not-allowed', opacity: 0.5 }}
+              disabled
+            >
+              [ Coming Soon ]
+            </button>
+          </div>
+
+          {/* Card 5: Belajar Bahasa */}
+          <div className={styles.featureCard}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <div className={styles.featureIcon}>
+                <Languages size={40} strokeWidth={1.5} />
+              </div>
+              <h3 className="display-font styles.featureName">Linguista</h3>
+              <p className={styles.featureDesc}>Belajar Kosakata Arab, Inggris & Indo ala Duolingo</p>
+            </div>
+            <button 
+              className={styles.featureBtn}
+              onClick={() => window.location.href = '/learn'}
+            >
+              [ Belajar ]
             </button>
           </div>
         </div>

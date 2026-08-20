@@ -14,25 +14,33 @@ export default function Gallery() {
   const { data } = useOsmisData();
   const previewIds = React.useMemo(() => {
     const selected: string[] = [];
-    // Pick 1-2 highlight action shots from each of the 5 categories
+    
+    // Create a deterministic but randomized-feeling selection 
+    // based on current date/hour so it doesn't shift on every re-render
+    // but changes periodically. Or we can just use Math.random() inside useMemo.
+    
     data.gallery.forEach(cat => {
       if (cat.ids && cat.ids.length > 0) {
-        // Pick an offset item (index 3) rather than index 0 for better action/event shots
-        const idx1 = Math.min(3, cat.ids.length - 1);
+        // Pick 1 random highlight
+        const idx1 = Math.floor(Math.random() * cat.ids.length);
         if (cat.ids[idx1] && !selected.includes(cat.ids[idx1])) {
           selected.push(cat.ids[idx1]);
         }
-        // Pick a second highlight further in (40% into the folder)
+        // Pick a second random highlight if large enough
         if (cat.ids.length > 5 && selected.length < 8) {
-          const idx2 = Math.floor(cat.ids.length * 0.4);
+          const idx2 = Math.floor(Math.random() * cat.ids.length);
           if (cat.ids[idx2] && !selected.includes(cat.ids[idx2])) {
             selected.push(cat.ids[idx2]);
           }
         }
       }
     });
+    // Shuffle the selected array
+    selected.sort(() => Math.random() - 0.5);
+    
     // Fill up to 8 if needed
     const all = data.gallery.flatMap(c => c.ids);
+    all.sort(() => Math.random() - 0.5);
     for (const id of all) {
       if (selected.length >= 8) break;
       if (!selected.includes(id)) selected.push(id);

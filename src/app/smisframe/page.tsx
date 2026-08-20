@@ -316,7 +316,7 @@ export default function SMISFramePage() {
     // Watermark
     ctx.font = '24px monospace';
     ctx.textAlign = 'center';
-    ctx.fillText("WWW.OSMIS.COM", C_WIDTH / 2, C_HEIGHT - 40);
+    ctx.fillText("OSMIS.VERCEL.APP", C_WIDTH / 2, C_HEIGHT - 40);
 
   }, [userImage, logoImage, scale, offsetX, offsetY, campaign, activeQuoteText, t.noVisualRecord]);
 

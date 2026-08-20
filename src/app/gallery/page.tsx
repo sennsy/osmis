@@ -148,9 +148,47 @@ export default function FullGalleryPage() {
         </div>
 
         {visibleCount < displayedIds.length && (
-          <div ref={observerRef} style={{ height: '20px', width: '100%', margin: '2rem 0' }}></div>
+          <div ref={observerRef} style={{ height: '50px', margin: '2rem 0', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <div className={styles.loader}></div>
+          </div>
         )}
 
+        {/* PANDUAN DOWNLOAD */}
+        <div style={{ marginTop: '4rem', padding: '2rem', borderTop: '1px solid var(--border-color)', textAlign: 'center', opacity: 0.8 }}>
+          <h3 className="mono-font" style={{ fontSize: '1rem', marginBottom: '1rem', color: 'var(--osmis-yellow)' }}>Panduan Menyimpan Gambar</h3>
+          <p style={{ fontSize: '0.9rem', lineHeight: 1.6 }}>
+            1. Klik gambar yang ingin disimpan.<br/>
+            2. Pada tampilan penuh, klik ikon <strong>"Buka Resolusi Penuh"</strong> di kanan atas.<br/>
+            3. Setelah terbuka di tab baru, tekan & tahan gambar (di HP) atau klik kanan (di PC), lalu pilih <strong>"Simpan Gambar" / "Save Image"</strong>.
+          </p>
+        </div>
+
+        {/* Tombol Kembali Ke Atas */}
+        <button 
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          style={{
+            position: 'fixed',
+            bottom: '2rem',
+            right: '2rem',
+            background: 'var(--text-color)',
+            color: 'var(--bg-color)',
+            width: '45px',
+            height: '45px',
+            borderRadius: '50%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            border: 'none',
+            cursor: 'pointer',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+            zIndex: 90
+          }}
+          title="Kembali ke atas"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 19V5M5 12l7-7 7 7"/>
+          </svg>
+        </button>
       </div>
       
       <Lightbox 
