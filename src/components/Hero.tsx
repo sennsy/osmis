@@ -1,5 +1,6 @@
 "use client";
 
+import React, { useState, useRef, useEffect } from 'react';
 import { useLanguage } from './LanguageProvider';
 import { organization } from '../data/organization';
 import { toArabicNumerals } from '../utils/arabicNumerals';
@@ -7,6 +8,24 @@ import styles from './Hero.module.css';
 
 export default function Hero() {
   const { t, language } = useLanguage();
+  const [showVideo, setShowVideo] = useState(true);
+  const heroRef = useRef<HTMLElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        setShowVideo(true);
+        if (videoRef.current) {
+          videoRef.current.currentTime = 0;
+          videoRef.current.play().catch(e => console.log('Autoplay blocked:', e));
+        }
+      }
+    }, { threshold: 0.3 });
+
+    if (heroRef.current) observer.observe(heroRef.current);
+    return () => observer.disconnect();
+  }, []);
 
   const scrollToNext = () => {
     const nextSection = document.getElementById('introduction');
@@ -16,7 +35,7 @@ export default function Hero() {
   };
 
   return (
-    <section className={styles.hero}>
+    <section className={styles.hero} ref={heroRef}>
       <div className={styles.content}>
         <h1 className={`${styles.title} display-font`}>{t.osmisName}</h1>
         <h2 className={`${styles.subtitle} mono-font`}>{t.orgNameLong.toUpperCase()}</h2>
@@ -51,7 +70,21 @@ export default function Hero() {
       {/* Decorative Elements */}
       <div className={styles.gridLines}></div>
       <div className={styles.hexDecoration}></div>
-      <img src="/logo_utama.png" alt="Watermark OSMIS" className={styles.watermark} />
+      
+      <video
+        ref={videoRef}
+        src="/video_utama.mp4"
+        className={`${styles.watermarkMedia} ${showVideo ? styles.visible : styles.hidden}`}
+        autoPlay
+        muted
+        playsInline
+        onEnded={() => setShowVideo(false)}
+      />
+      <img 
+        src="/logo_utama.png" 
+        alt="Watermark OSMIS" 
+        className={`${styles.watermarkMedia} ${!showVideo ? styles.visible : styles.hidden}`} 
+      />
     </section>
   );
 }
