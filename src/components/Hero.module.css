@@ -191,8 +191,8 @@
   top: 45%; /* Shifted up slightly to match the content box */
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 100vw;
-  max-width: 1200px;
+  width: 85vw;
+  max-width: 900px;
   z-index: 1; /* Di bawah konten yang z-index 10 */
   pointer-events: none;
   transition: opacity 1.5s ease-in-out;
