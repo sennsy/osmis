@@ -360,6 +360,30 @@ export default function Backroom() {
                       }}
                     />
                   </label>
+                      <button 
+                        className={styles.btnPrimary} 
+                        style={{ background: '#eab308', color: '#000' }}
+                        onClick={async () => {
+                          if (!confirm('Peringatan: Ini akan menimpa data di server publik. Pastikan data sudah benar. Lanjutkan?')) return;
+                          try {
+                            const res = await fetch('/api/deploy', {
+                              method: 'POST',
+                              headers: { 'Content-Type': 'application/json' },
+                              body: JSON.stringify(data)
+                            });
+                            const result = await res.json();
+                            if (res.ok) {
+                              alert('Deploy berhasil! Vercel sedang memproses ulang website Anda (butuh waktu ~1 menit).');
+                            } else {
+                              alert('Gagal deploy: ' + result.error);
+                            }
+                          } catch (e: any) {
+                            alert('Terjadi kesalahan: ' + e.message);
+                          }
+                        }}
+                      >
+                        Terapkan ke Publik (Auto-Deploy)
+                      </button>
                 </div>
               </div>
             </div>

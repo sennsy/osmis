@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react';
 import { organization as initialOrg } from '../data/organization';
 import { periods as initialPeriods } from '../data/periods';
 import { galleryCategories as initialGallery } from '../data/gallery';
+import serverOverrides from '../data/overrides.json';
 
 const STORAGE_KEY = 'osmis_data_overrides_v2';
 
@@ -24,12 +25,14 @@ export type OsmisDataOverrides = {
 const STORAGE_EVENT = 'osmis_data_updated';
 
 function getStoredOverrides(): OsmisDataOverrides {
-  if (typeof window === 'undefined') return {};
+  if (typeof window === 'undefined') return serverOverrides as OsmisDataOverrides;
   try {
     const data = localStorage.getItem(STORAGE_KEY);
-    return data ? JSON.parse(data) : {};
+    // Merge server overrides with local storage overrides
+    const localData = data ? JSON.parse(data) : {};
+    return { ...(serverOverrides as OsmisDataOverrides), ...localData };
   } catch (e) {
-    return {};
+    return serverOverrides as OsmisDataOverrides;
   }
 }
 
