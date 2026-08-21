@@ -75,7 +75,7 @@ export default function Hero() {
       
       <video
         ref={videoRef}
-        src="/video_utama.webm"
+        src="/video_utama.mp4"
         className={styles.watermarkMedia}
         style={{ opacity: videoPlaying ? 0.5 : 0 }}
         autoPlay
