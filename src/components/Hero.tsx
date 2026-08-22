@@ -8,25 +8,26 @@ import styles from './Hero.module.css';
 
 export default function Hero() {
   const { t, language } = useLanguage();
-  const [videoPlaying, setVideoPlaying] = useState(false);
+  const [showAnimation, setShowAnimation] = useState(true);
   const heroRef = useRef<HTMLElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
+    let timer: NodeJS.Timeout;
     const observer = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting) {
-        if (videoRef.current) {
-          videoRef.current.currentTime = 0;
-          videoRef.current.play().catch(e => {
-            console.log('Autoplay blocked:', e);
-            setVideoPlaying(false);
-          });
-        }
+        setShowAnimation(true);
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+          setShowAnimation(false);
+        }, 5000);
       }
     }, { threshold: 0.3 });
 
     if (heroRef.current) observer.observe(heroRef.current);
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      clearTimeout(timer);
+    };
   }, []);
 
   const scrollToNext = () => {
@@ -73,23 +74,18 @@ export default function Hero() {
       <div className={styles.gridLines}></div>
       <div className={styles.hexDecoration}></div>
       
-      <video
-        ref={videoRef}
-        src="/video_utama.webm"
+      <img
+        src="/video_utama.gif"
+        alt="Watermark OSMIS Animation"
         className={styles.videoWatermark}
-        style={{ opacity: videoPlaying ? 0.5 : 0 }}
-        autoPlay
-        muted
-        playsInline
-        onPlaying={() => setVideoPlaying(true)}
-        onEnded={() => setVideoPlaying(false)}
-        onError={() => setVideoPlaying(false)}
+        style={{ opacity: showAnimation ? 0.5 : 0 }}
+        onError={() => setShowAnimation(false)}
       />
       <img 
         src="/logo_utama.png" 
         alt="Watermark OSMIS" 
         className={styles.imageWatermark}
-        style={{ opacity: !videoPlaying ? 0.5 : 0 }}
+        style={{ opacity: !showAnimation ? 0.5 : 0 }}
       />
     </section>
   );
