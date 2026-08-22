@@ -80,16 +80,6 @@ export default function Navbar() {
             <button onClick={handleLanguageChange} className={styles.iconBtn} aria-label="Change Language">
               <span className="mono-font">{t.langName}</span>
             </button>
-            <button 
-              onClick={() => {
-                const current = theme === 'system' ? resolvedTheme : theme;
-                setTheme(current === 'dark' ? 'light' : 'dark');
-              }} 
-              className={styles.iconBtn}
-              aria-label="Toggle Theme"
-            >
-              {mounted && ((theme === 'system' ? resolvedTheme : theme) === 'dark' ? <Moon size={16} /> : <Sun size={16} />)}
-            </button>
           </div>
         </div>
 
@@ -115,12 +105,6 @@ export default function Navbar() {
           <div className={styles.mobileActions}>
             <button onClick={handleLanguageChange} className={styles.iconBtn}>
               <Globe size={18} /> <span className="mono-font">{t.langName}</span>
-            </button>
-            <button onClick={() => {
-              const current = theme === 'system' ? resolvedTheme : theme;
-              setTheme(current === 'dark' ? 'light' : 'dark');
-            }} className={styles.iconBtn}>
-              {mounted && ((theme === 'system' ? resolvedTheme : theme) === 'dark' ? <><Moon size={18} /> Dark</> : <><Sun size={18} /> Light</>)}
             </button>
           </div>
         </div>
