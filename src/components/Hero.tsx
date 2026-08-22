@@ -1,6 +1,5 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from 'react';
 import { useLanguage } from './LanguageProvider';
 import { organization } from '../data/organization';
 import { toArabicNumerals } from '../utils/arabicNumerals';
@@ -8,27 +7,6 @@ import styles from './Hero.module.css';
 
 export default function Hero() {
   const { t, language } = useLanguage();
-  const [showAnimation, setShowAnimation] = useState(true);
-  const heroRef = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    let timer: NodeJS.Timeout;
-    const observer = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting) {
-        setShowAnimation(true);
-        clearTimeout(timer);
-        timer = setTimeout(() => {
-          setShowAnimation(false);
-        }, 5000);
-      }
-    }, { threshold: 0.3 });
-
-    if (heroRef.current) observer.observe(heroRef.current);
-    return () => {
-      observer.disconnect();
-      clearTimeout(timer);
-    };
-  }, []);
 
   const scrollToNext = () => {
     const nextSection = document.getElementById('introduction');
@@ -38,7 +16,7 @@ export default function Hero() {
   };
 
   return (
-    <section className={styles.hero} ref={heroRef}>
+    <section className={styles.hero}>
       <div className={styles.content}>
         <h1 className={`${styles.title} display-font`}>{t.osmisName}</h1>
         <h2 className={`${styles.subtitle} mono-font`}>{t.orgNameLong.toUpperCase()}</h2>
@@ -73,20 +51,7 @@ export default function Hero() {
       {/* Decorative Elements */}
       <div className={styles.gridLines}></div>
       <div className={styles.hexDecoration}></div>
-      
-      <img
-        src="/video_utama.gif"
-        alt="Watermark OSMIS Animation"
-        className={styles.videoWatermark}
-        style={{ opacity: showAnimation ? 0.5 : 0 }}
-        onError={() => setShowAnimation(false)}
-      />
-      <img 
-        src="/logo_utama.png" 
-        alt="Watermark OSMIS" 
-        className={styles.imageWatermark}
-        style={{ opacity: !showAnimation ? 0.5 : 0 }}
-      />
+      <img src="/logo_utama.png" alt="Watermark OSMIS" className={styles.watermark} />
     </section>
   );
 }
