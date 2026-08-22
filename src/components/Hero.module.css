@@ -193,9 +193,23 @@
   transform: translate(-50%, -50%);
   width: 50vw;
   max-width: 600px;
-  opacity: 0.5;
   z-index: 1; /* Di bawah konten yang z-index 10 */
   pointer-events: none;
+  transition: opacity 1.5s ease-in-out;
+}
+
+.videoWatermark {
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90vw;
+  max-width: 800px;
+  height: 90vh;
+  object-fit: contain;
+  z-index: 1;
+  pointer-events: none;
+  transition: opacity 1.5s ease-in-out;
 }
 
 .visible {

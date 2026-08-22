@@ -1,12 +1,47 @@
 "use client";
 
+import React, { useState, useRef, useEffect } from 'react';
 import { useLanguage } from './LanguageProvider';
+import { useTheme } from 'next-themes';
 import { organization } from '../data/organization';
 import { toArabicNumerals } from '../utils/arabicNumerals';
 import styles from './Hero.module.css';
 
 export default function Hero() {
   const { t, language } = useLanguage();
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  const [videoPlaying, setVideoPlaying] = useState(false);
+  const heroRef = useRef<HTMLElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted && resolvedTheme === 'dark';
+
+  useEffect(() => {
+    if (isDark) {
+      setVideoPlaying(false);
+      return;
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        if (videoRef.current) {
+          videoRef.current.currentTime = 0;
+          videoRef.current.play().catch(e => {
+            console.log('Autoplay blocked:', e);
+            setVideoPlaying(false);
+          });
+        }
+      }
+    }, { threshold: 0.3 });
+
+    if (heroRef.current) observer.observe(heroRef.current);
+    return () => observer.disconnect();
+  }, [isDark]);
 
   const scrollToNext = () => {
     const nextSection = document.getElementById('introduction');
@@ -16,7 +51,7 @@ export default function Hero() {
   };
 
   return (
-    <section className={styles.hero}>
+    <section className={styles.hero} ref={heroRef}>
       <div className={styles.content}>
         <h1 className={`${styles.title} display-font`}>{t.osmisName}</h1>
         <h2 className={`${styles.subtitle} mono-font`}>{t.orgNameLong.toUpperCase()}</h2>
@@ -51,7 +86,27 @@ export default function Hero() {
       {/* Decorative Elements */}
       <div className={styles.gridLines}></div>
       <div className={styles.hexDecoration}></div>
-      <img src="/logo_utama.png" alt="Watermark OSMIS" className={styles.watermark} />
+      
+      {!isDark && (
+        <video
+          ref={videoRef}
+          src="/video_utama.webm"
+          className={styles.videoWatermark}
+          style={{ opacity: videoPlaying ? 0.5 : 0 }}
+          autoPlay
+          muted
+          playsInline
+          onPlaying={() => setVideoPlaying(true)}
+          onEnded={() => setVideoPlaying(false)}
+          onError={() => setVideoPlaying(false)}
+        />
+      )}
+      <img 
+        src="/logo_utama.png" 
+        alt="Watermark OSMIS" 
+        className={styles.watermark}
+        style={{ opacity: isDark || !videoPlaying ? 0.5 : 0 }}
+      />
     </section>
   );
 }
