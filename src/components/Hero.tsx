@@ -76,7 +76,7 @@ export default function Hero() {
       <video
         ref={videoRef}
         src="/video_utama.webm"
-        className={styles.watermarkMedia}
+        className={styles.videoWatermark}
         style={{ opacity: videoPlaying ? 0.5 : 0 }}
         autoPlay
         muted
@@ -88,7 +88,7 @@ export default function Hero() {
       <img 
         src="/logo_utama.png" 
         alt="Watermark OSMIS" 
-        className={styles.watermarkMedia}
+        className={styles.imageWatermark}
         style={{ opacity: !videoPlaying ? 0.5 : 0 }}
       />
     </section>
