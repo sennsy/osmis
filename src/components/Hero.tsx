@@ -11,9 +11,8 @@ export default function Hero() {
   const { t, language } = useLanguage();
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
-  const [videoPlaying, setVideoPlaying] = useState(false);
+  const [showAnimation, setShowAnimation] = useState(false);
   const heroRef = useRef<HTMLElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -23,24 +22,26 @@ export default function Hero() {
 
   useEffect(() => {
     if (isDark) {
-      setVideoPlaying(false);
+      setShowAnimation(false);
       return;
     }
 
+    let timer: NodeJS.Timeout;
     const observer = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting) {
-        if (videoRef.current) {
-          videoRef.current.currentTime = 0;
-          videoRef.current.play().catch(e => {
-            console.log('Autoplay blocked:', e);
-            setVideoPlaying(false);
-          });
-        }
+        setShowAnimation(true);
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+          setShowAnimation(false);
+        }, 5000);
       }
     }, { threshold: 0.3 });
 
     if (heroRef.current) observer.observe(heroRef.current);
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      clearTimeout(timer);
+    };
   }, [isDark]);
 
   const scrollToNext = () => {
@@ -88,24 +89,19 @@ export default function Hero() {
       <div className={styles.hexDecoration}></div>
       
       {!isDark && (
-        <video
-          ref={videoRef}
-          src="/video_utama.webm"
+        <img
+          src="/video_utama.gif"
+          alt="Watermark OSMIS Animation"
           className={styles.videoWatermark}
-          style={{ opacity: videoPlaying ? 0.5 : 0 }}
-          autoPlay
-          muted
-          playsInline
-          onPlaying={() => setVideoPlaying(true)}
-          onEnded={() => setVideoPlaying(false)}
-          onError={() => setVideoPlaying(false)}
+          style={{ opacity: showAnimation ? 0.5 : 0 }}
+          onError={() => setShowAnimation(false)}
         />
       )}
       <img 
         src="/logo_utama.png" 
         alt="Watermark OSMIS" 
         className={styles.watermark}
-        style={{ opacity: isDark || !videoPlaying ? 0.5 : 0 }}
+        style={{ opacity: isDark || !showAnimation ? 0.5 : 0 }}
       />
     </section>
   );
