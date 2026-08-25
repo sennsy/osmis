@@ -9,7 +9,7 @@ export default function TikTokPage() {
   const [activeTab, setActiveTab] = useState<string>('1');
   const [videos, setVideos] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [playingVideoUrl, setPlayingVideoUrl] = useState<string | null>(null);
+  const [playingVideo, setPlayingVideo] = useState<any>(null);
 
   const activeFolder = data.tiktokFolders?.find(f => f.id === activeTab);
 
@@ -82,7 +82,7 @@ export default function TikTokPage() {
           <div className={styles.emptyState}>Tidak ada video di folder ini.</div>
         ) : (
           videos.map(video => (
-            <div key={video.id} className={styles.videoCard} onClick={() => setPlayingVideoUrl(video.webViewLink)}>
+            <div key={video.id} className={styles.videoCard} onClick={() => setPlayingVideo(video)}>
               {video.thumbnailLink ? (
                 <img src={video.thumbnailLink.replace('=s220', '=s600')} alt={video.name} className={styles.thumbnail} />
               ) : (
@@ -105,12 +105,28 @@ export default function TikTokPage() {
         )}
       </div>
 
-      {playingVideoUrl && (
-        <div className={styles.playerModal} onClick={() => setPlayingVideoUrl(null)}>
-          <button className={styles.closeBtn} onClick={() => setPlayingVideoUrl(null)}>✕</button>
+      {playingVideo && (
+        <div className={styles.playerModal} onClick={() => setPlayingVideo(null)}>
+          <div className={styles.modalActions}>
+            <a 
+              href={`https://drive.google.com/uc?export=download&id=${playingVideo.id}`}
+              target="_blank" 
+              rel="noopener noreferrer"
+              className={styles.downloadBtn}
+              onClick={e => e.stopPropagation()}
+              title="Download Video"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="20" height="20">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+            </a>
+            <button className={styles.closeBtn} onClick={() => setPlayingVideo(null)}>✕</button>
+          </div>
           <div className={styles.iframeWrapper} onClick={e => e.stopPropagation()}>
             <iframe 
-              src={playingVideoUrl.replace('/view', '/preview')} 
+              src={playingVideo.webViewLink.replace('/view', '/preview')} 
               className={styles.iframe}
               allow="autoplay"
               allowFullScreen
