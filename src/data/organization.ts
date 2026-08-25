@@ -6,7 +6,7 @@ export const organization = {
       title: "KETUA OSMIS", 
       name: "Muhammad Hanan", 
       nameAr: "محمد حنان", 
-      image: "https://drive.google.com/uc?export=view&id=1PVjRHSHzOxRu6zsb_QLTYGi5zDB5gz8q",
+      image: "",
       programs: [
         {
           category: "I. Program Kerja Harian",
@@ -136,7 +136,7 @@ export const organization = {
       title: "WAKIL KETUA", 
       name: "Abdullah Muadz", 
       nameAr: "عبد الله معاذ", 
-      image: "https://drive.google.com/uc?export=view&id=1HxPeVWB9JC0Ne-RjpcZ5pupDUdw1g2WG",
+      image: "",
       programs: [
         {
           category: "I. Program Kerja Harian",
@@ -271,8 +271,8 @@ export const organization = {
       titleKey: "titleSekben", 
       title: "SEKRETARIS & BENDAHARA (SEKBEN)", 
       members: [
-        { name: "Ibrahim Zaki Maulana", nameAr: "إبراهيم زكي مولانا", image: "https://drive.google.com/uc?export=view&id=1FxpUzZ738VPcd7rZJm5djQTOzLHa3XTR" },
-        { name: "Jarir", nameAr: "جرير", image: "https://drive.google.com/uc?export=view&id=1V4JY1ob99jYeo5MZ3PrPF8zGK6sOpdjj" }
+        { name: "Ibrahim Zaki Maulana", nameAr: "إبراهيم زكي مولانا", image: "" },
+        { name: "Jarir", nameAr: "جرير", image: "" }
       ],
       programs: [
         {
@@ -412,12 +412,12 @@ export const organization = {
       name: "KEAMANAN",
       icon: "/amn.png",
       heads: [
-        { name: "Khadafi Agista Musyafa", nameAr: "قذافي أغيستا مشفع", image: "https://drive.google.com/uc?export=view&id=1xKyKAp0WbGYF2-qvsIoCOg0rzMZ8-eZY" }
+        { name: "Khadafi Agista Musyafa", nameAr: "قذافي أغيستا مشفع", image: "" }
       ],
       members: [
-        { name: "Faqihuddin Rahman", nameAr: "فقيه الدين رحمن", image: "https://drive.google.com/uc?export=view&id=1jLSwhl7qnJY9FjbHkJCcehiSxaysidQr" },
-        { name: "Maulana Zaidan Nugroho", nameAr: "مولانا زيدان نوغروهو", image: "https://drive.google.com/uc?export=view&id=1ORdRddb0LlJpx_UXtZiw5WyUw--HPyq0" },
-        { name: "Yahya bin Abu Muhammad", nameAr: "يحيى بن أبو محمد", image: "https://drive.google.com/uc?export=view&id=12SvP2y355hwcvRxRMSP-D_mw8Rdp9zau" }
+        { name: "Faqihuddin Rahman", nameAr: "فقيه الدين رحمن", image: "" },
+        { name: "Maulana Zaidan Nugroho", nameAr: "مولانا زيدان نوغروهو", image: "" },
+        { name: "Yahya bin Abu Muhammad", nameAr: "يحيى بن أبو محمد", image: "" }
       ],
       programs: [
         {
@@ -632,13 +632,13 @@ o Malam: 10 menit sebelum azan Isya berkumandang. (5)`,
       name: "IBADAH",
       icon: "/ibadah.png",
       heads: [
-        { name: "Muhammad Tegar Bimantoro", nameAr: "محمد تغار بيمانتورو", image: "https://drive.google.com/uc?export=view&id=1hCI8v1kxVgx_DvkCfu5AbPMmCdDdClA9" }
+        { name: "Muhammad Tegar Bimantoro", nameAr: "محمد تغار بيمانتورو", image: "" }
       ],
       members: [
-        { name: "Zakaria Akhsya", nameAr: "زكريا أخشى", image: "https://drive.google.com/uc?export=view&id=1DxqMfD7mujAkKna9cPpaaDnqA0mVhvez" },
-        { name: "Abdillah Muhsin Al Ansori", nameAr: "عبد الله محسن الأنصاري", image: "https://drive.google.com/uc?export=view&id=1UGEbWz-W6NpoGNtZnndpSUF6B71w8ME5" },
-        { name: "Haidar Muafa", nameAr: "حيدر معافى", image: "https://drive.google.com/uc?export=view&id=1fAKsD4YD4tCuszBZU-A2CgCcjJC1VfTU" },
-        { name: "Abdul Mumin", nameAr: "عبد المؤمن", image: "https://drive.google.com/uc?export=view&id=1ApvxKNli7JNxRqUXx_DLns1Mx-SW3G7T" }
+        { name: "Zakaria Akhsya", nameAr: "زكريا أخشى", image: "" },
+        { name: "Abdillah Muhsin Al Ansori", nameAr: "عبد الله محسن الأنصاري", image: "" },
+        { name: "Haidar Muafa", nameAr: "حيدر معافى", image: "" },
+        { name: "Abdul Mumin", nameAr: "عبد المؤمن", image: "" }
       ],
       programs: [
         {
@@ -856,13 +856,13 @@ o Malam: 10 menit sebelum azan Isya berkumandang. (5)`,
       name: "KEBERSIHAN & OLAHRAGA",
       icon: "/kebersihan dan olahraga.png",
       heads: [
-        { name: "Raykhan Dwi Fardani", nameAr: "ريحان دوي فرداني", image: "https://drive.google.com/uc?export=view&id=1M0Gi3RDoOv91eiKmPPFc-V4r2OGxJl-V" }
+        { name: "Raykhan Dwi Fardani", nameAr: "ريحان دوي فرداني", image: "" }
       ],
       members: [
-        { name: "Muhammad Said Mahfouz", nameAr: "محمد سعيد محفوظ", image: "https://drive.google.com/uc?export=view&id=1NaUESmfWgW2tr8tsdAZAxS_U_0CcqLtV" },
-        { name: "Lukman Athaillah Artundaya", nameAr: "لقمان عطاء الله أرتوندايا", image: "https://drive.google.com/uc?export=view&id=1Pna6GTb3Dpr6fqNpQHKMObdRexqBGsSB" },
-        { name: "khairul azzam", nameAr: "خير العزام", image: "https://drive.google.com/uc?export=view&id=1ZuAv8hE-1AgNbCn9oXQlw6_GuAA1EWfi" },
-        { name: "Nawaf Hafid Kautsar", nameAr: "نواف حافظ كوثر", image: "https://drive.google.com/uc?export=view&id=1ufnlHfPhO-5tqMMm8z7aZvzbzdgzaHOS" }
+        { name: "Muhammad Said Mahfouz", nameAr: "محمد سعيد محفوظ", image: "" },
+        { name: "Lukman Athaillah Artundaya", nameAr: "لقمان عطاء الله أرتوندايا", image: "" },
+        { name: "khairul azzam", nameAr: "خير العزام", image: "" },
+        { name: "Nawaf Hafid Kautsar", nameAr: "نواف حافظ كوثر", image: "" }
       ],
       programs: [
         {
@@ -1112,12 +1112,12 @@ o Malam: 10 menit sebelum azan Isya berkumandang. (5)`,
       name: "DAPUR & KESEHATAN",
       icon: "/kesehatan dan dapur.png",
       heads: [
-        { name: "Muhammad Azzam Tsabit", nameAr: "محمد عزام ثابت", image: "https://drive.google.com/uc?export=view&id=1-vM0157DKr_FiPQUSKxrleGznh-shJoE" }
+        { name: "Muhammad Azzam Tsabit", nameAr: "محمد عزام ثابت", image: "" }
       ],
       members: [
-        { name: "Fathlih Dhifan", nameAr: "فضلح ضيفان", image: "https://drive.google.com/uc?export=view&id=1nVOiGGTk2aLT0XjgoFLCdZqyQIsN6PW4" },
-        { name: "Mustofa Al Ghifari", nameAr: "مصطفى الغفاري", image: "https://drive.google.com/uc?export=view&id=1ZCLd73_I14gGEjbdVxFSgNQNz5to94PZ" },
-        { name: "Fajar Maulana Aris", nameAr: "فجر مولانا آريس", image: "https://drive.google.com/uc?export=view&id=1uAQn2GnwQ-vpFBl3u4ObV1BQ2N0ChQnr" }
+        { name: "Fathlih Dhifan", nameAr: "فضلح ضيفان", image: "" },
+        { name: "Mustofa Al Ghifari", nameAr: "مصطفى الغفاري", image: "" },
+        { name: "Fajar Maulana Aris", nameAr: "فجر مولانا آريس", image: "" }
       ],
       programs: [
         {
@@ -1287,12 +1287,12 @@ Malam: 45 menit setelah qism dapur mulai membagikan makan (minggu: 16.50-17.20)`
       name: "BAHASA",
       icon: "/bahasa.png",
       heads: [
-        { name: "Maula Ali Hudzaifah", nameAr: "مولى علي حذيفة", image: "https://drive.google.com/uc?export=view&id=1Ak3D0sUi0bG_aFYp_wgEAVVyjdSlm5Wm" }
+        { name: "Maula Ali Hudzaifah", nameAr: "مولى علي حذيفة", image: "" }
       ],
       members: [
-        { name: "Hariz Al Atsary", nameAr: "حريز الأثري", image: "https://drive.google.com/uc?export=view&id=196BoKe-Z9TkkF9lu5L_A3ivM6O-BVzF7" },
-        { name: "Dharma Adhyaksa", nameAr: "دارما أدياكسا", image: "https://drive.google.com/uc?export=view&id=14U2XA1siOVuuXdM5MCbox1pvbOKumHpC" },
-        { name: "Farhan Ismail", nameAr: "فرحان إسماعيل", image: "https://drive.google.com/uc?export=view&id=1ssnzIsQpt2Di0-qS4Zt5IGRtDEVD8Ru1" }
+        { name: "Hariz Al Atsary", nameAr: "حريز الأثري", image: "" },
+        { name: "Dharma Adhyaksa", nameAr: "دارما أدياكسا", image: "" },
+        { name: "Farhan Ismail", nameAr: "فرحان إسماعيل", image: "" }
       ],
       programs: [
         {
@@ -1487,10 +1487,10 @@ Malam: 45 menit setelah qism dapur mulai membagikan makan (minggu: 16.50-17.20)`
       name: "SARANA & PRASARANA",
       icon: "/sarpras.png",
       heads: [
-        { name: "Simbian Mahesa Naszhwi", nameAr: "سيمبيان ماهيسا ناشوي", image: "https://drive.google.com/uc?export=view&id=1_Kb2BvdziOXHP0Wa0BP3odpVNp6Bdxs7" }
+        { name: "Simbian Mahesa Naszhwi", nameAr: "سيمبيان ماهيسا ناشوي", image: "" }
       ],
       members: [
-        { name: "Faishal Syarif Putra Aji", nameAr: "فيصل شريف فوترا آجي", image: "https://drive.google.com/uc?export=view&id=1SvpCqsyzNFcr4IzQSobtbuF4aBkhMvmJ" }
+        { name: "Faishal Syarif Putra Aji", nameAr: "فيصل شريف فوترا آجي", image: "" }
       ],
       programs: [
         {
