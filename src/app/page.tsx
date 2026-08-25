@@ -197,7 +197,7 @@ export default function Home() {
               </button>
             </div>
             
-            {/* Game 1 */}
+            {/* Game 1: Happy Ngetik Sayy */}
             <div 
               style={{
                 display: 'flex',
@@ -208,23 +208,23 @@ export default function Home() {
                 border: '1px solid var(--border-color)',
                 background: 'var(--bg-color)',
                 cursor: 'pointer',
-                transition: 'border-color 0.2s'
+                transition: 'all 0.2s'
               }}
-              onClick={() => window.location.href = '/hts.html'}
+              onClick={() => window.location.href = '/happy-ngetik-sayy.html'}
               onMouseOver={e => e.currentTarget.style.borderColor = 'var(--text-color)'}
               onMouseOut={e => e.currentTarget.style.borderColor = 'var(--border-color)'}
             >
-              <div style={{ padding: '1rem', background: 'rgba(255,255,255,0.05)', borderRadius: '0.75rem' }}>
+              <div style={{ padding: '1rem', background: 'rgba(16,185,129,0.1)', color: '#10b981', borderRadius: '0.75rem' }}>
                 <Gamepad2 size={28} />
               </div>
               <div style={{ flex: 1 }}>
-                <h4 className="display-font" style={{ fontSize: '1.1rem', marginBottom: '0.25rem' }}>GMWST</h4>
-                <p style={{ fontSize: '0.85rem', opacity: 0.7 }}>Gemme Wong Sing Tulus</p>
+                <h4 className="display-font" style={{ fontSize: '1.1rem', marginBottom: '0.25rem' }}>Happy Ngetik Sayy (HTS)</h4>
+                <p style={{ fontSize: '0.85rem', opacity: 0.7 }}>Game 2D Edukatif Mengetik Cepat</p>
               </div>
-              <span style={{ fontSize: '0.8rem', opacity: 0.5 }}>Mainkan ↗</span>
+              <span style={{ fontSize: '0.85rem', color: '#10b981', fontWeight: 600 }}>Mainkan ↗</span>
             </div>
 
-            {/* Game 2 */}
+            {/* Game 2: Wong Tersakiti Bross */}
             <div 
               style={{
                 display: 'flex',
@@ -234,18 +234,48 @@ export default function Home() {
                 borderRadius: '1rem',
                 border: '1px solid var(--border-color)',
                 background: 'var(--bg-color)',
-                opacity: 0.5,
-                cursor: 'not-allowed'
+                cursor: 'pointer',
+                transition: 'all 0.2s'
               }}
+              onClick={() => window.location.href = '/wong-tersakiti-bross.html'}
+              onMouseOver={e => e.currentTarget.style.borderColor = 'var(--text-color)'}
+              onMouseOut={e => e.currentTarget.style.borderColor = 'var(--border-color)'}
             >
-              <div style={{ padding: '1rem', background: 'rgba(255,255,255,0.05)', borderRadius: '0.75rem' }}>
-                <Clock size={28} />
+              <div style={{ padding: '1rem', background: 'rgba(59,130,246,0.1)', color: '#3b82f6', borderRadius: '0.75rem' }}>
+                <Gamepad2 size={28} />
               </div>
               <div style={{ flex: 1 }}>
-                <h4 className="display-font" style={{ fontSize: '1.1rem', marginBottom: '0.25rem' }}>MGB</h4>
-                <p style={{ fontSize: '0.85rem', opacity: 0.7 }}>Mas Gagian Bali</p>
+                <h4 className="display-font" style={{ fontSize: '1.1rem', marginBottom: '0.25rem' }}>Wong Tersakiti Bross</h4>
+                <p style={{ fontSize: '0.85rem', opacity: 0.7 }}>2D Side-scrolling Retro Platformer</p>
               </div>
-              <span style={{ fontSize: '0.8rem', opacity: 0.5 }}>Coming Soon</span>
+              <span style={{ fontSize: '0.85rem', color: '#3b82f6', fontWeight: 600 }}>Mainkan ↗</span>
+            </div>
+
+            {/* Game 3: GMWST (Dino) */}
+            <div 
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '1rem',
+                padding: '1rem',
+                borderRadius: '1rem',
+                border: '1px solid var(--border-color)',
+                background: 'var(--bg-color)',
+                cursor: 'pointer',
+                transition: 'all 0.2s'
+              }}
+              onClick={() => window.location.href = '/hts.html'}
+              onMouseOver={e => e.currentTarget.style.borderColor = 'var(--text-color)'}
+              onMouseOut={e => e.currentTarget.style.borderColor = 'var(--border-color)'}
+            >
+              <div style={{ padding: '1rem', background: 'rgba(255,255,255,0.05)', borderRadius: '0.75rem' }}>
+                <Gamepad2 size={28} />
+              </div>
+              <div style={{ flex: 1 }}>
+                <h4 className="display-font" style={{ fontSize: '1.1rem', marginBottom: '0.25rem' }}>GMWST (Hari Tanpa Spek)</h4>
+                <p style={{ fontSize: '0.85rem', opacity: 0.7 }}>Endless Runner Klasik Santri</p>
+              </div>
+              <span style={{ fontSize: '0.85rem', opacity: 0.6 }}>Mainkan ↗</span>
             </div>
           </div>
         </div>

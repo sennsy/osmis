@@ -1,0 +1,529 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy Ngetik Sayy - OSMIS Typing Game</title>
+  <link rel="icon" href="/logo_utama.png">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+    body {
+      background: #09090b;
+      color: #f4f4f5;
+      font-family: 'JetBrains Mono', 'Courier New', monospace;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+    #gameContainer {
+      position: relative;
+      width: 95vw;
+      max-width: 1000px;
+      height: 85vh;
+      max-height: 700px;
+      background: #111115;
+      border: 2px solid #27272a;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 30px rgba(16,185,129,0.1);
+    }
+    canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    .hud {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(180deg, rgba(9,9,11,0.9) 0%, transparent 100%);
+      font-size: 14px;
+      font-weight: 700;
+      pointer-events: none;
+      z-index: 5;
+    }
+    .hud-left { display: flex; gap: 20px; }
+    .hud-center { text-align: center; }
+    .hud-right { display: flex; gap: 15px; align-items: center; }
+    .stat-badge {
+      background: rgba(255,255,255,0.06);
+      padding: 6px 12px;
+      border-radius: 6px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .val { color: #10b981; }
+    .combo-val { color: #f59e0b; }
+    .hp-hearts { color: #ef4444; font-size: 18px; letter-spacing: 2px; }
+    
+    .overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(9,9,11,0.85);
+      backdrop-filter: blur(8px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      text-align: center;
+      padding: 20px;
+    }
+    .overlay.hidden { display: none; }
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 8px;
+      color: #10b981;
+      text-shadow: 0 0 20px rgba(16,185,129,0.5);
+    }
+    p { color: #a1a1aa; margin-bottom: 20px; font-size: 0.95rem; }
+    .btn {
+      background: #10b981;
+      color: #09090b;
+      border: none;
+      padding: 12px 30px;
+      font-size: 1.1rem;
+      font-weight: 800;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s;
+      box-shadow: 0 0 20px rgba(16,185,129,0.4);
+    }
+    .btn:hover {
+      background: #34d399;
+      transform: scale(1.05);
+      box-shadow: 0 0 30px rgba(16,185,129,0.7);
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+      margin-bottom: 25px;
+      width: 100%;
+      max-width: 350px;
+    }
+    .stats-card {
+      background: #18181b;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #27272a;
+    }
+    .stats-label { font-size: 0.75rem; color: #71717a; text-transform: uppercase; }
+    .stats-val { font-size: 1.4rem; font-weight: 700; color: #f4f4f5; margin-top: 4px; }
+    .back-btn {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      background: transparent;
+      color: #a1a1aa;
+      border: 1px solid #27272a;
+      padding: 6px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 0.85rem;
+      z-index: 20;
+      text-decoration: none;
+    }
+    .back-btn:hover { color: #fff; border-color: #71717a; }
+  </style>
+</head>
+<body>
+  <a href="/" class="back-btn">← Kembali ke OSMIS</a>
+
+  <div id="gameContainer">
+    <div class="hud">
+      <div class="hud-left">
+        <div class="stat-badge">SCORE: <span class="val" id="scoreVal">0</span></div>
+        <div class="stat-badge">COMBO: <span class="combo-val" id="comboVal">x1</span></div>
+      </div>
+      <div class="hud-center">
+        <div class="stat-badge">WPM: <span class="val" id="wpmVal">0</span> | ACC: <span class="val" id="accVal">100%</span></div>
+      </div>
+      <div class="hud-right">
+        <div class="hp-hearts" id="hpVal">❤️❤️❤️❤️❤️</div>
+      </div>
+    </div>
+
+    <canvas id="gameCanvas"></canvas>
+
+    <!-- Start Menu -->
+    <div id="startOverlay" class="overlay">
+      <h1>HAPPY NGETIK SAYY</h1>
+      <p>Ketik kata-kata sebelum mencapai garis batas bawah!</p>
+      <button class="btn" id="startBtn">MULAI MAIN</button>
+      <p style="font-size: 0.8rem; margin-top: 20px; opacity: 0.6;">Gunakan Keyboard Anda untuk mengetik • ESC untuk Pause</p>
+    </div>
+
+    <!-- Pause Menu -->
+    <div id="pauseOverlay" class="overlay hidden">
+      <h1>PAUSED</h1>
+      <p>Game sedang dijeda</p>
+      <button class="btn" id="resumeBtn">LANJUTKAN</button>
+    </div>
+
+    <!-- Game Over Menu -->
+    <div id="gameOverOverlay" class="overlay hidden">
+      <h1 style="color: #ef4444;">GAME OVER</h1>
+      <div class="stats-grid">
+        <div class="stats-card">
+          <div class="stats-label">Skor Akhir</div>
+          <div class="stats-val" id="finalScore">0</div>
+        </div>
+        <div class="stats-card">
+          <div class="stats-label">Kecepatan (WPM)</div>
+          <div class="stats-val" id="finalWpm">0</div>
+        </div>
+        <div class="stats-card">
+          <div class="stats-label">Akurasi</div>
+          <div class="stats-val" id="finalAcc">0%</div>
+        </div>
+        <div class="stats-card">
+          <div class="stats-label">Max Combo</div>
+          <div class="stats-val" id="finalCombo">0</div>
+        </div>
+      </div>
+      <button class="btn" id="restartBtn">MAIN LAGI</button>
+    </div>
+  </div>
+
+  <script>
+    // Audio synthesizer for zero-dependency retro SFX
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    let audioCtx = null;
+    function playBeep(freq, type = 'sine', duration = 0.08, gainVal = 0.1) {
+      try {
+        if (!audioCtx) audioCtx = new AudioCtx();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(gainVal, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch (e) {}
+    }
+
+    const WORD_LIST = [
+      "osmis", "santri", "mahad", "syams", "quran", "sunnah", "akhlak", "ilmu", "dakwah",
+      "arabic", "inggris", "bahasa", "sarpras", "ibadah", "kesehatan", "olahraga", "kebersihan",
+      "angkatan", "belajar", "fokus", "ngetik", "keyboard", "coding", "software", "komputer",
+      "program", "pesantren", "ustadz", "disiplin", "amanah", "sholeh", "masjid", "waktu",
+      "sahabat", "ukhuwah", "semangat", "sukses", "prestasi", "generasi", "pemimpin",
+      "future", "vision", "mission", "leader", "brother", "knowledge", "digital", "archive",
+      "target", "speed", "accuracy", "combo", "typing", "action", "creative", "smart"
+    ];
+
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    let width, height;
+
+    function resize() {
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width;
+      canvas.height = rect.height;
+      width = canvas.width;
+      height = canvas.height;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    // State
+    let gameState = 'START'; // START, PLAYING, PAUSED, GAMEOVER
+    let hp = 5;
+    let score = 0;
+    let combo = 0;
+    let maxCombo = 0;
+    let totalKeystrokes = 0;
+    let correctKeystrokes = 0;
+    let wordsCompleted = 0;
+    let startTime = 0;
+    let activeTarget = null;
+    let typingObjects = [];
+    let particles = [];
+    let lastSpawn = 0;
+    let spawnInterval = 2500;
+    let baseSpeed = 40;
+
+    class Particle {
+      constructor(x, y, color) {
+        this.x = x;
+        this.y = y;
+        this.vx = (Math.random() - 0.5) * 8;
+        this.vy = (Math.random() - 0.5) * 8;
+        this.color = color;
+        this.life = 1.0;
+        this.decay = Math.random() * 0.03 + 0.02;
+        this.size = Math.random() * 4 + 2;
+      }
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.life -= this.decay;
+      }
+      draw(ctx) {
+        ctx.save();
+        ctx.globalAlpha = Math.max(0, this.life);
+        ctx.fillStyle = this.color;
+        ctx.fillRect(this.x, this.y, this.size, this.size);
+        ctx.restore();
+      }
+    }
+
+    class TypingObject {
+      constructor(word, x, speed) {
+        this.word = word;
+        this.x = x;
+        this.y = 40;
+        this.speed = speed;
+        this.currentIndex = 0;
+        this.dead = false;
+      }
+      update(dt) {
+        this.y += this.speed * dt;
+        if (this.y > height - 60) {
+          this.dead = true;
+          damagePlayer();
+        }
+      }
+      draw(ctx, isActive) {
+        ctx.save();
+        ctx.font = 'bold 18px "JetBrains Mono", monospace';
+        const typed = this.word.substring(0, this.currentIndex);
+        const untyped = this.word.substring(this.currentIndex);
+        const typedWidth = ctx.measureText(typed).width;
+        const totalWidth = ctx.measureText(this.word).width;
+
+        // Background bubble
+        ctx.fillStyle = isActive ? 'rgba(16,185,129,0.2)' : 'rgba(39,39,42,0.8)';
+        ctx.strokeStyle = isActive ? '#10b981' : '#3f3f46';
+        ctx.lineWidth = isActive ? 2 : 1;
+        ctx.beginPath();
+        ctx.roundRect(this.x - 12, this.y - 20, totalWidth + 24, 32, 6);
+        ctx.fill();
+        ctx.stroke();
+
+        // Typed text (lime)
+        ctx.fillStyle = '#10b981';
+        ctx.fillText(typed, this.x, this.y);
+
+        // Untyped text (white)
+        ctx.fillStyle = '#f4f4f5';
+        ctx.fillText(untyped, this.x + typedWidth, this.y);
+        ctx.restore();
+      }
+    }
+
+    function spawnWord() {
+      const word = WORD_LIST[Math.floor(Math.random() * WORD_LIST.length)];
+      ctx.font = 'bold 18px "JetBrains Mono", monospace';
+      const textWidth = ctx.measureText(word).width;
+      const margin = 50;
+      const x = Math.random() * (width - textWidth - margin * 2) + margin;
+      const speed = baseSpeed + Math.random() * 20;
+      typingObjects.push(new TypingObject(word, x, speed));
+    }
+
+    function damagePlayer() {
+      hp--;
+      combo = 0;
+      playBeep(150, 'sawtooth', 0.2, 0.3);
+      updateHUD();
+      if (hp <= 0) {
+        gameOver();
+      }
+    }
+
+    function createExplosion(x, y, color = '#10b981') {
+      for (let i = 0; i < 20; i++) {
+        particles.push(new Particle(x, y, color));
+      }
+    }
+
+    function updateHUD() {
+      document.getElementById('scoreVal').innerText = score;
+      document.getElementById('comboVal').innerText = 'x' + (1 + Math.floor(combo / 5));
+      const hearts = '❤️'.repeat(Math.max(0, hp)) + '🖤'.repeat(Math.max(0, 5 - hp));
+      document.getElementById('hpVal').innerText = hearts;
+
+      const elapsedMinutes = (Date.now() - startTime) / 60000;
+      const wpm = elapsedMinutes > 0.05 ? Math.round((correctKeystrokes / 5) / elapsedMinutes) : 0;
+      const acc = totalKeystrokes > 0 ? Math.round((correctKeystrokes / totalKeystrokes) * 100) : 100;
+      document.getElementById('wpmVal').innerText = wpm;
+      document.getElementById('accVal').innerText = acc + '%';
+    }
+
+    function handleKey(char) {
+      if (gameState !== 'PLAYING') return;
+      totalKeystrokes++;
+
+      // If already targeting a word
+      if (activeTarget && !activeTarget.dead) {
+        const expected = activeTarget.word[activeTarget.currentIndex].toLowerCase();
+        if (char === expected) {
+          correctKeystrokes++;
+          activeTarget.currentIndex++;
+          combo++;
+          maxCombo = Math.max(maxCombo, combo);
+          playBeep(440 + activeTarget.currentIndex * 50, 'sine', 0.06);
+
+          if (activeTarget.currentIndex >= activeTarget.word.length) {
+            // Word complete!
+            wordsCompleted++;
+            score += activeTarget.word.length * 10 * (1 + Math.floor(combo / 5));
+            createExplosion(activeTarget.x + 30, activeTarget.y);
+            playBeep(880, 'triangle', 0.15, 0.2);
+            activeTarget.dead = true;
+            activeTarget = null;
+          }
+          updateHUD();
+          return;
+        }
+      }
+
+      // If no active target or target missed, find new matching target closest to bottom
+      let candidates = typingObjects.filter(obj => !obj.dead && obj.word[0].toLowerCase() === char);
+      if (candidates.length > 0) {
+        candidates.sort((a, b) => b.y - a.y);
+        activeTarget = candidates[0];
+        activeTarget.currentIndex = 1;
+        correctKeystrokes++;
+        combo++;
+        maxCombo = Math.max(maxCombo, combo);
+        playBeep(440, 'sine', 0.06);
+
+        if (activeTarget.currentIndex >= activeTarget.word.length) {
+          wordsCompleted++;
+          score += activeTarget.word.length * 10 * (1 + Math.floor(combo / 5));
+          createExplosion(activeTarget.x + 30, activeTarget.y);
+          playBeep(880, 'triangle', 0.15, 0.2);
+          activeTarget.dead = true;
+          activeTarget = null;
+        }
+      } else {
+        // Wrong key
+        combo = 0;
+        playBeep(200, 'square', 0.08, 0.15);
+      }
+      updateHUD();
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        if (gameState === 'PLAYING') pauseGame();
+        else if (gameState === 'PAUSED') resumeGame();
+        return;
+      }
+      if (e.key.length === 1 && e.key.match(/[a-zA-Z]/)) {
+        handleKey(e.key.toLowerCase());
+      }
+    });
+
+    let lastTime = 0;
+    function gameLoop(time) {
+      const dt = (time - lastTime) / 1000 || 0;
+      lastTime = time;
+
+      if (gameState === 'PLAYING') {
+        // Difficulty scaling
+        const elapsed = (Date.now() - startTime) / 1000;
+        baseSpeed = 40 + Math.min(80, elapsed * 1.5);
+        spawnInterval = Math.max(900, 2500 - elapsed * 25);
+
+        // Spawn
+        if (time - lastSpawn > spawnInterval) {
+          spawnWord();
+          lastSpawn = time;
+        }
+
+        // Update
+        typingObjects.forEach(obj => obj.update(dt));
+        typingObjects = typingObjects.filter(obj => !obj.dead);
+
+        particles.forEach(p => p.update());
+        particles = particles.filter(p => p.life > 0);
+      }
+
+      // Draw
+      ctx.clearRect(0, 0, width, height);
+
+      // Danger line at bottom
+      ctx.strokeStyle = 'rgba(239, 68, 68, 0.4)';
+      ctx.lineWidth = 2;
+      ctx.setLineDash([8, 8]);
+      ctx.beginPath();
+      ctx.moveTo(0, height - 50);
+      ctx.lineTo(width, height - 50);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Draw objects
+      typingObjects.forEach(obj => obj.draw(ctx, obj === activeTarget));
+
+      // Draw particles
+      particles.forEach(p => p.draw(ctx));
+
+      requestAnimationFrame(gameLoop);
+    }
+    requestAnimationFrame(gameLoop);
+
+    function startGame() {
+      hp = 5;
+      score = 0;
+      combo = 0;
+      maxCombo = 0;
+      totalKeystrokes = 0;
+      correctKeystrokes = 0;
+      wordsCompleted = 0;
+      typingObjects = [];
+      particles = [];
+      activeTarget = null;
+      startTime = Date.now();
+      lastSpawn = 0;
+      gameState = 'PLAYING';
+      document.getElementById('startOverlay').classList.add('hidden');
+      document.getElementById('pauseOverlay').classList.add('hidden');
+      document.getElementById('gameOverOverlay').classList.add('hidden');
+      updateHUD();
+    }
+
+    function pauseGame() {
+      gameState = 'PAUSED';
+      document.getElementById('pauseOverlay').classList.remove('hidden');
+    }
+
+    function resumeGame() {
+      gameState = 'PLAYING';
+      document.getElementById('pauseOverlay').classList.add('hidden');
+    }
+
+    function gameOver() {
+      gameState = 'GAMEOVER';
+      const elapsedMinutes = (Date.now() - startTime) / 60000;
+      const wpm = elapsedMinutes > 0.05 ? Math.round((correctKeystrokes / 5) / elapsedMinutes) : 0;
+      const acc = totalKeystrokes > 0 ? Math.round((correctKeystrokes / totalKeystrokes) * 100) : 100;
+      
+      document.getElementById('finalScore').innerText = score;
+      document.getElementById('finalWpm').innerText = wpm;
+      document.getElementById('finalAcc').innerText = acc + '%';
+      document.getElementById('finalCombo').innerText = 'x' + (1 + Math.floor(maxCombo / 5));
+      document.getElementById('gameOverOverlay').classList.remove('hidden');
+    }
+
+    document.getElementById('startBtn').addEventListener('click', startGame);
+    document.getElementById('resumeBtn').addEventListener('click', resumeGame);
+    document.getElementById('restartBtn').addEventListener('click', startGame);
+  </script>
+</body>
+</html>
