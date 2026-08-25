@@ -769,7 +769,7 @@ export default function Backroom() {
                   <tr key={folder.id}>
                     <td>{folder.name}</td>
                     <td>{folder.folderId || '- Kosong -'}</td>
-                    <td>
+                    <td style={{ display: 'flex', gap: '0.5rem' }}>
                       <button 
                         className={styles.btnPrimary} 
                         style={{ padding: '0.4rem 0.8rem', fontSize: '0.9rem' }}
@@ -783,6 +783,34 @@ export default function Backroom() {
                       >
                         Edit Folder ID
                       </button>
+                      
+                      {folder.folderId && (
+                        <button 
+                          className={styles.btnSecondary} 
+                          style={{ padding: '0.4rem 0.8rem', fontSize: '0.9rem', border: '1px solid #52525b', background: 'transparent', color: '#fafafa' }}
+                          onClick={async () => {
+                            try {
+                              const res = await fetch(`/api/drive/files?folderId=${folder.folderId}`);
+                              if (!res.ok) {
+                                alert('Gagal menarik data dari Drive. Pastikan Anda sudah login ke Drive API di tab sebelah.');
+                                return;
+                              }
+                              const files = await res.json();
+                              const videoFiles = files.filter((f: any) => f.mimeType && f.mimeType.startsWith('video/'));
+                              
+                              const newFolders = data.tiktokFolders?.map(f => 
+                                f.id === folder.id ? { ...f, videos: videoFiles } : f
+                              );
+                              updateData({ tiktokFolders: newFolders });
+                              alert(`Berhasil menarik ${videoFiles.length} video untuk kategori ${folder.name}! Jangan lupa klik Terapkan ke Publik.`);
+                            } catch (err) {
+                              alert('Error: ' + err);
+                            }
+                          }}
+                        >
+                          Tarik Data Drive
+                        </button>
+                      )}
                     </td>
                   </tr>
                 ))}

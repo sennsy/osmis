@@ -14,31 +14,15 @@ export default function TikTokPage() {
   const activeFolder = data.tiktokFolders?.find(f => f.id === activeTab);
 
   useEffect(() => {
-    if (!activeFolder || !activeFolder.folderId) {
+    if (!activeFolder) {
       setVideos([]);
       return;
     }
-
-    const fetchVideos = async () => {
-      setIsLoading(true);
-      try {
-        const res = await fetch(`/api/drive/files?folderId=${activeFolder.folderId}`);
-        const files = await res.json();
-        if (res.ok && Array.isArray(files)) {
-          const videoFiles = files.filter((f: any) => f.mimeType && f.mimeType.startsWith('video/'));
-          setVideos(videoFiles);
-        } else {
-          setVideos([]);
-        }
-      } catch (err) {
-        console.error('Failed to fetch videos', err);
-        setVideos([]);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchVideos();
+    if ((activeFolder as any).videos && Array.isArray((activeFolder as any).videos)) {
+      setVideos((activeFolder as any).videos);
+    } else {
+      setVideos([]);
+    }
   }, [activeFolder]);
 
   if (!isLoaded) return <div style={{ padding: '2rem', textAlign: 'center' }}>Loading...</div>;
