@@ -570,14 +570,20 @@
 
       // Draw Player
       if (player.invulnerable % 6 < 3) {
-        if (player.image) {
+        if (player.image && player.image.complete && player.image.width > 0) {
           ctx.save();
+          const aspect = player.image.width / player.image.height;
+          const drawH = 80;
+          const drawW = drawH * aspect;
+          const offsetX = (player.w - drawW) / 2;
+          const offsetY = player.h - drawH;
+
           if (player.facingLeft) {
             ctx.translate(player.x + player.w, player.y);
             ctx.scale(-1, 1);
-            ctx.drawImage(player.image, 0, 0, player.w, player.h);
+            ctx.drawImage(player.image, offsetX, offsetY, drawW, drawH);
           } else {
-            ctx.drawImage(player.image, player.x, player.y, player.w, player.h);
+            ctx.drawImage(player.image, player.x + offsetX, player.y + offsetY, drawW, drawH);
           }
           ctx.restore();
         } else {

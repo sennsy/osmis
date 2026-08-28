@@ -492,11 +492,12 @@
       particles.forEach(p => p.draw(ctx));
 
       // Draw Character & Laser
-      if (playerImage && playerImage.complete) {
-        const charW = 100;
+      if (playerImage && playerImage.complete && playerImage.width > 0) {
+        const aspect = playerImage.width / playerImage.height;
         const charH = 150;
+        const charW = charH * aspect;
         const charX = width / 2 - charW / 2;
-        const charY = height - 160;
+        const charY = height - charH - 10;
         
         ctx.drawImage(playerImage, charX, charY, charW, charH);
 
@@ -505,7 +506,7 @@
            ctx.strokeStyle = 'rgba(239, 68, 68, 0.8)';
            ctx.lineWidth = 5;
            ctx.beginPath();
-           ctx.moveTo(width / 2, charY + 50);
+           ctx.moveTo(width / 2, charY + charH / 3);
            ctx.lineTo(activeTarget.x + 30, activeTarget.y + 15);
            ctx.stroke();
         }
