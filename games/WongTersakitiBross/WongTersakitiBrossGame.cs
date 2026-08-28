@@ -156,7 +156,7 @@ namespace WongTersakitiBross
                 {
                     MiniFont.DrawText(_spriteBatch, "SELECT CHARACTER", new Vector2(400, 100), Color.White, 5);
                     
-                    string charName = _selectedCharacterIndex == 0 ? "ULTRAMAN" : _selectedCharacterIndex == 1 ? "SPIDERMAN" : "BATMAN";
+                    string charName = _selectedCharacterIndex == 0 ? "WONG TULUS" : _selectedCharacterIndex == 1 ? "WONG MERELAKAN" : "WONG TERSAKITI";
                     MiniFont.DrawText(_spriteBatch, "< " + charName + " >", new Vector2(500, 200), Color.Yellow, 4);
                     
                     Texture2D tex = _selectedCharacterIndex == 0 ? Globals.UltramanTex : _selectedCharacterIndex == 1 ? Globals.SpidermanTex : Globals.BatmanTex;

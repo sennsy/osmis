@@ -102,7 +102,7 @@ public class MenuState : BaseState
             var titleSize = GameRoot.Font.MeasureString(title);
             spriteBatch.DrawString(GameRoot.Font, title, new Vector2(GameRoot.ScreenWidth / 2 - titleSize.X / 2, 100), Color.White);
 
-            string charName = _selectedCharacterIndex == 0 ? "ULTRAMAN" : _selectedCharacterIndex == 1 ? "SPIDERMAN" : "BATMAN";
+            string charName = _selectedCharacterIndex == 0 ? "WONG TULUS" : _selectedCharacterIndex == 1 ? "WONG MERELAKAN" : "WONG TERSAKITI";
             var nameSize = GameRoot.Font.MeasureString("< " + charName + " >");
             spriteBatch.DrawString(GameRoot.Font, "< " + charName + " >", new Vector2(GameRoot.ScreenWidth / 2 - nameSize.X / 2, 200), Color.Yellow);
 
