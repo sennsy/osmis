@@ -12,6 +12,11 @@ namespace WongTersakitiBross
         public static Texture2D Pixel { get; set; }
         public static SpriteFont Font { get; set; }
 
+        public static Texture2D UltramanTex { get; set; }
+        public static Texture2D SpidermanTex { get; set; }
+        public static Texture2D BatmanTex { get; set; }
+        public static Texture2D SelectedPlayerTex { get; set; }
+
         public static void Init(GraphicsDevice gd)
         {
             GraphicsDevice = gd;

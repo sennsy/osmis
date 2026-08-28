@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="/logo_utama.png">
-    <title>HTS - Hari Tanpa Spek</title>
+    <title>GMWST - Gemme Wong Sing Tulus</title>
     <style>
         body {
             margin: 0;
@@ -57,6 +57,40 @@
 
         .hidden {
             display: none !important;
+        }
+
+        /* START OVERLAY */
+        #startOverlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(9,9,11,0.85);
+            backdrop-filter: blur(8px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 30;
+            text-align: center;
+            color: #fff;
+            padding: 20px;
+        }
+        #startOverlay h1 { font-size: 2.3rem; margin-bottom: 10px; color: #eab308; }
+        #startOverlay p { font-size: 1.1rem; color: #d4d4d8; margin-bottom: 20px; }
+        .start-btn {
+            background: #eab308;
+            color: #000;
+            border: none;
+            padding: 14px 32px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-transform: uppercase;
+        }
+        .start-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(234, 179, 8, 0.7);
         }
 
         #messageText {
@@ -236,20 +270,20 @@
         const SCORE_SPEED = 38.45;
         const TARGET_AUDIO_SCORE = 1124;
         const TARGET_CLIMAX_SCORE = 1346;
-        const GRAVITY = 2500;
-        const JUMP_FORCE = 800;
-        const GROUND_Y = 250;
+        const bgm = document.getElementById('bgm');
 
-        const STATES = { PLAYING: 0, HEARTBREAK: 1, RETREATING: 2, GAMEOVER: 3 };
-
-        function formatScore(score) {
-            return Math.floor(score).toString().padStart(5, '0');
-        }
+        const STATES = { MENU: -1, PLAYING: 0, HEARTBREAK: 1, RETREATING: 2, GAMEOVER: 3 };
+        const GROUND_Y = 220;
+        const GRAVITY = 1500;
+        const JUMP_VELOCITY = -500;
 
         class Game {
-            constructor() { this.reset(); }
-            reset() {
-                this.state = STATES.PLAYING;
+            constructor() {
+                this.reset(true);
+            }
+
+            reset(isInit = false) {
+                this.state = isInit ? STATES.MENU : STATES.PLAYING;
                 this.score = 0;
                 this.highScore = localStorage.getItem('hts_highscore') || 0;
                 this.lastTime = performance.now();
@@ -292,7 +326,7 @@
             jump() {
                 if (this.state === STATES.PLAYING) {
                     if (!this.player.isJumping) {
-                        this.player.vy = -JUMP_FORCE;
+                        this.player.vy = JUMP_VELOCITY;
                         this.player.isJumping = true;
                     }
                 } else if (this.state === STATES.HEARTBREAK) {
@@ -563,11 +597,15 @@
         canvas.addEventListener('mousedown', handleInput);
         canvas.addEventListener('touchstart', handleInput, { passive: false });
 
+        document.getElementById('startBtn').addEventListener('click', () => {
+            document.getElementById('startOverlay').classList.add('hidden');
+            game.reset(false); // Play
+        });
+
         restartBtn.addEventListener('click', () => {
-            game.reset();
+            game.reset(false);
         });
 
     </script>
 </body>
-
 </html>

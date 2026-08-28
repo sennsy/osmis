@@ -141,6 +141,7 @@ namespace WongTersakitiBross
         private float _gravity = 1500f;
         private bool _isGrounded = false;
         private bool _isDead = false;
+        private bool _facingLeft = false;
 
         public Player(Vector2 position) : base(position, 30, 50, Color.Blue) { }
 
@@ -158,9 +159,15 @@ namespace WongTersakitiBross
             Velocity.X = 0;
 
             if (InputManager.IsKeyDown(Keys.Left) || InputManager.IsKeyDown(Keys.A))
+            {
                 Velocity.X = -_speed;
+                _facingLeft = true;
+            }
             if (InputManager.IsKeyDown(Keys.Right) || InputManager.IsKeyDown(Keys.D))
+            {
                 Velocity.X = _speed;
+                _facingLeft = false;
+            }
 
             if ((InputManager.IsKeyPressed(Keys.Up) || InputManager.IsKeyPressed(Keys.W) || InputManager.IsKeyPressed(Keys.Space)) && _isGrounded)
             {
@@ -258,6 +265,34 @@ namespace WongTersakitiBross
             if (level.LevelGoal.IsActive && playerBounds.Intersects(level.LevelGoal.Bounds))
             {
                 level.CompleteLevel();
+            }
+        }
+
+        public override void Draw()
+        {
+            if (!IsActive) return;
+
+            if (Globals.SelectedPlayerTex != null)
+            {
+                SpriteEffects effects = _facingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+
+                // Draw the texture bigger than hitbox for better visuals
+                Rectangle destRect = new Rectangle((int)Position.X - 15, (int)Position.Y - 10, Width + 30, Height + 10);
+                
+                Globals.SpriteBatch.Draw(
+                    Globals.SelectedPlayerTex,
+                    destRect,
+                    null,
+                    Color.White,
+                    0f,
+                    Vector2.Zero,
+                    effects,
+                    0f
+                );
+            }
+            else
+            {
+                base.Draw();
             }
         }
     }

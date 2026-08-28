@@ -140,6 +140,24 @@ public class PlayState : BaseState
 
     public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
     {
+        // Draw character at bottom center
+        Vector2 charPos = new Vector2(GameRoot.ScreenWidth / 2 - 50, GameRoot.ScreenHeight - 150);
+        if (GameRoot.SelectedPlayerTex != null)
+        {
+            Rectangle dest = new Rectangle((int)charPos.X, (int)charPos.Y, 100, 150);
+            spriteBatch.Draw(GameRoot.SelectedPlayerTex, dest, Color.White);
+        }
+
+        // Draw laser if there is an active object
+        if (_activeObject != null && !_activeObject.IsDestroyed)
+        {
+            Vector2 start = new Vector2(GameRoot.ScreenWidth / 2, GameRoot.ScreenHeight - 100);
+            // Point to the center of the active word (approx)
+            Vector2 end = new Vector2(_activeObject.Position.X + 30, _activeObject.Position.Y + 15);
+            
+            DrawLaser(spriteBatch, start, end, Color.Red);
+        }
+
         // Draw Words
         foreach (var obj in _objects)
         {
@@ -154,5 +172,19 @@ public class PlayState : BaseState
         string exitInst = "ESC to Pause";
         Vector2 instSize = GameRoot.Font.MeasureString(exitInst);
         spriteBatch.DrawString(GameRoot.Font, exitInst, new Vector2(GameRoot.ScreenWidth - instSize.X - 20, 10), Color.Gray);
+    }
+
+    private void DrawLaser(SpriteBatch spriteBatch, Vector2 start, Vector2 end, Color color)
+    {
+        Vector2 edge = end - start;
+        float angle = (float)Math.Atan2(edge.Y, edge.X);
+        spriteBatch.Draw(GameRoot.Pixel,
+            new Rectangle((int)start.X, (int)start.Y, (int)edge.Length(), 5), // thickness 5
+            null,
+            color,
+            angle,
+            new Vector2(0, 0.5f),
+            SpriteEffects.None,
+            0);
     }
 }

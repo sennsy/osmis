@@ -1,3 +1,4 @@
+using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -12,6 +13,7 @@ namespace WongTersakitiBross
         private GameState _currentState;
         private Level _currentLevel;
         private Camera _camera;
+        private int _selectedCharacterIndex = 0;
 
         public WongTersakitiBrossGame()
         {
@@ -36,6 +38,17 @@ namespace WongTersakitiBross
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             Globals.Init(GraphicsDevice);
             Globals.SpriteBatch = _spriteBatch;
+
+            using (var stream = TitleContainer.OpenStream("Assets/ultraman.png"))
+                Globals.UltramanTex = Texture2D.FromStream(GraphicsDevice, stream);
+
+            using (var stream = TitleContainer.OpenStream("Assets/spiderman.png"))
+                Globals.SpidermanTex = Texture2D.FromStream(GraphicsDevice, stream);
+
+            using (var stream = TitleContainer.OpenStream("Assets/batman.png"))
+                Globals.BatmanTex = Texture2D.FromStream(GraphicsDevice, stream);
+                
+            Globals.SelectedPlayerTex = Globals.UltramanTex; // Default
         }
 
         protected override void Update(GameTime gameTime)
@@ -56,6 +69,22 @@ namespace WongTersakitiBross
                 case GameState.MainMenu:
                     if (InputManager.IsKeyPressed(Keys.Enter))
                     {
+                        _currentState = GameState.CharacterSelection;
+                    }
+                    break;
+
+                case GameState.CharacterSelection:
+                    if (InputManager.IsKeyPressed(Keys.Left) || InputManager.IsKeyPressed(Keys.A))
+                        _selectedCharacterIndex = (_selectedCharacterIndex - 1 + 3) % 3;
+                    if (InputManager.IsKeyPressed(Keys.Right) || InputManager.IsKeyPressed(Keys.D))
+                        _selectedCharacterIndex = (_selectedCharacterIndex + 1) % 3;
+
+                    if (InputManager.IsKeyPressed(Keys.Enter))
+                    {
+                        if (_selectedCharacterIndex == 0) Globals.SelectedPlayerTex = Globals.UltramanTex;
+                        else if (_selectedCharacterIndex == 1) Globals.SelectedPlayerTex = Globals.SpidermanTex;
+                        else if (_selectedCharacterIndex == 2) Globals.SelectedPlayerTex = Globals.BatmanTex;
+                        
                         StartGame();
                     }
                     break;
@@ -122,6 +151,23 @@ namespace WongTersakitiBross
                     MiniFont.DrawText(_spriteBatch, "WONG TERSAKITI BROSS", new Vector2(300, 200), Color.White, 6);
                     MiniFont.DrawText(_spriteBatch, "PRESS ENTER TO START", new Vector2(400, 400), Color.White, 4);
                     MiniFont.DrawText(_spriteBatch, "ARROWS JUMP AND MOVE", new Vector2(400, 450), Color.LightGray, 3);
+                }
+                else if (_currentState == GameState.CharacterSelection)
+                {
+                    MiniFont.DrawText(_spriteBatch, "SELECT CHARACTER", new Vector2(400, 100), Color.White, 5);
+                    
+                    string charName = _selectedCharacterIndex == 0 ? "ULTRAMAN" : _selectedCharacterIndex == 1 ? "SPIDERMAN" : "BATMAN";
+                    MiniFont.DrawText(_spriteBatch, "< " + charName + " >", new Vector2(500, 200), Color.Yellow, 4);
+                    
+                    Texture2D tex = _selectedCharacterIndex == 0 ? Globals.UltramanTex : _selectedCharacterIndex == 1 ? Globals.SpidermanTex : Globals.BatmanTex;
+                    if (tex != null)
+                    {
+                        // Draw at center
+                        Rectangle dest = new Rectangle(540, 300, 200, 300);
+                        _spriteBatch.Draw(tex, dest, Color.White);
+                    }
+
+                    MiniFont.DrawText(_spriteBatch, "PRESS ENTER TO PLAY", new Vector2(400, 650), Color.White, 4);
                 }
                 else if (_currentState == GameState.GameOver)
                 {

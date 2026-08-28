@@ -196,6 +196,36 @@ export default function Home() {
                 Tutup ✕
               </button>
             </div>
+                      {/* Game 3: GMWST (Gemme Wong Sing Tulus) - TOP POPULAR */}
+            <div 
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '1rem',
+                padding: '1rem',
+                borderRadius: '1rem',
+                border: '2px solid #eab308',
+                background: 'rgba(234, 179, 8, 0.05)',
+                cursor: 'pointer',
+                position: 'relative',
+                transition: 'all 0.2s'
+              }}
+              onClick={() => window.location.href = '/hts.html'}
+              onMouseOver={e => e.currentTarget.style.background = 'rgba(234, 179, 8, 0.1)'}
+              onMouseOut={e => e.currentTarget.style.background = 'rgba(234, 179, 8, 0.05)'}
+            >
+              <div style={{ position: 'absolute', top: '-12px', right: '16px', background: '#eab308', color: '#000', fontSize: '0.75rem', fontWeight: 700, padding: '2px 8px', borderRadius: '12px' }}>
+                ⭐ TOP POPULAR
+              </div>
+              <div style={{ padding: '1rem', background: 'rgba(234, 179, 8, 0.1)', color: '#eab308', borderRadius: '0.75rem' }}>
+                <Gamepad2 size={28} />
+              </div>
+              <div style={{ flex: 1 }}>
+                <h4 className="display-font" style={{ fontSize: '1.1rem', marginBottom: '0.25rem' }}>Gemme Wong Sing Tulus (GMWST)</h4>
+                <p style={{ fontSize: '0.85rem', opacity: 0.7 }}>Endless Runner Klasik Santri</p>
+              </div>
+              <span style={{ fontSize: '0.85rem', color: '#eab308', fontWeight: 600 }}>Mainkan ➔</span>
+            </div>
             
             {/* Game 1: Happy Ngetik Sayy */}
             <div 
@@ -221,7 +251,7 @@ export default function Home() {
                 <h4 className="display-font" style={{ fontSize: '1.1rem', marginBottom: '0.25rem' }}>Happy Ngetik Sayy (HTS)</h4>
                 <p style={{ fontSize: '0.85rem', opacity: 0.7 }}>Game 2D Edukatif Mengetik Cepat</p>
               </div>
-              <span style={{ fontSize: '0.85rem', color: '#10b981', fontWeight: 600 }}>Mainkan ↗</span>
+              <span style={{ fontSize: '0.85rem', color: '#10b981', fontWeight: 600 }}>Mainkan ➔</span>
             </div>
 
             {/* Game 2: Wong Tersakiti Bross */}
@@ -248,34 +278,7 @@ export default function Home() {
                 <h4 className="display-font" style={{ fontSize: '1.1rem', marginBottom: '0.25rem' }}>Wong Tersakiti Bross</h4>
                 <p style={{ fontSize: '0.85rem', opacity: 0.7 }}>2D Side-scrolling Retro Platformer</p>
               </div>
-              <span style={{ fontSize: '0.85rem', color: '#3b82f6', fontWeight: 600 }}>Mainkan ↗</span>
-            </div>
-
-            {/* Game 3: GMWST (Dino) */}
-            <div 
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '1rem',
-                padding: '1rem',
-                borderRadius: '1rem',
-                border: '1px solid var(--border-color)',
-                background: 'var(--bg-color)',
-                cursor: 'pointer',
-                transition: 'all 0.2s'
-              }}
-              onClick={() => window.location.href = '/hts.html'}
-              onMouseOver={e => e.currentTarget.style.borderColor = 'var(--text-color)'}
-              onMouseOut={e => e.currentTarget.style.borderColor = 'var(--border-color)'}
-            >
-              <div style={{ padding: '1rem', background: 'rgba(255,255,255,0.05)', borderRadius: '0.75rem' }}>
-                <Gamepad2 size={28} />
-              </div>
-              <div style={{ flex: 1 }}>
-                <h4 className="display-font" style={{ fontSize: '1.1rem', marginBottom: '0.25rem' }}>GMWST (Hari Tanpa Spek)</h4>
-                <p style={{ fontSize: '0.85rem', opacity: 0.7 }}>Endless Runner Klasik Santri</p>
-              </div>
-              <span style={{ fontSize: '0.85rem', opacity: 0.6 }}>Mainkan ↗</span>
+              <span style={{ fontSize: '0.85rem', color: '#3b82f6', fontWeight: 600 }}>Mainkan ➔</span>
             </div>
           </div>
         </div>

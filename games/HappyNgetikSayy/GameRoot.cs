@@ -1,3 +1,4 @@
+using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -12,6 +13,10 @@ public class GameRoot : Game
 
     public static SpriteFont Font { get; private set; }
     public static Texture2D Pixel { get; private set; }
+    public static Texture2D UltramanTex { get; private set; }
+    public static Texture2D SpidermanTex { get; private set; }
+    public static Texture2D BatmanTex { get; private set; }
+    public static Texture2D SelectedPlayerTex { get; set; }
     
     public const int ScreenWidth = 1280;
     public const int ScreenHeight = 720;
@@ -41,6 +46,17 @@ public class GameRoot : Game
         
         Pixel = new Texture2D(GraphicsDevice, 1, 1);
         Pixel.SetData(new[] { Color.White });
+
+        using (var stream = TitleContainer.OpenStream("Assets/ultraman.png"))
+            UltramanTex = Texture2D.FromStream(GraphicsDevice, stream);
+
+        using (var stream = TitleContainer.OpenStream("Assets/spiderman.png"))
+            SpidermanTex = Texture2D.FromStream(GraphicsDevice, stream);
+
+        using (var stream = TitleContainer.OpenStream("Assets/batman.png"))
+            BatmanTex = Texture2D.FromStream(GraphicsDevice, stream);
+            
+        SelectedPlayerTex = UltramanTex;
     }
 
     protected override void Update(GameTime gameTime)
