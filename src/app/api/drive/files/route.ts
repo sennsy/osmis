@@ -37,14 +37,25 @@ export async function GET(request: NextRequest) {
       q = query; // allow custom queries
     }
 
-    const res = await drive.files.list({
-      q: q,
-      fields: 'files(id, name, mimeType, webViewLink, iconLink, thumbnailLink)',
-      orderBy: 'folder, name',
-      pageSize: 1000
-    });
+    let allFiles: any[] = [];
+    let pageToken: string | undefined = undefined;
 
-    return NextResponse.json(res.data.files);
+    do {
+      const res: any = await drive.files.list({
+        q: q,
+        fields: 'nextPageToken, files(id, name, mimeType, webViewLink, iconLink, thumbnailLink)',
+        orderBy: 'folder, name',
+        pageSize: 1000,
+        pageToken: pageToken
+      });
+
+      if (res.data.files && res.data.files.length > 0) {
+        allFiles = allFiles.concat(res.data.files);
+      }
+      pageToken = res.data.nextPageToken || undefined;
+    } while (pageToken);
+
+    return NextResponse.json(allFiles);
   } catch (error: any) {
     console.error('Google Drive API Error:', error);
     if (error.code === 401) {
