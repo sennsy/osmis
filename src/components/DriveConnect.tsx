@@ -10,6 +10,7 @@ export default function DriveConnect() {
   const [error, setError] = useState('');
   const [connected, setConnected] = useState(false);
   const [searchFolder, setSearchFolder] = useState('root');
+  const [copiedId, setCopiedId] = useState<string | null>(null);
 
   useEffect(() => {
     // Check if we just connected
@@ -139,11 +140,22 @@ export default function DriveConnect() {
                         <button 
                           onClick={() => {
                             navigator.clipboard.writeText(file.id);
-                            alert('ID Copied!');
+                            setCopiedId(file.id);
+                            setTimeout(() => setCopiedId(null), 2000);
                           }}
-                          style={{ background: 'none', border: '1px solid var(--border-color)', color: 'var(--text-color)', padding: '4px 8px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.8rem' }}
+                          style={{ 
+                            background: copiedId === file.id ? '#10b981' : 'none', 
+                            border: '1px solid var(--border-color)', 
+                            color: copiedId === file.id ? '#000' : 'var(--text-color)', 
+                            padding: '4px 8px', 
+                            borderRadius: '4px', 
+                            cursor: 'pointer', 
+                            fontSize: '0.8rem',
+                            fontWeight: copiedId === file.id ? 600 : 400,
+                            transition: 'all 0.2s'
+                          }}
                         >
-                          Copy ID
+                          {copiedId === file.id ? 'Tersalin! ✓' : 'Copy ID'}
                         </button>
                       </td>
                     </tr>

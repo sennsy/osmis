@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useOsmisData } from '../../lib/storage';
 import AnalyticsChart from './components/AnalyticsChart';
 import DriveConnect from '../../components/DriveConnect';
+import { CheckCircle, AlertCircle, AlertTriangle, Info, X, Sparkles, Loader2 } from 'lucide-react';
 import styles from './Backroom.module.css';
 
 export default function Backroom() {
@@ -12,6 +13,117 @@ export default function Backroom() {
   const { data, isLoaded, updateData } = useOsmisData();
   const [activeTab, setActiveTab] = useState('dashboard');
   const [auth, setAuth] = useState(false);
+  
+  // Custom Modal & Toast States
+  const [modalState, setModalState] = useState<{
+    isOpen: boolean;
+    type: 'confirm' | 'prompt' | 'info';
+    title: string;
+    description?: string;
+    warning?: string;
+    info?: string;
+    placeholder?: string;
+    defaultValue?: string;
+    confirmText?: string;
+    cancelText?: string;
+    isDestructive?: boolean;
+    onConfirm: (inputVal: string) => void | Promise<void>;
+  }>({
+    isOpen: false,
+    type: 'confirm',
+    title: '',
+    onConfirm: () => {},
+  });
+  const [modalInputVal, setModalInputVal] = useState('');
+
+  const [toasts, setToasts] = useState<Array<{ id: string; message: string; type: 'success' | 'error' | 'warning' | 'info' }>>([]);
+
+  const showToast = (message: string, type: 'success' | 'error' | 'warning' | 'info' = 'info') => {
+    const id = Math.random().toString(36).substring(2, 9);
+    setToasts(prev => [...prev, { id, message, type }]);
+    setTimeout(() => {
+      setToasts(prev => prev.filter(t => t.id !== id));
+    }, 4000);
+  };
+
+  const removeToast = (id: string) => {
+    setToasts(prev => prev.filter(t => t.id !== id));
+  };
+
+  const openConfirm = ({
+    title,
+    description,
+    warning,
+    info,
+    confirmText = 'Lanjutkan',
+    cancelText = 'Batal',
+    isDestructive = false,
+    onConfirm,
+  }: {
+    title: string;
+    description?: string;
+    warning?: string;
+    info?: string;
+    confirmText?: string;
+    cancelText?: string;
+    isDestructive?: boolean;
+    onConfirm: () => void | Promise<void>;
+  }) => {
+    setModalState({
+      isOpen: true,
+      type: 'confirm',
+      title,
+      description,
+      warning,
+      info,
+      confirmText,
+      cancelText,
+      isDestructive,
+      onConfirm: () => onConfirm(),
+    });
+  };
+
+  const openPrompt = ({
+    title,
+    description,
+    warning,
+    info,
+    placeholder = '',
+    defaultValue = '',
+    confirmText = 'Simpan',
+    cancelText = 'Batal',
+    onConfirm,
+  }: {
+    title: string;
+    description?: string;
+    warning?: string;
+    info?: string;
+    placeholder?: string;
+    defaultValue?: string;
+    confirmText?: string;
+    cancelText?: string;
+    onConfirm: (val: string) => void | Promise<void>;
+  }) => {
+    setModalInputVal(defaultValue);
+    setModalState({
+      isOpen: true,
+      type: 'prompt',
+      title,
+      description,
+      warning,
+      info,
+      placeholder,
+      defaultValue,
+      confirmText,
+      cancelText,
+      onConfirm: (val) => onConfirm(val),
+    });
+  };
+
+  const closeModal = () => {
+    setModalState(prev => ({ ...prev, isOpen: false }));
+    setModalInputVal('');
+  };
   
   // Local state for editing
   const [editSosmed, setEditSosmed] = useState('');
@@ -57,7 +169,7 @@ export default function Backroom() {
 
   const handleSaveSosmed = () => {
     updateData({ socialMedia: { instagram: editSosmed || data.socialMedia.instagram, tiktok: data.socialMedia.tiktok || '' } });
-    alert('Social Media Updated!');
+    showToast('Social media berhasil diperbarui!', 'success');
   };
 
   const handleAddPhoto = () => {
@@ -70,36 +182,56 @@ export default function Backroom() {
     });
     updateData({ gallery: newGallery });
     setNewPhotoId('');
-    alert('Photo Added!');
+    showToast('Foto berhasil ditambahkan ke galeri!', 'success');
   };
 
   const handleRemoveCategory = (catId: string) => {
-    if(!confirm('Apakah Anda yakin ingin menghapus kategori ini beserta seluruh fotonya?')) return;
-    const newGallery = data.gallery.filter(cat => cat.id !== catId);
-    updateData({ gallery: newGallery });
+    const target = data.gallery.find(c => c.id === catId);
+    openConfirm({
+      title: 'Hapus Kategori Galeri',
+      description: `Apakah Anda yakin ingin menghapus kategori "${target?.name || catId}"?`,
+      warning: 'Seluruh foto di dalam kategori ini akan dihapus dari tampilan website.',
+      confirmText: 'Hapus Kategori',
+      isDestructive: true,
+      onConfirm: () => {
+        const newGallery = data.gallery.filter(cat => cat.id !== catId);
+        updateData({ gallery: newGallery });
+        showToast('Kategori berhasil dihapus.', 'info');
+      }
+    });
   };
 
   const handleRenameCategory = (catId: string, currentName: string) => {
-    const newName = prompt('Masukkan nama kategori baru (hanya nama ID):', currentName);
-    if (!newName || !newName.trim() || newName.trim() === currentName) return;
-    
-    const newGallery = data.gallery.map(cat => {
-      if (cat.id === catId) {
-        return { ...cat, name: newName.trim() };
+    openPrompt({
+      title: 'Ganti Nama Kategori',
+      description: 'Masukkan nama baru untuk kategori galeri ini:',
+      defaultValue: currentName,
+      placeholder: 'Nama kategori baru...',
+      confirmText: 'Simpan Nama',
+      onConfirm: (newName) => {
+        if (!newName || !newName.trim() || newName.trim() === currentName) return;
+        const newGallery = data.gallery.map(cat => {
+          if (cat.id === catId) {
+            return { ...cat, name: newName.trim() };
+          }
+          return cat;
+        });
+        updateData({ gallery: newGallery });
+        showToast('Nama kategori berhasil diubah!', 'success');
       }
-      return cat;
     });
-    updateData({ gallery: newGallery });
   };
 
   const handleBulkAddFolder = async () => {
     setBulkMessage(null);
     if (!selectedCatId) {
       setBulkMessage('ERROR: Pilih Kategori terlebih dahulu di dropdown atas!');
+      showToast('Pilih kategori terlebih dahulu di dropdown atas!', 'warning');
       return;
     }
     if (!bulkFolderId.trim()) {
       setBulkMessage('ERROR: Masukkan Folder ID atau URL Folder!');
+      showToast('Masukkan Folder ID atau URL Folder!', 'warning');
       return;
     }
 
@@ -119,12 +251,14 @@ export default function Backroom() {
       if (res.ok) {
         if (!Array.isArray(dataResponse)) {
           setBulkMessage('ERROR: Respons dari server tidak valid (bukan array).');
+          showToast('Respons dari server tidak valid.', 'error');
           return;
         }
         const imageFiles = dataResponse.filter((f: any) => f.mimeType && f.mimeType.startsWith('image/'));
         if (imageFiles.length === 0) {
           const sampleMimes = dataResponse.slice(0, 3).map((f: any) => f.mimeType || 'unknown').join(', ');
           setBulkMessage(`FAILED: Tidak ada gambar di folder ini! Total file: ${dataResponse.length}. Contoh tipe file: ${sampleMimes}. Folder ID: ${finalFolderId}. (Pastikan isi folder langsung foto, BUKAN sub-folder)`);
+          showToast('Tidak ada file gambar di folder Drive ini!', 'warning');
           return;
         }
         const newIds = imageFiles.map((f: any) => f.id);
@@ -139,11 +273,14 @@ export default function Backroom() {
         updateData({ gallery: newGallery });
         setBulkFolderId('');
         setBulkMessage(`SUCCESS: Berhasil menambahkan ${newIds.length} foto ke kategori yang dipilih!`);
+        showToast(`Berhasil menambahkan ${newIds.length} foto baru!`, 'success');
       } else {
         setBulkMessage(`ERROR: ${dataResponse.error || 'Gagal memuat folder dari API.'}`);
+        showToast(dataResponse.error || 'Gagal memuat folder dari API.', 'error');
       }
     } catch (err: any) {
       setBulkMessage(`NETWORK ERROR: Terjadi kesalahan jaringan atau sistem: ${err.message}`);
+      showToast(`Error: ${err.message}`, 'error');
     } finally {
       setIsBulkLoading(false);
     }
@@ -151,7 +288,7 @@ export default function Backroom() {
 
   const handleAddCategory = () => {
     if (!newCatNameId.trim()) {
-      alert('Nama kategori (ID) wajib diisi!');
+      showToast('Nama kategori (ID) wajib diisi!', 'warning');
       return;
     }
     const slug = newCatNameId.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-');
@@ -164,7 +301,7 @@ export default function Backroom() {
     };
     
     if (data.gallery.find(c => c.id === slug)) {
-      alert('Kategori dengan nama ini sudah ada!');
+      showToast('Kategori dengan nama ini sudah ada!', 'error');
       return;
     }
     
@@ -172,11 +309,14 @@ export default function Backroom() {
     setNewCatNameId('');
     setNewCatNameEn('');
     setNewCatNameAr('');
-    alert('Kategori Baru Berhasil Dibuat!');
+    showToast('Kategori Baru Berhasil Dibuat!', 'success');
   };
 
   const handleAddMember = () => {
-    if (!selectedDivId || !newMemberName.trim()) return;
+    if (!selectedDivId || !newMemberName.trim()) {
+      showToast('Pilih divisi dan isi nama anggota!', 'warning');
+      return;
+    }
     const newOrg = { ...data.organization };
     newOrg.divisions = newOrg.divisions.map(div => {
       if (div.id === selectedDivId) {
@@ -197,30 +337,77 @@ export default function Backroom() {
     updateData({ organization: newOrg });
     setNewMemberName('');
     setNewMemberImage('');
-    alert('Member Added!');
+    showToast('Anggota/Ketua berhasil ditambahkan!', 'success');
   };
 
   const handleRemovePerson = (type: 'member'|'head'|'leadership-member', id: string, idx: number) => {
-    if(!confirm('Remove this person?')) return;
-    const newOrg = { ...data.organization };
-    if (type === 'member' || type === 'head') {
-      newOrg.divisions = newOrg.divisions.map(div => {
-        if (div.id === id) {
-          const arr = type === 'member' ? [...div.members] : [...(div.heads || [])];
+    openConfirm({
+      title: 'Hapus Anggota / Pengurus',
+      description: 'Apakah Anda yakin ingin menghapus nama ini dari kepengurusan?',
+      isDestructive: true,
+      confirmText: 'Ya, Hapus',
+      onConfirm: () => {
+        const newOrg = { ...data.organization };
+        if (type === 'member' || type === 'head') {
+          newOrg.divisions = newOrg.divisions.map(div => {
+            if (div.id === id) {
+              const arr = type === 'member' ? [...div.members] : [...(div.heads || [])];
+              arr.splice(idx, 1);
+              return type === 'member' ? { ...div, members: arr } : { ...div, heads: arr };
+            }
+            return div;
+          });
+        } else if (type === 'leadership-member') {
+          const roleIdx = parseInt(id);
+          const role = { ...newOrg.leadership[roleIdx] };
+          const arr = [...(role.members || [])];
           arr.splice(idx, 1);
-          return type === 'member' ? { ...div, members: arr } : { ...div, heads: arr };
+          role.members = arr;
+          newOrg.leadership[roleIdx] = role;
         }
-        return div;
-      });
-    } else if (type === 'leadership-member') {
-      const roleIdx = parseInt(id);
-      const role = { ...newOrg.leadership[roleIdx] };
-      const arr = [...(role.members || [])];
-      arr.splice(idx, 1);
-      role.members = arr;
-      newOrg.leadership[roleIdx] = role;
-    }
-    updateData({ organization: newOrg });
+        updateData({ organization: newOrg });
+        showToast('Pengurus berhasil dihapus.', 'info');
+      }
+    });
+  };
+
+  const handleChangeName = (type: 'member'|'head'|'leadership'|'leadership-member', id: string, idx: number, currentName: string) => {
+    openPrompt({
+      title: 'Ganti Nama Pengurus',
+      description: 'Masukkan nama baru untuk pengurus ini:',
+      defaultValue: currentName,
+      placeholder: 'Nama lengkap...',
+      confirmText: 'Simpan Nama',
+      onConfirm: (newName) => {
+        if (!newName || newName.trim() === '') return;
+        const newOrg = { ...data.organization };
+        if (type === 'member' || type === 'head') {
+          newOrg.divisions = newOrg.divisions.map(div => {
+            if (div.id === id) {
+              const arr = type === 'member' ? [...div.members] : [...(div.heads || [])];
+              arr[idx] = { ...arr[idx], name: newName.trim() };
+              return type === 'member' ? { ...div, members: arr } : { ...div, heads: arr };
+            }
+            return div;
+          });
+        } else if (type === 'leadership') {
+          const roleIdx = parseInt(id);
+          newOrg.leadership[roleIdx] = {
+            ...newOrg.leadership[roleIdx],
+            name: newName.trim()
+          } as any;
+        } else if (type === 'leadership-member') {
+          const roleIdx = parseInt(id);
+          const role = { ...newOrg.leadership[roleIdx] };
+          const arr = [...(role.members || [])];
+          arr[idx] = { ...arr[idx], name: newName.trim() };
+          role.members = arr;
+          newOrg.leadership[roleIdx] = role;
+        }
+        updateData({ organization: newOrg });
+        showToast('Nama pengurus berhasil diperbarui!', 'success');
+      }
+    });
   };
 
   const handleSaveEdit = () => {
@@ -263,37 +450,6 @@ export default function Backroom() {
     
     updateData({ organization: newOrg });
     setEditingTarget(null);
-  };
-
-  const handleChangeName = (type: 'member'|'head'|'leadership'|'leadership-member', id: string, idx: number, currentName: string) => {
-    const newName = prompt('Masukkan nama baru:', currentName);
-    if (!newName || newName.trim() === '') return;
-    
-    const newOrg = { ...data.organization };
-    if (type === 'member' || type === 'head') {
-      newOrg.divisions = newOrg.divisions.map(div => {
-        if (div.id === id) {
-          const arr = type === 'member' ? [...div.members] : [...(div.heads || [])];
-          arr[idx] = { ...arr[idx], name: newName.trim() };
-          return type === 'member' ? { ...div, members: arr } : { ...div, heads: arr };
-        }
-        return div;
-      });
-    } else if (type === 'leadership') {
-      const roleIdx = parseInt(id);
-      newOrg.leadership[roleIdx] = {
-        ...newOrg.leadership[roleIdx],
-        name: newName.trim()
-      } as any;
-    } else if (type === 'leadership-member') {
-      const roleIdx = parseInt(id);
-      const role = { ...newOrg.leadership[roleIdx] };
-      const arr = [...(role.members || [])];
-      arr[idx] = { ...arr[idx], name: newName.trim() };
-      role.members = arr;
-      newOrg.leadership[roleIdx] = role;
-    }
-    updateData({ organization: newOrg });
   };
 
   const startEdit = (type: 'member'|'head'|'leadership'|'leadership-member', id: string, idx: number, currentName: string, currentImage: string) => {
@@ -344,15 +500,22 @@ export default function Backroom() {
                           try {
                             const importedData = JSON.parse(event.target?.result as string);
                             if (importedData && importedData.gallery && importedData.organization) {
-                              if (confirm('Apakah Anda yakin ingin mengganti SELURUH data dengan data dari file ini?')) {
-                                updateData(importedData);
-                                alert('Data berhasil di-import!');
-                              }
+                              openConfirm({
+                                title: 'Konfirmasi Import Data',
+                                description: 'Apakah Anda yakin ingin menimpa seluruh data website dengan data dari file JSON ini?',
+                                warning: 'Data lama di browser Anda akan digantikan sepenuhnya.',
+                                confirmText: 'Ya, Timpa Data',
+                                isDestructive: true,
+                                onConfirm: () => {
+                                  updateData(importedData);
+                                  showToast('Data berhasil di-import!', 'success');
+                                }
+                              });
                             } else {
-                              alert('Format file JSON tidak sesuai dengan standar data OSMIS.');
+                              showToast('Format file JSON tidak sesuai dengan standar data OSMIS.', 'error');
                             }
                           } catch (err) {
-                            alert('Gagal membaca file JSON.');
+                            showToast('Gagal membaca file JSON.', 'error');
                           }
                         };
                         reader.readAsText(file);
@@ -360,11 +523,17 @@ export default function Backroom() {
                       }}
                     />
                   </label>
-                      <button 
-                        className={styles.btnPrimary} 
-                        style={{ background: '#eab308', color: '#000' }}
-                        onClick={async () => {
-                          if (!confirm('Peringatan: Ini akan menimpa data di server publik. Pastikan data sudah benar. Lanjutkan?')) return;
+                  <button 
+                    className={styles.btnPrimary} 
+                    style={{ background: '#eab308', color: '#000' }}
+                    onClick={() => {
+                      openConfirm({
+                        title: 'Terapkan ke Publik (Auto-Deploy)',
+                        description: 'Perubahan data akan disimpan ke GitHub dan diterapkan ke seluruh pengunjung website.',
+                        info: 'Vercel akan otomatis memproses pembaruan ini dalam waktu ~1 menit.',
+                        confirmText: 'Terapkan Sekarang',
+                        onConfirm: async () => {
+                          showToast('Sedang melakukan auto-deploy ke GitHub...', 'info');
                           try {
                             const res = await fetch('/api/deploy', {
                               method: 'POST',
@@ -373,17 +542,19 @@ export default function Backroom() {
                             });
                             const result = await res.json();
                             if (res.ok) {
-                              alert('Deploy berhasil! Vercel sedang memproses ulang website Anda (butuh waktu ~1 menit).');
+                              showToast('Deploy berhasil! Vercel sedang memproses website (~1 menit).', 'success');
                             } else {
-                              alert('Gagal deploy: ' + result.error);
+                              showToast('Gagal deploy: ' + result.error, 'error');
                             }
                           } catch (e: any) {
-                            alert('Terjadi kesalahan: ' + e.message);
+                            showToast('Terjadi kesalahan: ' + e.message, 'error');
                           }
-                        }}
-                      >
-                        Terapkan ke Publik (Auto-Deploy)
-                      </button>
+                        }
+                      });
+                    }}
+                  >
+                    Terapkan ke Publik (Auto-Deploy)
+                  </button>
                 </div>
               </div>
             </div>
@@ -505,37 +676,45 @@ export default function Backroom() {
                         <button 
                           className={styles.btnSecondary} 
                           style={{ padding: '0.4rem 0.8rem', fontSize: '0.9rem', background: '#3f3f46', borderColor: '#52525b' }}
-                          onClick={async () => {
-                            const newFolder = prompt(`Ganti ID Folder untuk kategori "${cat.name}"\n(PERHATIAN: Ini akan mengganti seluruh foto lama dengan foto dari folder baru)\n\nMasukkan ID Folder Google Drive:`);
-                            if (!newFolder || !newFolder.trim()) return;
+                          onClick={() => {
+                            openPrompt({
+                              title: `Ganti ID Folder: ${cat.name}`,
+                              description: 'Masukkan ID Folder Google Drive atau tautan folder Drive:',
+                              warning: 'Seluruh foto lama pada kategori ini akan digantikan otomatis dengan foto dari folder Drive baru.',
+                              placeholder: 'Contoh: 1aB2cD3eF4gH... atau link folder Drive',
+                              confirmText: 'Tarik & Ganti Foto',
+                              onConfirm: async (newFolder) => {
+                                if (!newFolder || !newFolder.trim()) return;
 
-                            let finalFolderId = newFolder.trim();
-                            if (finalFolderId.includes('folders/')) {
-                              finalFolderId = finalFolderId.split('folders/')[1].split('?')[0].split('/')[0];
-                            } else if (finalFolderId.includes('id=')) {
-                              finalFolderId = finalFolderId.split('id=')[1].split('&')[0];
-                            }
+                                let finalFolderId = newFolder.trim();
+                                if (finalFolderId.includes('folders/')) {
+                                  finalFolderId = finalFolderId.split('folders/')[1].split('?')[0].split('/')[0];
+                                } else if (finalFolderId.includes('id=')) {
+                                  finalFolderId = finalFolderId.split('id=')[1].split('&')[0];
+                                }
 
-                            alert('Sedang memuat foto dari Drive... Mohon tunggu (Jangan tutup halaman ini).');
-                            try {
-                              const res = await fetch(`/api/drive/files?folderId=${finalFolderId}`);
-                              const dataResponse = await res.json();
-                              if (res.ok) {
-                                if (!Array.isArray(dataResponse)) throw new Error('Format data tidak valid');
-                                const imageFiles = dataResponse.filter((f: any) => f.mimeType && f.mimeType.startsWith('image/'));
-                                if (imageFiles.length === 0) throw new Error('Tidak ada file gambar di folder ini.');
-                                
-                                const newIds = imageFiles.map((f: any) => f.id);
-                                updateData({ 
-                                  gallery: data.gallery.map(c => c.id === cat.id ? { ...c, ids: newIds } : c) 
-                                });
-                                alert(`Berhasil! ${newIds.length} foto baru telah menggantikan foto lama.`);
-                              } else {
-                                throw new Error(dataResponse.error || 'Gagal dari API');
+                                showToast('Sedang memuat foto dari Google Drive... Mohon tunggu.', 'info');
+                                try {
+                                  const res = await fetch(`/api/drive/files?folderId=${finalFolderId}`);
+                                  const dataResponse = await res.json();
+                                  if (res.ok) {
+                                    if (!Array.isArray(dataResponse)) throw new Error('Format data tidak valid');
+                                    const imageFiles = dataResponse.filter((f: any) => f.mimeType && f.mimeType.startsWith('image/'));
+                                    if (imageFiles.length === 0) throw new Error('Tidak ada file gambar di folder ini.');
+                                    
+                                    const newIds = imageFiles.map((f: any) => f.id);
+                                    updateData({ 
+                                      gallery: data.gallery.map(c => c.id === cat.id ? { ...c, ids: newIds } : c) 
+                                    });
+                                    showToast(`Berhasil! ${newIds.length} foto baru telah menggantikan foto lama.`, 'success');
+                                  } else {
+                                    throw new Error(dataResponse.error || 'Gagal mengambil data dari Drive API');
+                                  }
+                                } catch (err: any) {
+                                  showToast(`Error: ${err.message}`, 'error');
+                                }
                               }
-                            } catch (err: any) {
-                              alert(`ERROR: ${err.message}`);
-                            }
+                            });
                           }}
                         >
                           Ganti ID Folder
@@ -774,11 +953,20 @@ export default function Backroom() {
                         className={styles.btnPrimary} 
                         style={{ padding: '0.4rem 0.8rem', fontSize: '0.9rem' }}
                         onClick={() => {
-                          const newId = prompt(`Masukkan Folder ID Google Drive untuk kategori ${folder.name}:`, folder.folderId);
-                          if (newId !== null) {
-                            const newFolders = data.tiktokFolders?.map(f => f.id === folder.id ? { ...f, folderId: newId.trim() } : f);
-                            updateData({ tiktokFolders: newFolders });
-                          }
+                          openPrompt({
+                            title: `Edit Folder ID: ${folder.name}`,
+                            description: 'Masukkan Folder ID Google Drive untuk kategori TikTok ini:',
+                            defaultValue: folder.folderId || '',
+                            placeholder: 'Contoh: 1aB2cD3eF4gH...',
+                            confirmText: 'Simpan Folder ID',
+                            onConfirm: (newId) => {
+                              if (newId !== null) {
+                                const newFolders = data.tiktokFolders?.map(f => f.id === folder.id ? { ...f, folderId: newId.trim() } : f);
+                                updateData({ tiktokFolders: newFolders });
+                                showToast(`Folder ID untuk ${folder.name} berhasil disimpan!`, 'success');
+                              }
+                            }
+                          });
                         }}
                       >
                         Edit Folder ID
@@ -789,10 +977,11 @@ export default function Backroom() {
                           className={styles.btnSecondary} 
                           style={{ padding: '0.4rem 0.8rem', fontSize: '0.9rem', border: '1px solid #52525b', background: 'transparent', color: '#fafafa' }}
                           onClick={async () => {
+                            showToast(`Sedang menarik video dari Drive untuk ${folder.name}...`, 'info');
                             try {
                               const res = await fetch(`/api/drive/files?folderId=${folder.folderId}`);
                               if (!res.ok) {
-                                alert('Gagal menarik data dari Drive. Pastikan Anda sudah login ke Drive API di tab sebelah.');
+                                showToast('Gagal menarik data dari Drive. Pastikan Anda sudah login ke Drive API di tab sebelah.', 'error');
                                 return;
                               }
                               const files = await res.json();
@@ -802,9 +991,9 @@ export default function Backroom() {
                                 f.id === folder.id ? { ...f, videos: videoFiles } : f
                               );
                               updateData({ tiktokFolders: newFolders });
-                              alert(`Berhasil menarik ${videoFiles.length} video untuk kategori ${folder.name}! Jangan lupa klik Terapkan ke Publik.`);
-                            } catch (err) {
-                              alert('Error: ' + err);
+                              showToast(`Berhasil menarik ${videoFiles.length} video untuk ${folder.name}! Jangan lupa klik Terapkan ke Publik.`, 'success');
+                            } catch (err: any) {
+                              showToast('Error: ' + err.message, 'error');
                             }
                           }}
                         >
@@ -871,6 +1060,115 @@ export default function Backroom() {
           {renderContent()}
         </div>
       </main>
+
+      {/* Toast Notifications */}
+      <div className={styles.toastContainer}>
+        {toasts.map(toast => (
+          <div 
+            key={toast.id} 
+            className={`${styles.toast} ${
+              toast.type === 'success' ? styles.toastSuccess :
+              toast.type === 'error' ? styles.toastError :
+              toast.type === 'warning' ? styles.toastWarning : styles.toastInfo
+            }`}
+          >
+            {toast.type === 'success' && <CheckCircle size={18} />}
+            {toast.type === 'error' && <AlertCircle size={18} />}
+            {toast.type === 'warning' && <AlertTriangle size={18} />}
+            {toast.type === 'info' && <Info size={18} />}
+            <span style={{ flex: 1 }}>{toast.message}</span>
+            <button 
+              onClick={() => removeToast(toast.id)} 
+              style={{ background: 'none', border: 'none', color: 'inherit', cursor: 'pointer', opacity: 0.7, padding: 2 }}
+            >
+              <X size={14} />
+            </button>
+          </div>
+        ))}
+      </div>
+
+      {/* Custom Modal Dialog */}
+      {modalState.isOpen && (
+        <div className={styles.modalBackdrop} onClick={closeModal}>
+          <div className={styles.customModal} onClick={e => e.stopPropagation()}>
+            <div className={styles.modalHeader}>
+              <h3 className={styles.modalHeaderTitle}>
+                {modalState.isDestructive ? (
+                  <AlertTriangle size={18} color="#ef4444" />
+                ) : (
+                  <Sparkles size={18} color="var(--osmis-yellow)" />
+                )}
+                {modalState.title}
+              </h3>
+              <button className={styles.modalCloseBtn} onClick={closeModal}>
+                <X size={18} />
+              </button>
+            </div>
+
+            <div className={styles.modalBody}>
+              {modalState.description && (
+                <p className={styles.modalDesc}>{modalState.description}</p>
+              )}
+
+              {modalState.warning && (
+                <div className={styles.modalWarningBox}>
+                  <strong>⚠️ Perhatian:</strong> {modalState.warning}
+                </div>
+              )}
+
+              {modalState.info && (
+                <div className={styles.modalInfoBox}>
+                  <strong>ℹ️ Info:</strong> {modalState.info}
+                </div>
+              )}
+
+              {modalState.type === 'prompt' && (
+                <form 
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    if (!modalInputVal.trim()) return;
+                    modalState.onConfirm(modalInputVal.trim());
+                    closeModal();
+                  }}
+                  style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}
+                >
+                  <input
+                    type="text"
+                    className={styles.input}
+                    value={modalInputVal}
+                    onChange={e => setModalInputVal(e.target.value)}
+                    placeholder={modalState.placeholder || 'Ketik di sini...'}
+                    autoFocus
+                    style={{ background: '#18181b', borderColor: '#3f3f46', padding: '0.75rem 1rem', fontSize: '0.9rem' }}
+                  />
+                </form>
+              )}
+            </div>
+
+            <div className={styles.modalFooter}>
+              <button 
+                type="button" 
+                className={styles.btnSecondary} 
+                onClick={closeModal}
+                style={{ padding: '0.5rem 1rem', fontSize: '0.85rem' }}
+              >
+                {modalState.cancelText || 'Batal'}
+              </button>
+              <button 
+                type="button"
+                className={modalState.isDestructive ? styles.btnDanger : styles.btnPrimary}
+                style={modalState.isDestructive ? { padding: '0.5rem 1rem', fontSize: '0.85rem' } : { padding: '0.5rem 1rem', fontSize: '0.85rem', background: '#fafafa', color: '#09090b' }}
+                onClick={() => {
+                  modalState.onConfirm(modalInputVal.trim());
+                  closeModal();
+                }}
+              >
+                {modalState.confirmText || 'Lanjutkan'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

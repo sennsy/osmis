@@ -5,6 +5,7 @@ import styles from "../TikTok.module.css";
 export default function TikTokFeed({ videos, initialIndex, onClose }: { videos: any[], initialIndex: number, onClose: () => void }) {
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const [likedVideos, setLikedVideos] = useState<Record<string, boolean>>({});
+  const [toastMsg, setToastMsg] = useState<string | null>(null);
   
   const handleLike = (videoId: string) => {
     setLikedVideos(prev => ({ ...prev, [videoId]: !prev[videoId] }));
@@ -85,7 +86,8 @@ export default function TikTokFeed({ videos, initialIndex, onClose }: { videos: 
                     }).catch(console.error);
                   } else {
                     navigator.clipboard.writeText(window.location.href);
-                    alert("Tautan disalin ke papan klip!");
+                    setToastMsg("Tautan disalin ke papan klip! 🔗");
+                    setTimeout(() => setToastMsg(null), 2500);
                   }
                 }}>
                   <div className={styles.iconCircle}>↗️</div>
@@ -96,6 +98,26 @@ export default function TikTokFeed({ videos, initialIndex, onClose }: { videos: 
           </div>
         ))}
       </div>
+      {toastMsg && (
+        <div style={{
+          position: 'fixed',
+          top: '20px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          background: 'rgba(24, 24, 27, 0.9)',
+          backdropFilter: 'blur(10px)',
+          border: '1px solid #3f3f46',
+          color: '#fff',
+          padding: '10px 20px',
+          borderRadius: '20px',
+          fontSize: '0.9rem',
+          zIndex: 100002,
+          boxShadow: '0 10px 25px rgba(0,0,0,0.5)',
+          animation: 'fadeIn 0.2s ease-out'
+        }}>
+          {toastMsg}
+        </div>
+      )}
     </div>
   );
 }
