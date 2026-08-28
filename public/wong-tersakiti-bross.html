@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8">
@@ -174,8 +174,25 @@
     <div id="startOverlay" class="overlay">
       <h1>WONG TERSAKITI BROSS</h1>
       <p>Petualangan 2D Retro Platformer santri pantang menyerah!</p>
+      
+      <h3 style="margin-top: 20px; color: #eab308;">Pilih Karakter</h3>
+      <div id="characterSelect" style="display: flex; gap: 15px; margin: 15px 0;">
+        <div class="char-card active" data-char="ultraman" style="background: rgba(255,255,255,0.1); border: 2px solid #3b82f6; padding: 10px; border-radius: 8px; cursor: pointer; text-align: center;">
+            <img src="/assets/images/ultraman.png" alt="Ultraman" style="width:60px; height:80px; object-fit:contain; display:block; margin:0 auto;">
+            <p style="margin-top:5px; font-size:14px; font-weight:bold;">Ultraman</p>
+        </div>
+        <div class="char-card" data-char="spiderman" style="background: rgba(255,255,255,0.05); border: 2px solid transparent; padding: 10px; border-radius: 8px; cursor: pointer; text-align: center;">
+            <img src="/assets/images/spiderman.png" alt="Spiderman" style="width:60px; height:80px; object-fit:contain; display:block; margin:0 auto;">
+            <p style="margin-top:5px; font-size:14px; font-weight:bold;">Spiderman</p>
+        </div>
+        <div class="char-card" data-char="batman" style="background: rgba(255,255,255,0.05); border: 2px solid transparent; padding: 10px; border-radius: 8px; cursor: pointer; text-align: center;">
+            <img src="/assets/images/batman.png" alt="Batman" style="width:60px; height:80px; object-fit:contain; display:block; margin:0 auto;">
+            <p style="margin-top:5px; font-size:14px; font-weight:bold;">Batman</p>
+        </div>
+      </div>
+
       <button class="btn" id="startBtn">MULAI PETUALANGAN</button>
-      <p style="font-size: 0.8rem; margin-top: 20px; opacity: 0.6;">A / D / Panah untuk Bergerak • Space / W untuk Lompat • Injak musuh dari atas!</p>
+      <p style="font-size: 0.8rem; margin-top: 20px; opacity: 0.6;">A / D / Panah untuk Bergerak | Space / W untuk Lompat | Injak musuh dari atas!</p>
     </div>
 
     <!-- Game Over Overlay -->
@@ -363,8 +380,8 @@
       if (player.invulnerable > 0) player.invulnerable--;
 
       // Horizontal movement
-      if (keys.left) player.vx = -player.speed;
-      else if (keys.right) player.vx = player.speed;
+      if (keys.left) { player.vx = -player.speed; player.facingLeft = true; }
+      else if (keys.right) { player.vx = player.speed; player.facingLeft = false; }
       else player.vx *= 0.75;
 
       player.x += player.vx;
@@ -553,15 +570,27 @@
 
       // Draw Player
       if (player.invulnerable % 6 < 3) {
-        ctx.fillStyle = player.color;
-        ctx.fillRect(player.x, player.y, player.w, player.h);
-        // Headband / Santri Peci
-        ctx.fillStyle = '#18181b';
-        ctx.fillRect(player.x - 2, player.y - 6, player.w + 4, 10);
-        // Face / Eyes
-        ctx.fillStyle = '#fff';
-        const eyeX = player.vx >= 0 ? player.x + 18 : player.x + 4;
-        ctx.fillRect(eyeX, player.y + 12, 6, 6);
+        if (player.image) {
+          ctx.save();
+          if (player.facingLeft) {
+            ctx.translate(player.x + player.w, player.y);
+            ctx.scale(-1, 1);
+            ctx.drawImage(player.image, 0, 0, player.w, player.h);
+          } else {
+            ctx.drawImage(player.image, player.x, player.y, player.w, player.h);
+          }
+          ctx.restore();
+        } else {
+          ctx.fillStyle = player.color;
+          ctx.fillRect(player.x, player.y, player.w, player.h);
+          // Headband / Santri Peci
+          ctx.fillStyle = '#18181b';
+          ctx.fillRect(player.x - 2, player.y - 6, player.w + 4, 10);
+          // Face / Eyes
+          ctx.fillStyle = '#fff';
+          const eyeX = player.vx >= 0 ? player.x + 18 : player.x + 4;
+          ctx.fillRect(eyeX, player.y + 12, 6, 6);
+        }
       }
 
       // Particles
@@ -627,7 +656,34 @@
       setTimeout(() => playSfx(880, 'triangle', 0.4, 0.3), 200);
     }
 
-    document.getElementById('startBtn').addEventListener('click', startGame);
+    let selectedChar = 'ultraman';
+    const charCards = document.querySelectorAll('.char-card');
+    const images = {
+      'ultraman': new Image(),
+      'spiderman': new Image(),
+      'batman': new Image()
+    };
+    images['ultraman'].src = '/assets/images/ultraman.png';
+    images['spiderman'].src = '/assets/images/spiderman.png';
+    images['batman'].src = '/assets/images/batman.png';
+
+    charCards.forEach(card => {
+      card.addEventListener('click', () => {
+        charCards.forEach(c => {
+          c.style.borderColor = 'transparent';
+          c.classList.remove('active');
+        });
+        card.style.borderColor = '#3b82f6';
+        card.classList.add('active');
+        selectedChar = card.getAttribute('data-char');
+      });
+    });
+
+    document.getElementById('startBtn').addEventListener('click', () => {
+      player.image = images[selectedChar];
+      player.facingLeft = false;
+      startGame();
+    });
     document.getElementById('retryBtn').addEventListener('click', startGame);
     document.getElementById('playAgainBtn').addEventListener('click', startGame);
   </script>
