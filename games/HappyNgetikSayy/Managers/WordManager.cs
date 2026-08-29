@@ -19,7 +19,11 @@ public static class WordManager
         "string", "integer", "boolean", "double", "float", "decimal", "character", "array", "list", "dictionary",
         "dog", "cat", "bird", "fish", "turtle", "rabbit", "hamster", "guineapig", "parrot", "goldfish",
         "lion", "tiger", "bear", "elephant", "giraffe", "zebra", "monkey", "gorilla", "kangaroo", "koala",
-        "school", "college", "university", "student", "teacher", "professor", "classroom", "library", "laboratory", "gymnasium"
+        "school", "college", "university", "student", "teacher", "professor", "classroom", "library", "laboratory", "gymnasium",
+        "merelakan", "terluka", "tulus", "tersakiti", "pahlawan", "pembunuh", "si paling effort", "disia-siakan", "diabaikan",
+        "ultraman", "wong tulus", "setia", "badut", "kesatria", "pengorbanan", "ditinggalkan", "bertahan", "menyerah", "kecewa",
+        "harapan", "palsu", "luka", "air mata", "sendiri", "kesepian", "hancur", "kenangan", "melupakan", "move on", "sakit",
+        "ikhlas", "menunggu", "bayangan", "hilang", "pergi", "tanpa alasan", "cinta", "rahasia", "kisah", "akhir"
     };
 
     public static string GetRandomWord()

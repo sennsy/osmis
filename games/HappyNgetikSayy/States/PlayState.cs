@@ -135,6 +135,8 @@ public class PlayState : BaseState
         {
             return key.ToString()[0];
         }
+        if (key == Keys.Space) return ' ';
+        if (key == Keys.OemMinus) return '-';
         return '\0';
     }
 
