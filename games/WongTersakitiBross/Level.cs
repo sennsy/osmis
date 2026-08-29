@@ -23,17 +23,17 @@ namespace WongTersakitiBross
         public bool IsGameOver { get; private set; }
         public bool IsLevelComplete { get; private set; }
 
-        public Level()
+        public Level(int levelNum = 1)
         {
             Platforms = new List<Platform>();
             Coins = new List<Coin>();
             Enemies = new List<Enemy>();
             Checkpoints = new List<Checkpoint>();
 
-            LoadLevel();
+            LoadLevel(levelNum);
         }
 
-        private void LoadLevel()
+        private void LoadLevel(int levelNum)
         {
             MapWidth = 4000;
             LastCheckpointPosition = new Vector2(100, 500);
@@ -47,23 +47,24 @@ namespace WongTersakitiBross
             Platforms.Add(new Platform(new Vector2(400, 500), 200, 30, Color.SaddleBrown));
             Platforms.Add(new Platform(new Vector2(700, 400), 200, 30, Color.SaddleBrown));
             Platforms.Add(new Platform(new Vector2(1000, 300), 200, 30, Color.SaddleBrown));
-
-            Platforms.Add(new Platform(new Vector2(1500, 500), 150, 30, Color.SaddleBrown));
-            Platforms.Add(new Platform(new Vector2(1800, 400), 150, 30, Color.SaddleBrown));
-            Platforms.Add(new Platform(new Vector2(2100, 300), 150, 30, Color.SaddleBrown));
-
+            
             // Coins
-            Coins.Add(new Coin(new Vector2(490, 450)));
-            Coins.Add(new Coin(new Vector2(790, 350)));
-            Coins.Add(new Coin(new Vector2(1090, 250)));
-            Coins.Add(new Coin(new Vector2(1600, 600)));
-            Coins.Add(new Coin(new Vector2(1700, 600)));
-
+            Coins.Add(new Coin(new Vector2(480, 450)));
+            Coins.Add(new Coin(new Vector2(780, 350)));
+            Coins.Add(new Coin(new Vector2(1080, 250)));
+            
             // Enemies
-            Enemies.Add(new Enemy(new Vector2(600, 610)));
-            Enemies.Add(new Enemy(new Vector2(1600, 610)));
-            Enemies.Add(new Enemy(new Vector2(2800, 610)));
-            Enemies.Add(new Enemy(new Vector2(3200, 610)));
+            float speedMult = 1f + (levelNum - 1) * 0.3f;
+            Enemies.Add(new Enemy(new Vector2(600, 610)) { Speed = 100f * speedMult });
+            Enemies.Add(new Enemy(new Vector2(1600, 610)) { Speed = 100f * speedMult });
+            Enemies.Add(new Enemy(new Vector2(2800, 610)) { Speed = 100f * speedMult });
+            Enemies.Add(new Enemy(new Vector2(3200, 610)) { Speed = 100f * speedMult });
+            
+            if (levelNum > 1) {
+                for (int i = 0; i < levelNum; i++) {
+                    Enemies.Add(new Enemy(new Vector2(2500 + i*100, 610)) { Speed = 120f * speedMult });
+                }
+            }
 
             // Checkpoints
             Checkpoints.Add(new Checkpoint(new Vector2(1500, 570)));

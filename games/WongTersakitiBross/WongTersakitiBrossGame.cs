@@ -14,6 +14,9 @@ namespace WongTersakitiBross
         private Level _currentLevel;
         private Camera _camera;
         private int _selectedCharacterIndex = 0;
+        private int _currentLevelNum = 1;
+        private Texture2D _dinoTex;
+        private System.Collections.Generic.List<Vector2> _rainDrops = new System.Collections.Generic.List<Vector2>();
 
         public WongTersakitiBrossGame()
         {
@@ -47,6 +50,9 @@ namespace WongTersakitiBross
 
             using (var stream = TitleContainer.OpenStream("Assets/batman.png"))
                 Globals.BatmanTex = Texture2D.FromStream(GraphicsDevice, stream);
+                
+            using (var stream = TitleContainer.OpenStream("Assets/dino.png"))
+                _dinoTex = Texture2D.FromStream(GraphicsDevice, stream);
                 
             Globals.SelectedPlayerTex = Globals.UltramanTex; // Default
         }
@@ -104,10 +110,25 @@ namespace WongTersakitiBross
                     break;
 
                 case GameState.GameOver:
-                case GameState.LevelComplete:
                     if (InputManager.IsKeyPressed(Keys.Enter))
                     {
+                        _currentLevelNum = 1;
                         _currentState = GameState.MainMenu;
+                    }
+                    break;
+                case GameState.LevelComplete:
+                    if (_rainDrops.Count < 50) {
+                        _rainDrops.Add(new Vector2(new System.Random().Next(1280), new System.Random().Next(-500, 0)));
+                    }
+                    for (int i = 0; i < _rainDrops.Count; i++) {
+                        _rainDrops[i] = new Vector2(_rainDrops[i].X, _rainDrops[i].Y + 800f * Globals.TotalSeconds);
+                        if (_rainDrops[i].Y > 720) _rainDrops[i] = new Vector2(new System.Random().Next(1280), new System.Random().Next(-100, 0));
+                    }
+
+                    if (InputManager.IsKeyPressed(Keys.Enter))
+                    {
+                        _currentLevelNum++;
+                        StartGame();
                     }
                     break;
             }
@@ -117,7 +138,7 @@ namespace WongTersakitiBross
 
         private void StartGame()
         {
-            _currentLevel = new Level();
+            _currentLevel = new Level(_currentLevelNum);
             _currentState = GameState.Playing;
         }
 
@@ -138,9 +159,8 @@ namespace WongTersakitiBross
                 
                 if (_currentState == GameState.Paused)
                 {
-                    MiniFont.DrawText(_spriteBatch, "PAUSED", new Vector2(550, 300), Color.White, 8);
+                    MiniFont.DrawText(_spriteBatch, "PAUSED", new Vector2(550, 300), Color.Yellow, 5);
                 }
-                
                 _spriteBatch.End();
             }
             else
@@ -148,9 +168,8 @@ namespace WongTersakitiBross
                 _spriteBatch.Begin();
                 if (_currentState == GameState.MainMenu)
                 {
-                    MiniFont.DrawText(_spriteBatch, "WONG TERSAKITI BROSS", new Vector2(300, 200), Color.White, 6);
-                    MiniFont.DrawText(_spriteBatch, "PRESS ENTER TO START", new Vector2(400, 400), Color.White, 4);
-                    MiniFont.DrawText(_spriteBatch, "ARROWS JUMP AND MOVE", new Vector2(400, 450), Color.LightGray, 3);
+                    MiniFont.DrawText(_spriteBatch, "WONG TERSAKITI BROSS", new Vector2(250, 200), Color.White, 6);
+                    MiniFont.DrawText(_spriteBatch, "PRESS ENTER TO START", new Vector2(350, 400), Color.Yellow, 4);
                 }
                 else if (_currentState == GameState.CharacterSelection)
                 {
@@ -166,19 +185,36 @@ namespace WongTersakitiBross
                         Rectangle dest = new Rectangle(540, 300, 200, 300);
                         _spriteBatch.Draw(tex, dest, Color.White);
                     }
-
-                    MiniFont.DrawText(_spriteBatch, "PRESS ENTER TO PLAY", new Vector2(400, 650), Color.White, 4);
+                    MiniFont.DrawText(_spriteBatch, "PRESS ARROWS TO CHANGE", new Vector2(400, 650), Color.White, 3);
+                    MiniFont.DrawText(_spriteBatch, "PRESS ENTER TO CONFIRM", new Vector2(400, 700), Color.Yellow, 3);
                 }
                 else if (_currentState == GameState.GameOver)
                 {
                     MiniFont.DrawText(_spriteBatch, "GAME OVER", new Vector2(450, 200), Color.Red, 8);
+                    MiniFont.DrawText(_spriteBatch, $"SCORE: {_currentLevel.Score}", new Vector2(500, 350), Color.White, 4);
                     MiniFont.DrawText(_spriteBatch, "PRESS ENTER TO MENU", new Vector2(400, 400), Color.White, 4);
                 }
                 else if (_currentState == GameState.LevelComplete)
                 {
-                    MiniFont.DrawText(_spriteBatch, "LEVEL COMPLETE", new Vector2(350, 200), Color.Yellow, 8);
-                    MiniFont.DrawText(_spriteBatch, $"SCORE: {_currentLevel.Score}", new Vector2(500, 350), Color.White, 4);
-                    MiniFont.DrawText(_spriteBatch, "PRESS ENTER TO MENU", new Vector2(400, 450), Color.White, 4);
+                    // Draw Rain
+                    if (Globals.Pixel != null) {
+                        foreach(var drop in _rainDrops) {
+                            _spriteBatch.Draw(Globals.Pixel, new Rectangle((int)drop.X, (int)drop.Y, 2, 40), Color.White * 0.5f);
+                        }
+                    }
+                    
+                    // Draw Dino Couple
+                    if (_dinoTex != null) {
+                       _spriteBatch.Draw(_dinoTex, new Rectangle(500, 150, 80, 80), null, Color.White * 0.8f, 0, Vector2.Zero, SpriteEffects.FlipHorizontally, 0);
+                       _spriteBatch.Draw(_dinoTex, new Rectangle(620, 150, 80, 80), null, Color.LightPink * 0.8f, 0, Vector2.Zero, SpriteEffects.None, 0);
+                    }
+
+                    MiniFont.DrawText(_spriteBatch, "SEMOGA KAMU SELALU MERELAKAN", new Vector2(200, 300), Color.LightSkyBlue, 3);
+                    MiniFont.DrawText(_spriteBatch, "APA YANG MEMANG BUKAN MILIKMU.", new Vector2(200, 350), Color.LightSkyBlue, 3);
+                    MiniFont.DrawText(_spriteBatch, "(Bahkan pahlawan pun bisa terluka...)", new Vector2(300, 420), Color.Gray, 2);
+
+                    MiniFont.DrawText(_spriteBatch, $"SCORE: {_currentLevel.Score}", new Vector2(550, 500), Color.Yellow, 4);
+                    MiniFont.DrawText(_spriteBatch, "PRESS ENTER TO NEXT LEVEL", new Vector2(400, 600), Color.White, 4);
                 }
                 _spriteBatch.End();
             }
