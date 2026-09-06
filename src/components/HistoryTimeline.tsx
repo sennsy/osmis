@@ -5,6 +5,7 @@ import { useLanguage } from './LanguageProvider';
 import { useOsmisData } from '../lib/storage';
 import styles from './HistoryTimeline.module.css';
 import { toArabicNumerals } from '../utils/arabicNumerals';
+import HangingCard from './HangingCard';
 
 type StructureRow = { role: string; roleAr?: string; members: string[] };
 
@@ -63,9 +64,18 @@ export default function HistoryTimeline() {
               </div>
 
               {/* Visual: image OR structure OR placeholder */}
-              <div className={styles.cardVisual}>
+              <div 
+                className={styles.cardVisual} 
+                style={activePeriod?.image 
+                  ? { minHeight: '450px', overflow: 'visible', background: 'transparent', border: 'none' } 
+                  : {}
+                }
+              >
                 {activePeriod?.image ? (
-                  <img src={activePeriod.image} alt={activeYear} className={styles.visualImg} />
+                  <HangingCard 
+                    imageSrc={activePeriod.image} 
+                    title="Pengurus Aktif" 
+                  />
                 ) : structure ? (
                   <div className={styles.structureGrid}>
                     {structure.map((row, i) => (
