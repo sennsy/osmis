@@ -272,7 +272,7 @@ export default function Home() {
                 <Gamepad2 size={28} />
               </div>
               <div style={{ flex: 1 }}>
-                <h4 className="display-font" style={{ fontSize: '1.1rem', marginBottom: '0.25rem' }}>GMWST (Hari Tanpa Spek)</h4>
+                <h4 className="display-font" style={{ fontSize: '1.1rem', marginBottom: '0.25rem' }}>GMWST (gemme wong sing tulus)</h4>
                 <p style={{ fontSize: '0.85rem', opacity: 0.7 }}>Endless Runner Klasik Santri</p>
               </div>
               <span style={{ fontSize: '0.85rem', opacity: 0.6 }}>Mainkan ↗</span>
