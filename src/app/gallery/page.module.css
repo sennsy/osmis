@@ -51,6 +51,7 @@
     justify-content: center;
     flex-wrap: wrap;
     gap: 0.5rem;
+    zoom: 0.6; /* Shrink tabs significantly per user request */
   }
   .tabBtn {
     padding: 0.4rem 0.8rem;
@@ -164,7 +165,7 @@
     margin-bottom: 1.5rem;
   }
   .masonryGridWrapper {
-    padding: 0 2rem; /* Add padding to shrink the single column image */
-    zoom: 0.85; /* Scale down slightly */
+    padding: 0 4rem; /* Shrink images significantly */
+    zoom: 0.7; /* Scale down heavily per user request */
   }
 }
