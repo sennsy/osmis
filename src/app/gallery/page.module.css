@@ -165,7 +165,12 @@
     margin-bottom: 1.5rem;
   }
   .masonryGridWrapper {
-    padding: 0 4rem; /* Shrink images significantly */
-    zoom: 0.7; /* Scale down heavily per user request */
+    gap: 0.5rem;
+  }
+  .masonryCol {
+    gap: 0.5rem;
+  }
+  .image {
+    min-height: 150px; /* Reduce min-height for mobile 2-col layout */
   }
 }
