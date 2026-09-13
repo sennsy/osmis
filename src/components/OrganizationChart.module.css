@@ -192,8 +192,9 @@
     margin-bottom: 2rem;
   }
   .chartWrapper {
-    zoom: 0.35;
-    overflow-x: hidden;
+    zoom: 0.55;
+    overflow-x: auto;
+    padding-bottom: 1rem;
   }
 }
 

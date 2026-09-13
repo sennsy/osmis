@@ -27,6 +27,13 @@
   gap: 1.5rem;
 }
 
+@media (max-width: 768px) {
+  .masonry {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+  }
+}
+
 .imageItem {
   position: relative;
   overflow: hidden;
