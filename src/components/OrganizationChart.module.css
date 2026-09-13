@@ -238,16 +238,14 @@
 }
 
 .modalContent {
-  background: var(--card-bg);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
+  background: #ffffff;
   width: 100%;
   max-width: 900px;
-  border: 1px solid var(--border-color);
+  border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: 24px;
   padding: 2.5rem;
   position: relative;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
   animation: slideUp 0.3s ease;
   
   display: flex;
@@ -257,7 +255,9 @@
 }
 
 [data-theme='dark'] .modalContent {
-  box-shadow: 0 10px 40px rgba(0, 255, 136, 0.05);
+  background: #111827;
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
 }
 
 .closeBtn {
