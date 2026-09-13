@@ -63,6 +63,16 @@
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.05);
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.chartWrapper::-webkit-scrollbar {
+  height: 8px;
+}
+.chartWrapper::-webkit-scrollbar-thumb {
+  background: var(--osmis-green);
+  border-radius: 4px;
 }
 
 [data-theme='dark'] .chartWrapper {
@@ -176,22 +186,14 @@
 
 @media (max-width: 768px) {
   .section {
-    padding: 4rem 0; /* Reduce padding on mobile */
+    padding: 2rem 0;
   }
   .header {
-    margin-bottom: 3rem;
+    margin-bottom: 2rem;
   }
   .chartWrapper {
-    padding: 2.5rem 1rem;
-  }
-  .leaderInfo {
-    padding: 1.5rem;
-  }
-  .leaderName {
-    font-size: 1.5rem;
-  }
-  .leadersBox {
-    gap: 3rem; /* Tighter gap */
+    zoom: 0.35;
+    overflow-x: hidden;
   }
 }
 

@@ -283,6 +283,18 @@
   transform: translateX(5px);
 }
 
+.timelineLine {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: var(--sketch-line);
+  border-radius: 5px 2px 4px 1px;
+  transform: rotate(0.2deg);
+  z-index: 1;
+}
+
 @media (max-width: 768px) {
   .section {
     padding: 4rem 0; /* Reduce padding on mobile */
@@ -292,11 +304,23 @@
   }
   .timelineWrapper {
     margin-bottom: 2rem;
+    overflow-x: hidden;
+  }
+  .timelineScroller {
+    min-width: unset;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    justify-content: center;
+  }
+  .timelineLine {
+    display: none;
   }
   .cardContent {
     flex-direction: row;
     gap: 1rem;
     align-items: center;
+    width: 100%;
+    height: 100%;
   }
   .cardVisual {
     min-height: 180px;
@@ -306,6 +330,9 @@
   }
   .periodCard {
     padding: 1rem;
+    aspect-ratio: 16/9;
+    display: flex;
+    justify-content: center;
   }
   .cardInfo h3 {
     font-size: 1.5rem;

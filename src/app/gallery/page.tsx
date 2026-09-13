@@ -34,7 +34,7 @@ export default function FullGalleryPage() {
 
   React.useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth < 640) setCols(1);
+      if (window.innerWidth < 640) setCols(3);
       else if (window.innerWidth < 1024) setCols(2);
       else if (window.innerWidth < 1280) setCols(3);
       else setCols(4);

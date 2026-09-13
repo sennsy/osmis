@@ -156,13 +156,20 @@
 
 @media (max-width: 768px) {
   .section {
-    padding: 4rem 0; /* Reduce padding on mobile */
+    padding: 2rem 0;
   }
   .grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
   }
   .card {
-    padding: 1.5rem;
+    padding: 0.5rem;
+  }
+  .card h3 {
+    font-size: 0.9rem;
+  }
+  .card p {
+    font-size: 0.65rem;
   }
 }
 

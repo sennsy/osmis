@@ -81,7 +81,8 @@
 
 @media (max-width: 768px) {
   .visiMisiGrid {
-    grid-template-columns: 1fr;
+    gap: 1rem;
+    zoom: 0.7;
   }
 }
 
@@ -181,7 +182,8 @@
 
 @media (max-width: 768px) {
   .mottoExplainer {
-    grid-template-columns: 1fr;
+    gap: 0.5rem;
+    zoom: 0.7; /* Scale down to fit 3 columns */
   }
 }
 
@@ -309,6 +311,17 @@
   gap: 2.5rem;
   max-width: 1200px;
   margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .featuresGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    zoom: 0.7;
+  }
+  .featureCard {
+    padding: 1.5rem 1rem;
+  }
 }
 
 .featureCard {

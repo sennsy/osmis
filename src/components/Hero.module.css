@@ -32,7 +32,7 @@
 }
 
 .title {
-  font-size: clamp(4rem, 12vw, 10rem);
+  font-size: clamp(2.5rem, 12vw, 10rem);
   line-height: 0.9;
   letter-spacing: -0.04em;
   color: var(--text-color);
