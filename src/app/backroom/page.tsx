@@ -468,8 +468,8 @@ export default function Backroom() {
             
             <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem', marginBottom: '2rem', background: 'rgba(255,255,255,0.05)', padding: '1rem', borderRadius: '8px' }}>
               <div style={{ flex: 1 }}>
-                <h3 style={{ fontSize: '1rem', color: 'var(--osmis-yellow)', marginBottom: '0.5rem' }}>Migrasi Data (Vercel Prep)</h3>
-                <p style={{ fontSize: '0.85rem', color: '#a1a1aa', marginBottom: '1rem' }}>Gunakan fitur ini untuk memindahkan data LocalStorage ke komputer/browser lain (terutama setelah deploy ke Vercel).</p>
+                <h3 style={{ fontSize: '1rem', color: 'var(--osmis-yellow)', marginBottom: '0.5rem' }}>Migrasi Data</h3>
+                <p style={{ fontSize: '0.85rem', color: '#a1a1aa', marginBottom: '1rem' }}>Gunakan fitur ini untuk memindahkan data LocalStorage ke komputer/browser lain (terutama setelah melakukan deploy).</p>
                 <div style={{ display: 'flex', gap: '0.5rem' }}>
                   <button 
                     className={styles.btnPrimary} 
@@ -530,7 +530,7 @@ export default function Backroom() {
                       openConfirm({
                         title: 'Terapkan ke Publik (Auto-Deploy)',
                         description: 'Perubahan data akan disimpan ke GitHub dan diterapkan ke seluruh pengunjung website.',
-                        info: 'Vercel akan otomatis memproses pembaruan ini dalam waktu ~1 menit.',
+                        info: 'Sistem akan otomatis memproses pembaruan ini dalam waktu ~1 menit.',
                         confirmText: 'Terapkan Sekarang',
                         onConfirm: async () => {
                           showToast('Sedang melakukan auto-deploy ke GitHub...', 'info');
@@ -542,7 +542,7 @@ export default function Backroom() {
                             });
                             const result = await res.json();
                             if (res.ok) {
-                              showToast('Deploy berhasil! Vercel sedang memproses website (~1 menit).', 'success');
+                              showToast('Deploy berhasil! Server sedang memproses website (~1 menit).', 'success');
                             } else {
                               showToast('Gagal deploy: ' + result.error, 'error');
                             }

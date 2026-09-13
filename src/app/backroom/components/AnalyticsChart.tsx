@@ -57,37 +57,38 @@ export default function AnalyticsChart() {
       <div className={styles.header}>
         <div>
           <h3 className={styles.title}>Visitor Traffic (Real-time)</h3>
-          <p className={styles.subtitle}>Powered by Vercel Web Analytics</p>
+          <p className={styles.subtitle}>Powered by Web Analytics</p>
         </div>
       </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '4rem 1rem', textAlign: 'center' }}>
-        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--osmis-green)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: '1rem' }}>
-          <path d="M3 3v18h18" />
-          <path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3" />
+      <div className={styles.chartArea} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '250px', background: 'rgba(255,255,255,0.02)', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)' }}>
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ color: 'var(--osmis-cyan)', marginBottom: '1rem' }}>
+          <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+          <polyline points="3.29 7 12 12 20.71 7"></polyline>
+          <line x1="12" y1="22" x2="12" y2="12"></line>
         </svg>
         <h4 style={{ fontSize: '1.25rem', color: '#fff', marginBottom: '0.5rem' }}>Data Analitik Aktif</h4>
         <p style={{ color: '#a1a1aa', maxWidth: '400px', marginBottom: '1.5rem', lineHeight: '1.5' }}>
-          Website ini sekarang menggunakan sistem pelacakan otomatis dari Vercel. Untuk melihat jumlah pengunjung asli, negara asal, dan halaman yang paling sering dibuka, silakan buka Dashboard Vercel Anda.
+          Website ini menggunakan sistem pelacakan otomatis. Untuk melihat jumlah pengunjung asli, negara asal, dan halaman yang paling sering dibuka, silakan buka Dashboard Analitik Anda.
         </p>
         <a 
           href="https://vercel.com/dashboard" 
           target="_blank" 
           rel="noopener noreferrer"
           style={{
+            padding: '10px 20px',
             background: '#fff',
             color: '#000',
-            padding: '0.75rem 1.5rem',
             borderRadius: '6px',
-            fontWeight: '600',
+            fontSize: '0.9rem',
+            fontWeight: 500,
             textDecoration: 'none',
-            display: 'inline-block',
-            transition: 'background 0.2s ease'
+            transition: 'all 0.2s ease'
           }}
           onMouseOver={(e) => e.currentTarget.style.background = '#e5e5e5'}
           onMouseOut={(e) => e.currentTarget.style.background = '#fff'}
         >
-          Lihat Analitik Pengunjung di Vercel
+          Lihat Analitik Pengunjung
         </a>
       </div>
     </div>
