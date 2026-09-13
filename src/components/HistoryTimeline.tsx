@@ -72,10 +72,12 @@ export default function HistoryTimeline() {
                 }
               >
                 {activePeriod?.image ? (
-                  <HangingCard 
-                    imageSrc={activePeriod.image} 
-                    title="Pengurus Aktif" 
-                  />
+                  <div className={styles.cardVisualWrapper}>
+                    <HangingCard 
+                      imageSrc={activePeriod.image} 
+                      title="Pengurus Aktif" 
+                    />
+                  </div>
                 ) : structure ? (
                   <div className={styles.structureGrid}>
                     {structure.map((row, i) => (

@@ -294,17 +294,24 @@
     margin-bottom: 2rem;
   }
   .cardContent {
-    flex-direction: column;
-    gap: 1.5rem;
+    flex-direction: row;
+    gap: 1rem;
+    align-items: center;
   }
   .cardVisual {
-    min-height: 200px;
+    min-height: 180px;
+  }
+  .cardVisualWrapper {
+    zoom: 0.5;
   }
   .periodCard {
-    padding: 1.5rem;
+    padding: 1rem;
   }
   .cardInfo h3 {
-    font-size: 2.2rem;
+    font-size: 1.5rem;
+  }
+  .timelineLabel {
+    font-size: 0.75rem;
   }
 }
 
