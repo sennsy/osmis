@@ -333,12 +333,30 @@
 
 @media (max-width: 768px) {
   .featuresGrid {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-    padding: 0 1rem;
+    grid-template-columns: repeat(2, 1fr); /* 2x2 grid */
+    gap: 1rem;
+    padding: 0;
   }
   .featureCard {
-    padding: 2rem 1.5rem;
+    padding: 1.5rem 1rem;
+    min-height: 200px;
+  }
+  .featureIcon {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+  }
+  .featureName {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+  }
+  .featureDesc {
+    font-size: 0.75rem;
+    margin-bottom: 1rem;
+  }
+  .featureBtn {
+    padding: 0.5rem 1rem;
+    font-size: 0.75rem;
+    width: 100%;
   }
 }
 

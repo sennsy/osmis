@@ -134,7 +134,61 @@ export default function HistoryTimeline() {
                 </div>
                 {isActive && (
                   <div className={styles.mobilePeriodDetail}>
-                    <p>{period.descriptionKey ? (t as any)[period.descriptionKey] : period.description}</p>
+                    <p style={{ marginBottom: period.image || period.structure ? '1.5rem' : '0' }}>
+                      {period.descriptionKey ? (t as any)[period.descriptionKey] : period.description}
+                    </p>
+
+                    {period.image ? (
+                      <div style={{ borderRadius: '8px', overflow: 'hidden', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-color)', padding: '0.25rem' }}>
+                        <img 
+                          src={period.image} 
+                          alt="Pengurus" 
+                          style={{ width: '100%', height: 'auto', display: 'block', borderRadius: '4px', objectFit: 'cover' }} 
+                        />
+                      </div>
+                    ) : period.structure ? (
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', borderLeft: '2px solid var(--osmis-green)', paddingLeft: '1rem' }}>
+                        {period.structure.map((row: any, i: number) => (
+                          <div key={i} style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                            <span className="mono-font" style={{ fontSize: '0.75rem', opacity: 0.6, letterSpacing: '0.05em' }}>
+                              {language === 'ar' && row.roleAr ? row.roleAr : row.role}
+                            </span>
+                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem' }}>
+                              {row.members.map((m: string, j: number) => (
+                                <span key={j} style={{ fontSize: '0.85rem' }}>
+                                  {m}{j < row.members.length - 1 ? <span style={{opacity: 0.3}}>,</span> : ''}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div style={{ opacity: 0.5, fontStyle: 'italic', fontSize: '0.8rem', padding: '1rem', backgroundColor: 'rgba(0,0,0,0.02)', borderRadius: '8px', textAlign: 'center' }}>
+                        <span className="mono-font">{t.noVisualRecord}</span>
+                      </div>
+                    )}
+
+                    {period.year.includes('2026') && (
+                      <button 
+                        style={{ 
+                          marginTop: '1.5rem', 
+                          background: 'none', 
+                          border: '1px solid var(--border-color)', 
+                          color: 'var(--text-color)', 
+                          cursor: 'pointer', 
+                          fontSize: '0.8rem', 
+                          display: 'block',
+                          width: '100%',
+                          padding: '0.75rem',
+                          borderRadius: '8px',
+                          transition: 'background 0.3s'
+                        }}
+                        onClick={() => document.getElementById('organization')?.scrollIntoView({ behavior: 'smooth' })}
+                      >
+                        <span className="mono-font">{t.viewPeriod} →</span>
+                      </button>
+                    )}
                   </div>
                 )}
               </div>
