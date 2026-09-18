@@ -82,8 +82,17 @@
 @media (max-width: 768px) {
   .visiMisiGrid {
     grid-template-columns: 1fr;
-    gap: 1.5rem;
-    margin-top: 1.5rem;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  .visiCard, .misiCard {
+    padding: 1.25rem !important;
+  }
+  .vmLabel {
+    margin-bottom: 0.75rem !important;
+  }
+  .misiList {
+    gap: 0.75rem !important;
   }
 }
 

@@ -101,19 +101,20 @@
 
 @media (max-width: 768px) {
   .footer {
-    padding: 4rem 0 calc(2rem + env(safe-area-inset-bottom)); /* Reduce padding on mobile + safe area */
+    padding: 3rem 0 calc(2rem + env(safe-area-inset-bottom));
   }
   .top {
     flex-direction: column;
-    gap: 3rem;
-    margin-bottom: 3rem;
+    gap: 2rem;
+    margin-bottom: 2rem;
   }
   .links {
-    flex-direction: column;
-    gap: 2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
   }
   .controls {
-    gap: 2rem;
+    gap: 1.5rem;
   }
 }
 
