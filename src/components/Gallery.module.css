@@ -33,6 +33,9 @@
     gap: 0.5rem;
     padding: 0;
   }
+  .image {
+    filter: grayscale(0%) contrast(1);
+  }
 }
 
 .imageItem {

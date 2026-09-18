@@ -191,5 +191,6 @@
   }
   .image {
     min-height: 120px;
+    filter: grayscale(0%) contrast(1);
   }
 }
