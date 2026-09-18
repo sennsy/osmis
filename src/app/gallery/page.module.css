@@ -174,13 +174,13 @@
     margin-bottom: 1.5rem;
   }
   .masonryGridWrapper {
-    gap: 1.5rem;
-    padding: 0 1rem;
+    gap: 0.5rem;
+    padding: 0;
   }
   .masonryCol {
-    gap: 1.5rem;
+    gap: 0.5rem;
   }
   .image {
-    min-height: 250px;
+    min-height: 120px;
   }
 }

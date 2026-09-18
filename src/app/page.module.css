@@ -183,9 +183,25 @@
 
 @media (max-width: 768px) {
   .mottoExplainer {
-    grid-template-columns: 1fr; /* Stack vertically */
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
     gap: 1rem;
     padding-top: 1.5rem;
+    padding-bottom: 1rem;
+    -webkit-overflow-scrolling: touch;
+    margin-left: -1.5rem;
+    margin-right: -1.5rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+  .mottoExplainer::-webkit-scrollbar {
+    display: none;
+  }
+  .mottoWordCard {
+    flex: 0 0 80%; /* 80% width leaves 20% for the next card to peek */
+    scroll-snap-align: center;
   }
 }
 

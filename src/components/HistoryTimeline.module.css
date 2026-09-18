@@ -295,51 +295,89 @@
   z-index: 1;
 }
 
+.desktopTimeline {
+  display: block;
+}
+
+.mobileTimeline {
+  display: none;
+}
+
 @media (max-width: 768px) {
   .section {
-    padding: 3rem 0; /* Compact padding */
+    padding: 3rem 0;
   }
   .header {
     margin-bottom: 2rem;
   }
-  .timelineWrapper {
-    margin-bottom: 2.5rem;
-    padding: 1rem 0;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch;
+  .desktopTimeline {
+    display: none; /* Hide horizontal scroll and giant card on mobile */
   }
-  .timelineScroller {
-    min-width: max-content;
+  .mobileTimeline {
     display: flex;
-    justify-content: flex-start;
-    padding: 0 1rem;
-    gap: 2rem;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 0;
   }
-  .timelineNode {
-    scroll-snap-align: center;
+  .mobilePeriodRow {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all 0.3s;
   }
-  .timelineLine {
-    display: block;
-    top: 50%;
-    left: 0;
-    width: 100%;
-    height: 2px;
+  .mobileActive {
+    border-color: var(--osmis-green);
+    background: linear-gradient(135deg, var(--card-bg) 0%, var(--bg-color) 100%);
   }
-  .periodCard {
-    padding: 1.5rem;
-    border-radius: 16px;
+  .mobilePeriodHeader {
+    display: flex;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    cursor: pointer;
+    gap: 1rem;
   }
-  .cardContent {
-    flex-direction: column-reverse;
-    gap: 1.5rem;
+  .mobilePeriodYear {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.9rem;
+    opacity: 0.8;
   }
-  .cardInfo h3 {
-    font-size: 2rem;
+  .mobileNodeDot {
+    width: 10px;
+    height: 10px;
+    background-color: transparent;
+    border: 1px solid var(--text-color);
+    transform: rotate(45deg);
+    transition: all 0.3s;
   }
-  .cardVisualWrapper {
-    zoom: 0.65;
+  .mobileActive .mobileNodeDot {
+    background-color: var(--osmis-green);
+    border-color: var(--osmis-green);
+    box-shadow: 0 0 5px var(--osmis-green);
+  }
+  .mobilePeriodTitle {
+    flex: 1;
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+  .mobileActive .mobilePeriodTitle {
+    color: var(--osmis-green);
+  }
+  .mobileExpandIcon {
+    font-size: 1.25rem;
+    font-family: var(--font-mono);
+    opacity: 0.5;
+  }
+  .mobilePeriodDetail {
+    padding: 0 1.5rem 1.5rem 1.5rem;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    opacity: 0.8;
+    border-top: 1px dashed var(--sketch-line);
+    margin-top: 0.5rem;
+    padding-top: 1rem;
   }
 }
 

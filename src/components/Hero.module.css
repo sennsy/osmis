@@ -202,7 +202,9 @@
 @media (max-width: 768px) {
   .hero {
     padding: 0 1rem;
-    min-height: 100vh;
+    min-height: 85vh; /* Reduced vertical footprint */
+    justify-content: flex-start;
+    padding-top: 25vh; /* Push it down a bit natively */
   }
   .content {
     padding: 2rem 1.5rem;

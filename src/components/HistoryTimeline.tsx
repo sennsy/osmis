@@ -29,89 +29,119 @@ export default function HistoryTimeline() {
           <p className="mono-font">{t.archiveSubtitle}</p>
         </div>
 
-        <div className={styles.timelineWrapper}>
-          <div className={styles.timelineLine}></div>
-          <div className={styles.timelineScroller}>
-            {periods.map((period) => (
-              <div 
-                key={period.year} 
-                className={`${styles.timelineNode} ${activeYear === period.year ? styles.active : ''}`}
-                onClick={() => setActiveYear(period.year)}
-              >
-                <div className={styles.nodeDot}></div>
-                <div className={`${styles.nodeYear} mono-font`}>{getYearDisplay(period.year)}</div>
+        {/* DESKTOP TIMELINE (LOCKED) */}
+        <div className={styles.desktopTimeline}>
+          <div className={styles.timelineWrapper}>
+            <div className={styles.timelineLine}></div>
+            <div className={styles.timelineScroller}>
+              {periods.map((period) => (
+                <div 
+                  key={period.year} 
+                  className={`${styles.timelineNode} ${activeYear === period.year ? styles.active : ''}`}
+                  onClick={() => setActiveYear(period.year)}
+                >
+                  <div className={styles.nodeDot}></div>
+                  <div className={`${styles.nodeYear} mono-font`}>{getYearDisplay(period.year)}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className={styles.periodCard}>
+            <div className={styles.cardInner}>
+              <div className={styles.cardHeader}>
+                <span className="mono-font">{t.galleryNo} {getYearDisplay(activeYear.replace('–', ''))}</span>
               </div>
-            ))}
+              <div className={styles.cardContent}>
+                <div className={styles.cardInfo}>
+                  <h3 className="display-font">{getYearDisplay(activeYear)}</h3>
+                  {activePeriod?.leader ? (
+                    <>
+                      <h4 className="mono-font">{t.leaderTitle}: {language === 'ar' && activePeriod.leaderAr ? activePeriod.leaderAr : activePeriod.leader}</h4>
+                      <p>{activePeriod.descriptionKey ? (t as any)[activePeriod.descriptionKey] : activePeriod.description}</p>
+                    </>
+                  ) : (
+                    <p className={styles.placeholder}>{t.comingSoon}</p>
+                  )}
+                </div>
+
+                {/* Visual: image OR structure OR placeholder */}
+                <div 
+                  className={styles.cardVisual} 
+                  style={activePeriod?.image 
+                    ? { minHeight: '450px', overflow: 'visible', background: 'transparent', border: 'none' } 
+                    : {}
+                  }
+                >
+                  {activePeriod?.image ? (
+                    <div className={styles.cardVisualWrapper}>
+                      <HangingCard 
+                        imageSrc={activePeriod.image} 
+                        title="Pengurus Aktif" 
+                      />
+                    </div>
+                  ) : structure ? (
+                    <div className={styles.structureGrid}>
+                      {structure.map((row, i) => (
+                        <div key={i} className={styles.structureRow}>
+                          <span className={`${styles.structureRole} mono-font`}>
+                            {language === 'ar' && row.roleAr ? row.roleAr : row.role}
+                          </span>
+                          <div className={styles.structureMembers}>
+                            {row.members.map((m, j) => (
+                              <span key={j} className={styles.structureMember}>{m}</span>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className={styles.imagePlaceholder}>
+                      <span className="mono-font">{t.noVisualRecord}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+              {activeYear === '2026–2027' && (
+                <button 
+                  className={styles.viewBtn} 
+                  onClick={() => document.getElementById('organization')?.scrollIntoView({ behavior: 'smooth' })}
+                >
+                  <span className="mono-font">[ {t.viewPeriod} ]</span>
+                </button>
+              )}
+            </div>
           </div>
         </div>
 
-        <div className={styles.periodCard}>
-          <div className={styles.cardInner}>
-            <div className={styles.cardHeader}>
-              <span className="mono-font">{t.galleryNo} {getYearDisplay(activeYear.replace('–', ''))}</span>
-            </div>
-            <div className={styles.cardContent}>
-              <div className={styles.cardInfo}>
-                <h3 className="display-font">{getYearDisplay(activeYear)}</h3>
-                {activePeriod?.leader ? (
-                  <>
-                    <h4 className="mono-font">{t.leaderTitle}: {language === 'ar' && activePeriod.leaderAr ? activePeriod.leaderAr : activePeriod.leader}</h4>
-                    <p>{activePeriod.descriptionKey ? (t as any)[activePeriod.descriptionKey] : activePeriod.description}</p>
-                  </>
-                ) : (
-                  <p className={styles.placeholder}>{t.comingSoon}</p>
-                )}
-              </div>
-
-              {/* Visual: image OR structure OR placeholder */}
-              <div 
-                className={styles.cardVisual} 
-                style={activePeriod?.image 
-                  ? { minHeight: '450px', overflow: 'visible', background: 'transparent', border: 'none' } 
-                  : {}
-                }
-              >
-                {activePeriod?.image ? (
-                  <div className={styles.cardVisualWrapper}>
-                    <HangingCard 
-                      imageSrc={activePeriod.image} 
-                      title="Pengurus Aktif" 
-                    />
+        {/* MOBILE TIMELINE COMPACT INDEX */}
+        <div className={styles.mobileTimeline}>
+          {periods.map((period) => {
+            const isActive = activeYear === period.year;
+            return (
+              <div key={period.year} className={`${styles.mobilePeriodRow} ${isActive ? styles.mobileActive : ''}`}>
+                <div className={styles.mobilePeriodHeader} onClick={() => setActiveYear(isActive ? '' : period.year)}>
+                  <div className={styles.mobilePeriodYear}>
+                    <div className={styles.mobileNodeDot}></div>
+                    <span className="mono-font">{getYearDisplay(period.year)}</span>
                   </div>
-                ) : structure ? (
-                  <div className={styles.structureGrid}>
-                    {structure.map((row, i) => (
-                      <div key={i} className={styles.structureRow}>
-                        <span className={`${styles.structureRole} mono-font`}>
-                          {language === 'ar' && row.roleAr ? row.roleAr : row.role}
-                        </span>
-                        <div className={styles.structureMembers}>
-                          {row.members.map((m, j) => (
-                            <span key={j} className={styles.structureMember}>{m}</span>
-                          ))}
-                        </div>
-                      </div>
-                    ))}
+                  <div className={styles.mobilePeriodTitle}>
+                    {period.leader ? (language === 'ar' && period.leaderAr ? period.leaderAr : period.leader) : t.comingSoon}
                   </div>
-                ) : (
-                  <div className={styles.imagePlaceholder}>
-                    <span className="mono-font">{t.noVisualRecord}</span>
+                  <div className={styles.mobileExpandIcon}>
+                    {isActive ? '−' : '+'}
+                  </div>
+                </div>
+                {isActive && (
+                  <div className={styles.mobilePeriodDetail}>
+                    <p>{period.descriptionKey ? (t as any)[period.descriptionKey] : period.description}</p>
                   </div>
                 )}
               </div>
-            </div>
-            {activeYear === '2026–2027' && (
-              <button 
-                className={styles.viewBtn} 
-                onClick={() => document.getElementById('organization')?.scrollIntoView({ behavior: 'smooth' })}
-              >
-                <span className="mono-font">[ {t.viewPeriod} ]</span>
-              </button>
-            )}
-          </div>
+            );
+          })}
         </div>
       </div>
     </section>
   );
 }
-
