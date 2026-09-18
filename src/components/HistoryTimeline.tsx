@@ -139,12 +139,13 @@ export default function HistoryTimeline() {
                     </p>
 
                     {period.image ? (
-                      <div style={{ borderRadius: '8px', overflow: 'hidden', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-color)', padding: '0.25rem' }}>
-                        <img 
-                          src={period.image} 
-                          alt="Pengurus" 
-                          style={{ width: '100%', height: 'auto', display: 'block', borderRadius: '4px', objectFit: 'cover' }} 
-                        />
+                      <div style={{ display: 'flex', justifyContent: 'center', margin: '1rem 0' }}>
+                        <div style={{ zoom: 0.75, width: '100%', display: 'flex', justifyContent: 'center' }}>
+                          <HangingCard 
+                            imageSrc={period.image} 
+                            title="Pengurus Aktif" 
+                          />
+                        </div>
                       </div>
                     ) : period.structure ? (
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', borderLeft: '2px solid var(--osmis-green)', paddingLeft: '1rem' }}>
