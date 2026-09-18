@@ -342,29 +342,31 @@
 
 @media (max-width: 768px) {
   .featuresGrid {
-    grid-template-columns: repeat(2, 1fr); /* 2x2 grid */
-    gap: 1rem;
+    grid-template-columns: 1fr; /* 1 column on mobile like divisions */
+    gap: 1.25rem;
     padding: 0;
   }
   .featureCard {
-    padding: 1.5rem 1rem;
-    min-height: 200px;
+    padding: 2rem 1.5rem;
+    min-height: auto;
+    align-items: center;
+    text-align: center;
   }
   .featureIcon {
-    font-size: 1.8rem;
+    font-size: 2.5rem;
     margin-bottom: 1rem;
   }
   .featureName {
-    font-size: 1.1rem;
+    font-size: 1.25rem;
     margin-bottom: 0.5rem;
   }
   .featureDesc {
-    font-size: 0.75rem;
-    margin-bottom: 1rem;
+    font-size: 0.85rem;
+    margin-bottom: 1.5rem;
   }
   .featureBtn {
-    padding: 0.5rem 1rem;
-    font-size: 0.75rem;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.85rem;
     width: 100%;
   }
 }

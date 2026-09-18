@@ -197,7 +197,7 @@ export default function Home() {
               </button>
             </div>
             
-            {/* Game 1: Happy Ngetik Sayy */}
+            {/* Game 1: Wong Tersakiti Bross */}
             <div 
               style={{
                 display: 'flex',
@@ -210,34 +210,13 @@ export default function Home() {
                 cursor: 'pointer',
                 transition: 'all 0.2s'
               }}
-              onClick={() => window.location.href = '/happy-ngetik-sayy.html'}
-              onMouseOver={e => e.currentTarget.style.borderColor = 'var(--text-color)'}
-              onMouseOut={e => e.currentTarget.style.borderColor = 'var(--border-color)'}
-            >
-              <div style={{ padding: '1rem', background: 'rgba(16,185,129,0.1)', color: '#10b981', borderRadius: '0.75rem' }}>
-                <Gamepad2 size={28} />
-              </div>
-              <div style={{ flex: 1 }}>
-                <h4 className="display-font" style={{ fontSize: '1.1rem', marginBottom: '0.25rem' }}>Happy Ngetik Sayy (HTS)</h4>
-                <p style={{ fontSize: '0.85rem', opacity: 0.7 }}>Game 2D Edukatif Mengetik Cepat</p>
-              </div>
-              <span style={{ fontSize: '0.85rem', color: '#10b981', fontWeight: 600 }}>Mainkan ↗</span>
-            </div>
-
-            {/* Game 2: Wong Tersakiti Bross */}
-            <div 
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '1rem',
-                padding: '1rem',
-                borderRadius: '1rem',
-                border: '1px solid var(--border-color)',
-                background: 'var(--bg-color)',
-                cursor: 'pointer',
-                transition: 'all 0.2s'
+              onClick={() => {
+                if (typeof window !== 'undefined' && window.innerWidth < 768) {
+                  alert("Game ini khusus untuk pengguna Desktop/PC (membutuhkan keyboard fisik).");
+                } else {
+                  window.location.href = '/wong-tersakiti-bross.html';
+                }
               }}
-              onClick={() => window.location.href = '/wong-tersakiti-bross.html'}
               onMouseOver={e => e.currentTarget.style.borderColor = 'var(--text-color)'}
               onMouseOut={e => e.currentTarget.style.borderColor = 'var(--border-color)'}
             >
@@ -251,7 +230,7 @@ export default function Home() {
               <span style={{ fontSize: '0.85rem', color: '#3b82f6', fontWeight: 600 }}>Mainkan ↗</span>
             </div>
 
-            {/* Game 3: GMWST (Dino) */}
+            {/* Game 2: GMWST (Dino) */}
             <div 
               style={{
                 display: 'flex',
@@ -276,6 +255,40 @@ export default function Home() {
                 <p style={{ fontSize: '0.85rem', opacity: 0.7 }}>Endless Runner Klasik Santri</p>
               </div>
               <span style={{ fontSize: '0.85rem', opacity: 0.6 }}>Mainkan ↗</span>
+            </div>
+
+            {/* Game 3: Happy Ngetik Sayy (Moved to bottom, mobile restricted) */}
+            <div 
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '1rem',
+                padding: '1rem',
+                borderRadius: '1rem',
+                border: '1px solid var(--border-color)',
+                background: 'var(--bg-color)',
+                cursor: 'pointer',
+                transition: 'all 0.2s',
+                opacity: typeof window !== 'undefined' && window.innerWidth < 768 ? 0.6 : 1
+              }}
+              onClick={() => {
+                if (typeof window !== 'undefined' && window.innerWidth < 768) {
+                  alert("Game ini khusus untuk pengguna Desktop/PC (membutuhkan keyboard fisik untuk mengetik).");
+                } else {
+                  window.location.href = '/happy-ngetik-sayy.html';
+                }
+              }}
+              onMouseOver={e => e.currentTarget.style.borderColor = 'var(--text-color)'}
+              onMouseOut={e => e.currentTarget.style.borderColor = 'var(--border-color)'}
+            >
+              <div style={{ padding: '1rem', background: 'rgba(16,185,129,0.1)', color: '#10b981', borderRadius: '0.75rem' }}>
+                <Gamepad2 size={28} />
+              </div>
+              <div style={{ flex: 1 }}>
+                <h4 className="display-font" style={{ fontSize: '1.1rem', marginBottom: '0.25rem' }}>Happy Ngetik Sayy (HTS)</h4>
+                <p style={{ fontSize: '0.85rem', opacity: 0.7 }}>Game 2D Edukatif Mengetik Cepat</p>
+              </div>
+              <span style={{ fontSize: '0.85rem', color: '#10b981', fontWeight: 600 }}>Mainkan ↗</span>
             </div>
           </div>
         </div>
