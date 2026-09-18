@@ -125,7 +125,7 @@ export default function FullGalleryPage() {
               className={`${styles.tabBtn} ${styles.moreBtn} mono-font`}
               onClick={() => setShowAllFilters(!showAllFilters)}
             >
-              {showAllFilters ? "- Lebih Sedikit" : "+ Lainnya"}
+              {showAllFilters ? (t.showLess || "- Lebih Sedikit") : (t.showMore || "+ Lainnya")}
             </button>
           </div>
         </div>

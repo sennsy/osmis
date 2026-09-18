@@ -77,7 +77,7 @@ export default function HistoryTimeline() {
                     <div className={styles.cardVisualWrapper}>
                       <HangingCard 
                         imageSrc={activePeriod.image} 
-                        title="Pengurus Aktif" 
+                        title={t.activeBoard || "Pengurus Aktif"} 
                       />
                     </div>
                   ) : structure ? (
@@ -143,7 +143,7 @@ export default function HistoryTimeline() {
                         <div style={{ zoom: 0.75, width: '100%', display: 'flex', justifyContent: 'center' }}>
                           <HangingCard 
                             imageSrc={period.image} 
-                            title="Pengurus Aktif" 
+                            title={t.activeBoard || "Pengurus Aktif"} 
                           />
                         </div>
                       </div>

@@ -75,6 +75,9 @@ export const translations = {
     titleKetua: "KETUA OSMIS",
     titleWakil: "WAKIL KETUA",
     titleSekben: "SEKRETARIS & BENDAHARA (SEKBEN)",
+    activeBoard: "Pengurus Aktif",
+    showMore: "+ LAINNYA",
+    showLess: "- LEBIH SEDIKIT",
     // Divisions
     divKeamanan: "KEAMANAN",
     divIbadah: "IBADAH",
@@ -167,6 +170,9 @@ export const translations = {
     titleKetua: "OSMIS CHAIRMAN",
     titleWakil: "VICE CHAIRMAN",
     titleSekben: "SECRETARY & TREASURER",
+    activeBoard: "ACTIVE BOARD",
+    showMore: "+ SHOW MORE",
+    showLess: "- SHOW LESS",
     // Divisions
     divKeamanan: "SECURITY",
     divIbadah: "WORSHIP",
@@ -259,6 +265,9 @@ export const translations = {
     titleKetua: "رئيس جمعية طلاب",
     titleWakil: "نائب الرئيس",
     titleSekben: "السكرتير وأمين الصندوق",
+    activeBoard: "الإدارة النشطة",
+    showMore: "+ عرض المزيد",
+    showLess: "- عرض أقل",
     // Divisions
     divKeamanan: "الأمن",
     divIbadah: "العبادة",
