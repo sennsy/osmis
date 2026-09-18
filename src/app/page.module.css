@@ -81,8 +81,9 @@
 
 @media (max-width: 768px) {
   .visiMisiGrid {
-    gap: 1rem;
-    zoom: 0.7;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
   }
 }
 
@@ -182,8 +183,9 @@
 
 @media (max-width: 768px) {
   .mottoExplainer {
-    gap: 0.5rem;
-    zoom: 0.7; /* Scale down to fit 3 columns */
+    grid-template-columns: 1fr; /* Stack vertically */
+    gap: 1rem;
+    padding-top: 1.5rem;
   }
 }
 
@@ -194,7 +196,7 @@
   padding: 1.25rem 1.5rem;
   background: linear-gradient(135deg, var(--card-bg) 0%, var(--bg-color) 100%);
   border-left: 3px solid var(--osmis-green);
-  border-radius: 0 8px 8px 0;
+  border-radius: 4px;
   transition: transform 0.25s ease, border-color 0.25s ease;
   text-align: left;
 }
@@ -315,12 +317,12 @@
 
 @media (max-width: 768px) {
   .featuresGrid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
-    zoom: 0.7;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding: 0 1rem;
   }
   .featureCard {
-    padding: 1.5rem 1rem;
+    padding: 2rem 1.5rem;
   }
 }
 

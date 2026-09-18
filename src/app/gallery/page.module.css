@@ -48,14 +48,23 @@
 
 @media (max-width: 768px) {
   .filterTabs {
-    justify-content: center;
-    flex-wrap: wrap;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
     gap: 0.5rem;
-    zoom: 0.6; /* Shrink tabs significantly per user request */
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+  }
+  .filterTabs::-webkit-scrollbar {
+    display: none;
   }
   .tabBtn {
-    padding: 0.4rem 0.8rem;
-    font-size: 0.75rem;
+    padding: 0.75rem 1.25rem;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+    scroll-snap-align: start;
+    white-space: nowrap;
   }
 }
 
@@ -165,12 +174,13 @@
     margin-bottom: 1.5rem;
   }
   .masonryGridWrapper {
-    gap: 0.5rem;
+    gap: 1.5rem;
+    padding: 0 1rem;
   }
   .masonryCol {
-    gap: 0.5rem;
+    gap: 1.5rem;
   }
   .image {
-    min-height: 150px; /* Reduce min-height for mobile 2-col layout */
+    min-height: 250px;
   }
 }

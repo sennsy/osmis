@@ -186,15 +186,25 @@
 
 @media (max-width: 768px) {
   .section {
-    padding: 2rem 0;
+    padding: 3rem 0; /* Compact padding */
   }
   .header {
-    margin-bottom: 2rem;
+    margin-bottom: 3rem;
+  }
+  .header h2 {
+    font-size: 2.5rem; /* Safe mobile size */
   }
   .chartWrapper {
-    zoom: 0.55;
-    overflow-x: auto;
-    padding-bottom: 1rem;
+    padding: 2.5rem 1rem;
+    overflow-x: hidden;
+  }
+  .leaderInfo {
+    padding: 1.5rem; /* Smaller padding */
+  }
+  .leaderNumber {
+    font-size: 4rem; /* Scale down watermark number */
+    top: -2rem;
+    left: 0;
   }
 }
 

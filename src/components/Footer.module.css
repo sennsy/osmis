@@ -101,7 +101,7 @@
 
 @media (max-width: 768px) {
   .footer {
-    padding: 4rem 0 2rem; /* Reduce padding on mobile */
+    padding: 4rem 0 calc(2rem + env(safe-area-inset-bottom)); /* Reduce padding on mobile + safe area */
   }
   .top {
     flex-direction: column;
