@@ -46,25 +46,34 @@
   margin-top: 2rem;
 }
 
+.moreBtn {
+  display: none; /* Hidden on desktop */
+}
+
 @media (max-width: 768px) {
   .filterTabs {
-    justify-content: flex-start;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    padding-bottom: 0.5rem;
+    justify-content: center;
+    flex-wrap: wrap; /* Wrap instead of horizontal scroll */
     gap: 0.5rem;
-    -webkit-overflow-scrolling: touch;
-    scroll-snap-type: x mandatory;
+    margin-top: 1.5rem;
   }
-  .filterTabs::-webkit-scrollbar {
-    display: none;
-  }
+  
   .tabBtn {
-    padding: 0.75rem 1.25rem;
-    font-size: 0.85rem;
-    flex-shrink: 0;
-    scroll-snap-align: start;
+    padding: 0.5rem 1rem;
+    font-size: 0.75rem;
     white-space: nowrap;
+    border-radius: 20px; /* Chip style */
+  }
+
+  .moreBtn {
+    display: inline-block;
+    border-style: dashed;
+    background: transparent;
+  }
+
+  /* When collapsed on mobile, hide buttons from 5th child onwards (except moreBtn) */
+  .filterTabs.collapsed .tabBtn:nth-child(n+5):not(.moreBtn) {
+    display: none;
   }
 }
 

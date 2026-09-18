@@ -18,6 +18,7 @@ export default function FullGalleryPage() {
   const [activeCategory, setActiveCategory] = useState<string>('all');
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [visibleCount, setVisibleCount] = useState<number>(20);
+  const [showAllFilters, setShowAllFilters] = useState<boolean>(false);
   const observerRef = React.useRef<HTMLDivElement | null>(null);
 
   const displayedIds = useMemo(() => {
@@ -96,7 +97,7 @@ export default function FullGalleryPage() {
             )}
           </p>
           
-          <div className={styles.filterTabs}>
+          <div className={`${styles.filterTabs} ${!showAllFilters ? styles.collapsed : ''}`}>
             <button 
               className={`${styles.tabBtn} ${activeCategory === 'all' ? styles.activeTab : ''} mono-font`}
               onClick={() => setActiveCategory('all')}
@@ -118,6 +119,14 @@ export default function FullGalleryPage() {
                 </button>
               );
             })}
+            
+            {/* Mobile "More" button to expand filters */}
+            <button 
+              className={`${styles.tabBtn} ${styles.moreBtn} mono-font`}
+              onClick={() => setShowAllFilters(!showAllFilters)}
+            >
+              {showAllFilters ? "- Lebih Sedikit" : "+ Lainnya"}
+            </button>
           </div>
         </div>
 
