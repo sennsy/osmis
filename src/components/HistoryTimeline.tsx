@@ -139,7 +139,7 @@ export default function HistoryTimeline() {
                     </p>
 
                     {period.image ? (
-                      <div style={{ display: 'flex', justifyContent: 'center', margin: '1rem 0' }}>
+                      <div style={{ display: 'flex', justifyContent: 'center', margin: '1rem 0', overflow: 'hidden', paddingTop: '0.5rem' }}>
                         <div style={{ zoom: 0.75, width: '100%', display: 'flex', justifyContent: 'center' }}>
                           <HangingCard 
                             imageSrc={period.image} 
