@@ -89,11 +89,14 @@ export default function Hero() {
       <div className={styles.hexDecoration}></div>
       
       {!isDark && (
-        <img
-          src="/video_utama.gif"
-          alt="Watermark OSMIS Animation"
+        <video
+          src="/video_utama.webm"
           className={styles.videoWatermark}
           style={{ opacity: showAnimation ? 0.5 : 0 }}
+          autoPlay
+          loop
+          muted
+          playsInline
           onError={() => setShowAnimation(false)}
         />
       )}
