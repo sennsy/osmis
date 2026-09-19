@@ -1,96 +1,245 @@
+"use client";
+
 import React, { useState, useEffect } from 'react';
+import { Users, Eye, Activity, ShieldCheck, RefreshCw, AlertCircle } from 'lucide-react';
 import styles from './AnalyticsChart.module.css';
 
+interface DailyStat {
+  date: string;
+  label: string;
+  requests: number;
+  pageViews: number;
+  uniques: number;
+  bytes: number;
+  cachedBytes: number;
+}
+
+interface AnalyticsData {
+  success: boolean;
+  hasData: boolean;
+  totals: {
+    requests: number;
+    pageViews: number;
+    uniques: number;
+    bandwidthBytes: number;
+    cachedBytes: number;
+    cacheRate: string;
+  };
+  daily: DailyStat[];
+}
+
 export default function AnalyticsChart() {
-  const [period, setPeriod] = useState<'daily' | 'weekly' | 'monthly' | 'yearly'>('daily');
-  const [visitsCount, setVisitsCount] = useState(0);
+  const [metric, setMetric] = useState<'uniques' | 'pageViews' | 'requests'>('uniques');
+  const [data, setData] = useState<AnalyticsData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    // Read actual local tracking data
-    const local = parseInt(localStorage.getItem('osmis_visits') || '0', 10);
-    // Add a baseline so the chart isn't empty on first visit
-    setVisitsCount(local + 120); 
-  }, []);
-
-  // Generate realistic looking data based on the true visit count
-  const generateData = () => {
-    const base = visitsCount;
-    return {
-      daily: [
-        { label: 'Sen', value: Math.floor(base * 0.15) },
-        { label: 'Sel', value: Math.floor(base * 0.12) },
-        { label: 'Rab', value: Math.floor(base * 0.18) },
-        { label: 'Kam', value: Math.floor(base * 0.10) },
-        { label: 'Jum', value: Math.floor(base * 0.25) },
-        { label: 'Sab', value: Math.floor(base * 0.35) },
-        { label: 'Min', value: base }, // Today's actual tracking
-      ],
-      weekly: [
-        { label: 'W1', value: base * 3 },
-        { label: 'W2', value: base * 4 },
-        { label: 'W3', value: base * 2.5 },
-        { label: 'W4', value: base * 5 },
-      ],
-      monthly: [
-        { label: 'Jan', value: base * 12 },
-        { label: 'Feb', value: base * 14 },
-        { label: 'Mar', value: base * 11 },
-        { label: 'Apr', value: base * 18 },
-        { label: 'Mei', value: base * 21 },
-        { label: 'Jun', value: base * 19 },
-      ],
-      yearly: [
-        { label: '2023', value: base * 150 },
-        { label: '2024', value: base * 210 },
-        { label: '2025', value: base * 289 },
-        { label: '2026', value: base * 356 },
-      ]
-    };
+  const fetchAnalytics = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch('/api/analytics');
+      if (!res.ok) {
+        const errJson = await res.json().catch(() => ({}));
+        throw new Error(errJson.error || 'Gagal memuat analitik');
+      }
+      const json: AnalyticsData = await res.json();
+      setData(json);
+    } catch (err: any) {
+      console.error('Analytics fetch error:', err);
+      setError(err.message || 'Terjadi kesalahan saat memuat analitik');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const chartData = generateData();
-  const data = chartData[period];
-  const maxValue = Math.max(...data.map(d => d.value), 1);
+  useEffect(() => {
+    fetchAnalytics();
+  }, []);
+
+  const formatBytes = (bytes: number) => {
+    if (!bytes || bytes === 0) return '0 B';
+    const k = 1024;
+    const sizes = ['B', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+  };
+
+  const dailyList = data?.daily || [];
+  const currentValues = dailyList.map(d => d[metric]);
+  const maxValue = Math.max(...currentValues, 1);
 
   return (
     <div className={styles.chartContainer}>
+      {/* Header */}
       <div className={styles.header}>
         <div>
-          <h3 className={styles.title}>Visitor Traffic (Real-time)</h3>
-          <p className={styles.subtitle}>Powered by Web Analytics</p>
+          <h3 className={styles.title} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <span>Statistik Pengunjung (Live Cloudflare)</span>
+            {loading && <RefreshCw size={14} className="animate-spin" style={{ opacity: 0.7 }} />}
+          </h3>
+          <p className={styles.subtitle}>
+            Data lalu lintas web real-time yang tersaring melalui jaringan Cloudflare.
+          </p>
+        </div>
+        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+          <div className={styles.tabs}>
+            <button 
+              className={`${styles.tabBtn} ${metric === 'uniques' ? styles.active : ''}`}
+              onClick={() => setMetric('uniques')}
+            >
+              Pengunjung
+            </button>
+            <button 
+              className={`${styles.tabBtn} ${metric === 'pageViews' ? styles.active : ''}`}
+              onClick={() => setMetric('pageViews')}
+            >
+              Tampilan
+            </button>
+            <button 
+              className={`${styles.tabBtn} ${metric === 'requests' ? styles.active : ''}`}
+              onClick={() => setMetric('requests')}
+            >
+              Requests
+            </button>
+          </div>
+          <button 
+            onClick={fetchAnalytics}
+            title="Muat Ulang Data"
+            style={{
+              background: '#18181b',
+              border: '1px solid #27272a',
+              color: '#fafafa',
+              borderRadius: '6px',
+              padding: '0.4rem 0.6rem',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+          >
+            <RefreshCw size={14} />
+          </button>
         </div>
       </div>
 
-      <div className={styles.chartArea} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '250px', background: 'rgba(255,255,255,0.02)', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)' }}>
-        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ color: 'var(--osmis-cyan)', marginBottom: '1rem' }}>
-          <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-          <polyline points="3.29 7 12 12 20.71 7"></polyline>
-          <line x1="12" y1="22" x2="12" y2="12"></line>
-        </svg>
-        <h4 style={{ fontSize: '1.25rem', color: '#fff', marginBottom: '0.5rem' }}>Data Analitik Aktif</h4>
-        <p style={{ color: '#a1a1aa', maxWidth: '400px', marginBottom: '1.5rem', lineHeight: '1.5' }}>
-          Website ini menggunakan sistem pelacakan otomatis. Untuk melihat jumlah pengunjung asli, negara asal, dan halaman yang paling sering dibuka, silakan buka Dashboard Analitik Anda.
-        </p>
-        <a 
-          href="https://vercel.com/dashboard" 
-          target="_blank" 
-          rel="noopener noreferrer"
-          style={{
-            padding: '10px 20px',
-            background: '#fff',
-            color: '#000',
-            borderRadius: '6px',
-            fontSize: '0.9rem',
-            fontWeight: 500,
-            textDecoration: 'none',
-            transition: 'all 0.2s ease'
-          }}
-          onMouseOver={(e) => e.currentTarget.style.background = '#e5e5e5'}
-          onMouseOut={(e) => e.currentTarget.style.background = '#fff'}
-        >
-          Lihat Analitik Pengunjung
-        </a>
+      {/* Metric Cards */}
+      <div style={{ 
+        display: 'grid', 
+        gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', 
+        gap: '1rem', 
+        marginBottom: '1.5rem' 
+      }}>
+        <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid #27272a', borderRadius: '8px', padding: '1rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#a1a1aa', fontSize: '0.75rem', marginBottom: '0.25rem' }}>
+            <Users size={14} color="var(--osmis-green, #4ade80)" /> Pengunjung Unik
+          </div>
+          <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#fafafa' }}>
+            {data?.totals.uniques?.toLocaleString('id-ID') || 0}
+          </div>
+        </div>
+
+        <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid #27272a', borderRadius: '8px', padding: '1rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#a1a1aa', fontSize: '0.75rem', marginBottom: '0.25rem' }}>
+            <Eye size={14} color="#38bdf8" /> Tampilan Halaman
+          </div>
+          <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#fafafa' }}>
+            {data?.totals.pageViews?.toLocaleString('id-ID') || 0}
+          </div>
+        </div>
+
+        <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid #27272a', borderRadius: '8px', padding: '1rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#a1a1aa', fontSize: '0.75rem', marginBottom: '0.25rem' }}>
+            <Activity size={14} color="#facc15" /> Total Requests
+          </div>
+          <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#fafafa' }}>
+            {data?.totals.requests?.toLocaleString('id-ID') || 0}
+          </div>
+        </div>
+
+        <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid #27272a', borderRadius: '8px', padding: '1rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#a1a1aa', fontSize: '0.75rem', marginBottom: '0.25rem' }}>
+            <ShieldCheck size={14} color="#a855f7" /> Hemat Bandwidth
+          </div>
+          <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#fafafa' }}>
+            {data?.totals.cacheRate || '0%'}
+          </div>
+          <div style={{ fontSize: '0.7rem', color: '#71717a', marginTop: '0.2rem' }}>
+            {formatBytes(data?.totals.cachedBytes || 0)} di-cache
+          </div>
+        </div>
       </div>
+
+      {/* Chart or Status */}
+      {error ? (
+        <div style={{ 
+          display: 'flex', 
+          flexDirection: 'column', 
+          alignItems: 'center', 
+          justifyContent: 'center', 
+          height: '200px', 
+          background: 'rgba(239, 68, 68, 0.05)', 
+          border: '1px dashed rgba(239, 68, 68, 0.2)', 
+          borderRadius: '8px',
+          padding: '1rem',
+          textAlign: 'center'
+        }}>
+          <AlertCircle size={24} color="#ef4444" style={{ marginBottom: '0.5rem' }} />
+          <p style={{ color: '#ef4444', fontSize: '0.875rem', fontWeight: 500 }}>{error}</p>
+          <p style={{ color: '#71717a', fontSize: '0.75rem', marginTop: '0.25rem' }}>
+            Pastikan variabel CLOUDFLARE_API_TOKEN sudah dipasang di Vercel.
+          </p>
+        </div>
+      ) : !data?.hasData ? (
+        <div style={{ 
+          display: 'flex', 
+          flexDirection: 'column', 
+          alignItems: 'center', 
+          justifyContent: 'center', 
+          height: '200px', 
+          background: 'rgba(255,255,255,0.02)', 
+          border: '1px dashed rgba(255,255,255,0.1)', 
+          borderRadius: '8px',
+          padding: '1.5rem',
+          textAlign: 'center'
+        }}>
+          <ShieldCheck size={32} color="var(--osmis-green, #4ade80)" style={{ marginBottom: '0.75rem' }} />
+          <h4 style={{ color: '#fafafa', fontSize: '0.95rem', fontWeight: 600, marginBottom: '0.25rem' }}>
+            Domain Sukses Terhubung ke Cloudflare!
+          </h4>
+          <p style={{ color: '#a1a1aa', fontSize: '0.8rem', maxWidth: '440px', lineHeight: 1.5 }}>
+            Data grafik harian sedang menunggu lalu lintas pengunjung masuk melalui DNS baru. Grafik akan otomatis terisi dan terupdate secara berkala.
+          </p>
+        </div>
+      ) : (
+        <div className={styles.chartArea}>
+          {dailyList.map((day, idx) => {
+            const val = day[metric];
+            const heightPercent = Math.max(Math.round((val / maxValue) * 100), 4);
+
+            return (
+              <div key={idx} className={styles.barGroup}>
+                <div className={styles.barWrapper}>
+                  <div 
+                    className={styles.bar} 
+                    style={{ 
+                      height: `${heightPercent}%`,
+                      backgroundColor: metric === 'uniques' ? 'var(--osmis-green, #4ade80)' : metric === 'pageViews' ? '#38bdf8' : '#fafafa'
+                    }}
+                  >
+                    <div className={styles.tooltip}>
+                      <strong>{val.toLocaleString('id-ID')}</strong> {metric}
+                      <br />
+                      <span style={{ fontSize: '0.65rem', color: '#a1a1aa' }}>{day.date}</span>
+                    </div>
+                  </div>
+                </div>
+                <div className={styles.label}>{day.label}</div>
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }
