@@ -81,7 +81,7 @@ export default function FullGalleryPage() {
     <div className={styles.page}>
       <div className={styles.container}>
         <div className={styles.header}>
-          <Link href="/#gallery" scroll={true} className={styles.backBtn}>
+          <Link href="/" className={styles.backBtn}>
             <ArrowLeft size={16} /> <span className="mono-font">{t.backToHome}</span>
           </Link>
           <h1 className="display-font">{t.archiveTitle}</h1>

@@ -94,7 +94,7 @@ export default function LearnPage() {
   return (
     <div style={{ minHeight: '100vh', padding: '2rem', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       <div style={{ width: '100%', maxWidth: '600px', display: 'flex', alignItems: 'center', marginBottom: '2rem' }}>
-        <Link href="/#introduction" scroll={true} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', opacity: 0.8, color: 'inherit', textDecoration: 'none' }}>
+        <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', opacity: 0.8, color: 'inherit', textDecoration: 'none' }}>
           <ArrowLeft size={20} /> <span className="mono-font">{t.backToHome}</span>
         </Link>
       </div>

@@ -131,7 +131,7 @@ export default function MBTIPage() {
     <div className={styles.mbtiContainer}>
       <div className={styles.contentWrapper}>
         <div className={styles.header}>
-          <Link href="/#introduction" scroll={true} className={styles.backLink}>
+          <Link href="/" className={styles.backLink}>
             <ArrowLeft size={16} /> Kembali ke Beranda
           </Link>
           <h1 className={styles.title}>The SMIS MBTI</h1>

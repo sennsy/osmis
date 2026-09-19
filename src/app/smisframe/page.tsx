@@ -335,7 +335,7 @@ export default function SMISFramePage() {
     <div className={styles.page}>
       <div className={styles.container}>
         <div className={styles.header}>
-          <Link href="/#introduction" scroll={true} className={styles.backBtn}>
+          <Link href="/" className={styles.backBtn}>
             <ArrowLeft size={16} /> <span className="mono-font">{t.backToHome || 'KEMBALI'}</span>
           </Link>
           <h1 className="display-font" style={{ fontSize: '2.5rem' }}>{t.smisFrameTitle || 'SMISFrame'}</h1>
