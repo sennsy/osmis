@@ -335,9 +335,9 @@ export default function SMISFramePage() {
     <div className={styles.page}>
       <div className={styles.container}>
         <div className={styles.header}>
-          <button onClick={() => window.history.length > 1 ? window.history.back() : window.location.href = '/'} className={styles.backBtn} style={{ background: 'none', border: 'none', color: 'inherit', cursor: 'pointer', padding: 0 }}>
+          <Link href="/" className={styles.backBtn}>
             <ArrowLeft size={16} /> <span className="mono-font">{t.backToHome || 'KEMBALI'}</span>
-          </button>
+          </Link>
           <h1 className="display-font" style={{ fontSize: '2.5rem' }}>{t.smisFrameTitle || 'SMISFrame'}</h1>
           <p className="mono-font" style={{ opacity: 0.7 }}>{t.smisFrameDesc || 'Kampanye visual OSMIS.'}</p>
         </div>

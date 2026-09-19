@@ -131,9 +131,9 @@ export default function MBTIPage() {
     <div className={styles.mbtiContainer}>
       <div className={styles.contentWrapper}>
         <div className={styles.header}>
-          <button onClick={() => window.history.length > 1 ? window.history.back() : window.location.href = '/'} className={styles.backLink} style={{ background: 'none', border: 'none', color: 'inherit', cursor: 'pointer', padding: 0 }}>
+          <Link href="/" className={styles.backLink}>
             <ArrowLeft size={16} /> Kembali ke Beranda
-          </button>
+          </Link>
           <h1 className={styles.title}>The SMIS MBTI</h1>
           <p className={styles.subtitle}>Temukan tipe kepribadian Anda dan pahami potensi diri dengan tes berbasis teori Myers-Briggs.</p>
         </div>
