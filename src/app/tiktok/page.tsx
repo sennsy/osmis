@@ -77,9 +77,9 @@ export default function TikTokPage() {
         {isLoading ? (
           <div className={styles.loading}>Memuat video...</div>
         ) : !activeFolder?.folderId ? (
-          <div className={styles.emptyState}>Folder ID belum diatur di Backroom.</div>
+          <div className={styles.emptyState}>Kosong</div>
         ) : videos.length === 0 ? (
-          <div className={styles.emptyState}>Tidak ada video di folder ini.</div>
+          <div className={styles.emptyState}>Kosong</div>
         ) : (
           videos.map(video => (
             <div key={video.id} className={styles.videoCard} onClick={() => setPlayingVideo(video)}>
