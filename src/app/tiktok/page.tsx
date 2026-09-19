@@ -83,17 +83,15 @@ export default function TikTokPage() {
         ) : (
           videos.map(video => (
             <div key={video.id} className={styles.videoCard} onClick={() => setPlayingVideo(video)}>
-              <img 
-                src={video.thumbnailLink ? video.thumbnailLink.replace('=s220', '=s600') : '/logo_utama.png'} 
-                alt={video.name} 
-                className={styles.thumbnail} 
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.onerror = null; // Mencegah loop
-                  target.src = '/logo_utama.png';
-                  target.style.objectFit = 'contain';
-                  target.style.padding = '3rem';
-                  target.style.backgroundColor = '#18181b';
+              <video 
+                src={`https://drive.google.com/uc?export=download&id=${video.id}`}
+                className={styles.thumbnail}
+                muted
+                playsInline
+                preload="metadata"
+                onMouseEnter={(e) => e.currentTarget.play().catch(() => {})}
+                onMouseLeave={(e) => { 
+                  e.currentTarget.pause(); 
                 }}
               />
               <div className={styles.playIcon}>
