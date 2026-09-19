@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Hero from '../components/Hero';
 import HistoryTimeline from '../components/HistoryTimeline';
 import OrganizationChart from '../components/OrganizationChart';
@@ -14,6 +14,11 @@ import { Camera, Sparkles, Gamepad2, Languages, Clock } from 'lucide-react';
 export default function Home() {
   const { t } = useLanguage();
   const [isGameModalOpen, setIsGameModalOpen] = useState(false);
+
+  useEffect(() => {
+    // Cache bust: 2026-09-19 14:55
+    console.log("OSMIS V2 Loaded");
+  }, []);
 
   return (
     <div className={styles.page}>
@@ -296,5 +301,3 @@ export default function Home() {
     </div>
   );
 }
-
-// Force Vercel fresh build cache bust 2026-09-19

@@ -81,9 +81,9 @@ export default function FullGalleryPage() {
     <div className={styles.page}>
       <div className={styles.container}>
         <div className={styles.header}>
-          <Link href="/" className={styles.backBtn}>
+          <button onClick={() => window.history.length > 1 ? window.history.back() : window.location.href = '/'} className={styles.backBtn} style={{ background: 'none', border: 'none', color: 'inherit', cursor: 'pointer', padding: 0 }}>
             <ArrowLeft size={16} /> <span className="mono-font">{t.backToHome}</span>
-          </Link>
+          </button>
           <h1 className="display-font">{t.archiveTitle}</h1>
           <p className="mono-font" style={{ marginTop: '1rem', color: 'var(--osmis-yellow)', letterSpacing: '0.1em' }}>
             {activeCategory === 'all' ? t.allCategories : (
