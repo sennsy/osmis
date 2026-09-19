@@ -286,30 +286,64 @@ export default function Backroom() {
     }
   };
 
-  const handleAddCategory = () => {
+  const [isTranslating, setIsTranslating] = useState(false);
+
+  const handleAddCategory = async () => {
     if (!newCatNameId.trim()) {
       showToast('Nama kategori (ID) wajib diisi!', 'warning');
       return;
     }
-    const slug = newCatNameId.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-');
-    const newCat = {
-      id: slug,
-      name: newCatNameId.trim(),
-      customNameEn: newCatNameEn.trim() || newCatNameId.trim(),
-      customNameAr: newCatNameAr.trim() || newCatNameId.trim(),
-      ids: []
-    };
     
-    if (data.gallery.find(c => c.id === slug)) {
-      showToast('Kategori dengan nama ini sudah ada!', 'error');
-      return;
+    setIsTranslating(true);
+    
+    try {
+      const slug = newCatNameId.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-');
+      
+      if (data.gallery.find(c => c.id === slug)) {
+        showToast('Kategori dengan nama ini sudah ada!', 'error');
+        setIsTranslating(false);
+        return;
+      }
+
+      let enName = newCatNameEn.trim();
+      let arName = newCatNameAr.trim();
+
+      // Auto-translate if fields are empty
+      if (!enName || !arName) {
+        showToast('Menghasilkan terjemahan otomatis...', 'info');
+        try {
+          const res = await fetch('/api/translate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text: newCatNameId.trim() })
+          });
+          const translated = await res.json();
+          if (translated.en && !enName) enName = translated.en;
+          if (translated.ar && !arName) arName = translated.ar;
+        } catch (e) {
+          console.error("Translation failed", e);
+          // Fallback to original text if translation fails
+          if (!enName) enName = newCatNameId.trim();
+          if (!arName) arName = newCatNameId.trim();
+        }
+      }
+
+      const newCat = {
+        id: slug,
+        name: newCatNameId.trim(),
+        customNameEn: enName,
+        customNameAr: arName,
+        ids: []
+      };
+      
+      updateData({ gallery: [...data.gallery, newCat] });
+      setNewCatNameId('');
+      setNewCatNameEn('');
+      setNewCatNameAr('');
+      showToast('Kategori Baru Berhasil Dibuat!', 'success');
+    } finally {
+      setIsTranslating(false);
     }
-    
-    updateData({ gallery: [...data.gallery, newCat] });
-    setNewCatNameId('');
-    setNewCatNameEn('');
-    setNewCatNameAr('');
-    showToast('Kategori Baru Berhasil Dibuat!', 'success');
   };
 
   const handleAddMember = () => {
@@ -750,7 +784,9 @@ export default function Backroom() {
                   <label>Terjemahan (AR)</label>
                   <input type="text" className={styles.input} style={{ marginTop: '0.5rem' }} value={newCatNameAr} onChange={e => setNewCatNameAr(e.target.value)} placeholder="Opsional..." dir="rtl" />
                 </div>
-                <button className={styles.btnPrimary} onClick={handleAddCategory} style={{ background: 'var(--osmis-green)', color: '#000' }}>Buat Kategori</button>
+                <button className={styles.btnPrimary} onClick={handleAddCategory} disabled={isTranslating} style={{ background: isTranslating ? '#52525b' : 'var(--osmis-green)', color: isTranslating ? '#a1a1aa' : '#000', cursor: isTranslating ? 'not-allowed' : 'pointer' }}>
+                  {isTranslating ? 'Menyusun Terjemahan...' : 'Buat Kategori'}
+                </button>
               </div>
             </div>
             
