@@ -753,6 +753,28 @@ export default function Backroom() {
                           Ganti ID Folder
                         </button>
                         <button 
+                          className={styles.btnSecondary} 
+                          style={{ padding: '0.4rem 0.8rem', fontSize: '0.9rem', border: '1px solid #52525b', background: 'transparent', color: '#fafafa' }}
+                          onClick={() => {
+                            openPrompt({
+                              title: `Edit Nama Kategori (ID)`,
+                              description: `Nama saat ini: ${cat.name}`,
+                              defaultValue: cat.name,
+                              placeholder: 'Nama kategori baru...',
+                              confirmText: 'Simpan',
+                              onConfirm: (newName) => {
+                                if (newName && newName.trim() !== '') {
+                                  const newGallery = data.gallery.map(c => c.id === cat.id ? { ...c, name: newName.trim() } : c);
+                                  updateData({ gallery: newGallery });
+                                  showToast('Nama kategori berhasil diubah!', 'success');
+                                }
+                              }
+                            });
+                          }}
+                        >
+                          Edit Nama
+                        </button>
+                        <button 
                           className={styles.btnDanger} 
                           style={{ padding: '0.4rem 0.8rem', fontSize: '0.9rem' }}
                           onClick={() => handleRemoveCategory(cat.id)}
@@ -984,6 +1006,28 @@ export default function Backroom() {
                     <td>{folder.name}</td>
                     <td>{folder.folderId || '- Kosong -'}</td>
                     <td style={{ display: 'flex', gap: '0.5rem' }}>
+                      <button 
+                        className={styles.btnSecondary} 
+                        style={{ padding: '0.4rem 0.8rem', fontSize: '0.9rem', border: '1px solid #52525b', background: 'transparent', color: '#fafafa' }}
+                        onClick={() => {
+                          openPrompt({
+                            title: `Edit Nama Kategori`,
+                            description: `Masukkan nama baru untuk kategori ini:`,
+                            defaultValue: folder.name,
+                            placeholder: 'Nama kategori...',
+                            confirmText: 'Simpan Nama',
+                            onConfirm: (newName) => {
+                              if (newName && newName.trim() !== '') {
+                                const newFolders = data.tiktokFolders?.map(f => f.id === folder.id ? { ...f, name: newName.trim() } : f);
+                                updateData({ tiktokFolders: newFolders });
+                                showToast(`Nama kategori berhasil diubah menjadi ${newName.trim()}!`, 'success');
+                              }
+                            }
+                          });
+                        }}
+                      >
+                        Edit Nama
+                      </button>
                       <button 
                         className={styles.btnPrimary} 
                         style={{ padding: '0.4rem 0.8rem', fontSize: '0.9rem' }}
