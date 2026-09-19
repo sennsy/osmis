@@ -13,6 +13,7 @@ export default function Backroom() {
   const { data, isLoaded, updateData } = useOsmisData();
   const [activeTab, setActiveTab] = useState('dashboard');
   const [auth, setAuth] = useState(false);
+  const [isTranslating, setIsTranslating] = useState(false);
   
   // Custom Modal & Toast States
   const [modalState, setModalState] = useState<{
@@ -285,8 +286,6 @@ export default function Backroom() {
       setIsBulkLoading(false);
     }
   };
-
-  const [isTranslating, setIsTranslating] = useState(false);
 
   const handleAddCategory = async () => {
     if (!newCatNameId.trim()) {
