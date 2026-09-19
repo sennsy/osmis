@@ -15,6 +15,15 @@ export default function Home() {
   const { t } = useLanguage();
   const [isGameModalOpen, setIsGameModalOpen] = useState(false);
 
+  useEffect(() => {
+    const handleHashChange = () => {
+      setIsGameModalOpen(window.location.hash === '#games');
+    };
+    handleHashChange();
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
+
   return (
     <div className={styles.page}>
       <Hero />
@@ -128,7 +137,7 @@ export default function Home() {
             </div>
             <button 
               className={styles.featureBtn}
-              onClick={() => setIsGameModalOpen(true)}
+              onClick={() => { window.location.hash = 'games'; }}
             >
               [ Pilih Game ]
             </button>
@@ -170,7 +179,7 @@ export default function Home() {
             zIndex: 9999,
             padding: '1rem'
           }}
-          onClick={() => setIsGameModalOpen(false)}
+          onClick={() => window.history.back()}
         >
           <div 
             style={{
@@ -190,7 +199,7 @@ export default function Home() {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <h2 className="display-font" style={{ fontSize: '1.5rem' }}>OSMIS Games</h2>
               <button 
-                onClick={() => setIsGameModalOpen(false)}
+                onClick={() => window.history.back()}
                 style={{ background: 'none', border: 'none', color: 'var(--text-color)', cursor: 'pointer', opacity: 0.7 }}
               >
                 Tutup ✕
