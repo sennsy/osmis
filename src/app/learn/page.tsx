@@ -94,9 +94,9 @@ export default function LearnPage() {
   return (
     <div style={{ minHeight: '100vh', padding: '2rem', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       <div style={{ width: '100%', maxWidth: '600px', display: 'flex', alignItems: 'center', marginBottom: '2rem' }}>
-        <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', opacity: 0.8, color: 'inherit', textDecoration: 'none' }}>
+        <button onClick={() => window.history.length > 1 ? window.history.back() : window.location.href = '/'} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', opacity: 0.8, color: 'inherit', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
           <ArrowLeft size={20} /> <span className="mono-font">{t.backToHome}</span>
-        </Link>
+        </button>
       </div>
 
       <div style={{ width: '100%', maxWidth: '600px', flex: 1, display: 'flex', flexDirection: 'column' }}>
