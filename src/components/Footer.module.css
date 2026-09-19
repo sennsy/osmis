@@ -152,14 +152,16 @@
 .underline {
   height: 2px;
   background-color: var(--osmis-yellow);
-  width: 0;
-  transition: width 0.5s ease-in-out;
+  width: 100%;
+  transform-origin: left;
+  transform: scaleX(0);
+  transition: transform 0.5s ease-in-out;
   margin: 0.5rem auto 0;
   border-radius: 2px;
 }
 
 .lineActive {
-  width: 100%;
+  transform: scaleX(1);
 }
 
 @media (max-width: 768px) {
