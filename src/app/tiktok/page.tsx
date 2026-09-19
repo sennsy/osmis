@@ -83,11 +83,19 @@ export default function TikTokPage() {
         ) : (
           videos.map(video => (
             <div key={video.id} className={styles.videoCard} onClick={() => setPlayingVideo(video)}>
-              {video.thumbnailLink ? (
-                <img src={video.thumbnailLink.replace('=s220', '=s600')} alt={video.name} className={styles.thumbnail} />
-              ) : (
-                <div className={styles.noThumbnail}>Video</div>
-              )}
+              <img 
+                src={video.thumbnailLink ? video.thumbnailLink.replace('=s220', '=s600') : '/logo_utama.png'} 
+                alt={video.name} 
+                className={styles.thumbnail} 
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.onerror = null; // Mencegah loop
+                  target.src = '/logo_utama.png';
+                  target.style.objectFit = 'contain';
+                  target.style.padding = '3rem';
+                  target.style.backgroundColor = '#18181b';
+                }}
+              />
               <div className={styles.playIcon}>
                 <svg viewBox="0 0 24 24" fill="white" width="32" height="32">
                   <path d="M8 5v14l11-7z" />
