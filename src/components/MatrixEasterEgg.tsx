@@ -33,50 +33,27 @@ export default function MatrixEasterEgg({ onClose }: MatrixEasterEggProps) {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
   const [displayedText, setDisplayedText] = useState("");
-  const [bootLog, setBootLog] = useState("");
-
-  const bootSequence = [
-    "Loading ASCII animated text...",
-    "Initializing animated ASCII typography...",
-    "Booting ASCII text animation...",
-    "Generating ASCII art text animation...",
-    "Starting terminal text animation...",
-    "CONNECTION SECURED."
-  ];
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
     
     if (phase === 1) {
-      // Boot sequence
+      // Phase 1: just draw ASCII
       setDisplayedText("");
-      setBootLog("");
       setShowInput(false);
-      
-      let lineIndex = 0;
+      let charIndex = 0;
       interval = setInterval(() => {
-        if (lineIndex < bootSequence.length) {
-          setBootLog(prev => prev + (prev ? "\n" : "") + "> " + bootSequence[lineIndex]);
-          lineIndex++;
-        } else {
+        setDisplayedText(ASCII_PHASE1.slice(0, charIndex));
+        charIndex += 5;
+        if (charIndex > ASCII_PHASE1.length) {
           clearInterval(interval);
-          // Start drawing ASCII
-          let charIndex = 0;
-          interval = setInterval(() => {
-            setDisplayedText(ASCII_PHASE1.slice(0, charIndex));
-            charIndex += 5;
-            if (charIndex > ASCII_PHASE1.length) {
-              clearInterval(interval);
-              setDisplayedText(ASCII_PHASE1);
-              setTimeout(() => setShowInput(true), 500);
-            }
-          }, 20);
+          setDisplayedText(ASCII_PHASE1);
+          setTimeout(() => setShowInput(true), 500);
         }
-      }, 300);
+      }, 20);
     } else {
       // Phase 2: just draw ASCII
       setDisplayedText("");
-      setBootLog("");
       setShowInput(false);
       let charIndex = 0;
       interval = setInterval(() => {
@@ -118,11 +95,6 @@ export default function MatrixEasterEgg({ onClose }: MatrixEasterEggProps) {
   return (
     <div className={styles.overlay}>
       <div className={styles.uiContainer}>
-        {bootLog && (
-          <pre className={styles.bootLog}>
-            {bootLog}
-          </pre>
-        )}
         <pre className={`${styles.asciiText} ${phase === 2 ? styles.phase2Color : ''}`}>
           {displayedText}
         </pre>
