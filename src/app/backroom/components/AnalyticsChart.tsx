@@ -104,6 +104,22 @@ export default function AnalyticsChart() {
   };
 
   const dailyList = data?.daily || [];
+  let displayData = [...dailyList];
+
+  // Fix Recharts 1-point issue (lines need 2 points to draw)
+  if (displayData.length === 1) {
+    const d = new Date(displayData[0].date);
+    d.setDate(d.getDate() - 1);
+    displayData.unshift({
+      date: d.toISOString().split('T')[0],
+      label: d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' }),
+      requests: 0,
+      pageViews: 0,
+      uniques: 0,
+      bytes: 0,
+      cachedBytes: 0
+    });
+  }
 
   return (
     <div className={styles.chartContainer}>
@@ -217,7 +233,7 @@ export default function AnalyticsChart() {
         <div style={{ height: '350px', width: '100%', marginTop: '1rem' }}>
           <ResponsiveContainer width="100%" height="100%">
             <ComposedChart
-              data={dailyList}
+              data={displayData}
               margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
             >
               <defs>
