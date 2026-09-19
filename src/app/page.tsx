@@ -24,6 +24,16 @@ export default function Home() {
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
 
+  const safeCloseGameModal = () => {
+    // If they used the hardware back button, this is already handled by hashchange.
+    // If they click the "Tutup" button, we remove the hash without navigating back 
+    // to avoid crashing Instagram/TikTok WebViews when history is empty.
+    if (window.location.hash === '#games') {
+      window.history.replaceState(null, '', window.location.pathname + window.location.search);
+      setIsGameModalOpen(false);
+    }
+  };
+
   return (
     <div className={styles.page}>
       <Hero />
@@ -179,7 +189,7 @@ export default function Home() {
             zIndex: 9999,
             padding: '1rem'
           }}
-          onClick={() => window.history.back()}
+          onClick={safeCloseGameModal}
         >
           <div 
             style={{
@@ -199,7 +209,7 @@ export default function Home() {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <h2 className="display-font" style={{ fontSize: '1.5rem' }}>OSMIS Games</h2>
               <button 
-                onClick={() => window.history.back()}
+                onClick={safeCloseGameModal}
                 style={{ background: 'none', border: 'none', color: 'var(--text-color)', cursor: 'pointer', opacity: 0.7 }}
               >
                 Tutup ✕
