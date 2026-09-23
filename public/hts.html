@@ -27,7 +27,7 @@
         }
 
         #gameWrapper {
-            width: 800px;
+            
             height: 300px;
             position: absolute;
             left: 50%;
@@ -183,7 +183,7 @@
     <a href="/" id="backToHubBtn">← Kembali ke Hub</a>
 
     <div id="gameWrapper">
-        <canvas id="gameCanvas" width="800" height="300"></canvas>
+        <canvas id="gameCanvas"  height="300"></canvas>
 
         <div id="scoreDisplay">HI 00000 00000</div>
 
@@ -211,12 +211,12 @@
 
         function resizeCanvas() {
             const wrapper = document.getElementById('gameWrapper');
-            const scaleX = window.innerWidth / 800;
+            const GAME_WIDTH = window.innerWidth < 600 ? 450 : 800; wrapper.style.width = GAME_WIDTH + "px"; canvas.width = GAME_WIDTH; const scaleX = window.innerWidth / GAME_WIDTH;
             const scaleY = window.innerHeight / 300;
             const scale = Math.min(scaleX, scaleY) * 0.95;
             
             // To properly center it when scaling from top left:
-            const scaledWidth = 800 * scale;
+            const scaledWidth = GAME_WIDTH * scale;
             const scaledHeight = 300 * scale;
             wrapper.style.left = `calc(50% - ${scaledWidth / 2}px)`;
             wrapper.style.top = `calc(50% - ${scaledHeight / 2}px)`;
@@ -382,7 +382,7 @@
                         document.body.classList.add('sad-mode');
                         this.spawnRain();
                         this.couple.visible = true;
-                        this.couple.x = 400; // spawn closer to player
+                        this.couple.x = GAME_WIDTH * 0.6; // spawn closer to player
 
                         messageText.classList.remove('hidden');
                         setTimeout(() => messageText.classList.add('fade-in'), 100);

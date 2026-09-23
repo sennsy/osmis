@@ -215,13 +215,7 @@ export default function Home() {
                 cursor: 'pointer',
                 transition: 'all 0.2s'
               }}
-              onClick={() => {
-                if (typeof window !== 'undefined' && window.innerWidth < 768) {
-                  alert("Game ini khusus untuk pengguna Desktop/PC (membutuhkan keyboard fisik).");
-                } else {
-                  window.location.href = '/wong-tersakiti-bross.html';
-                }
-              }}
+              onClick={() => window.location.href = '/wong-tersakiti-bross.html'}
               onMouseOver={e => e.currentTarget.style.borderColor = 'var(--text-color)'}
               onMouseOut={e => e.currentTarget.style.borderColor = 'var(--border-color)'}
             >
