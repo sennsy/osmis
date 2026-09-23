@@ -84,13 +84,20 @@ export default function TikTokPage() {
           videos.map(video => (
             <div key={video.id} className={styles.videoCard} onClick={() => setPlayingVideo(video)}>
               <img 
-                src={video.thumbnailLink ? video.thumbnailLink.replace('=s220', '=s600') : '/logo_utama.png'} 
+                src={`https://drive.google.com/thumbnail?id=${video.id}&sz=w800`}
                 alt={video.name} 
                 className={styles.thumbnail} 
                 referrerPolicy="no-referrer"
                 onError={(e) => {
                   const target = e.target as HTMLImageElement;
                   if (target.src.includes('logo_utama.png')) return;
+                  
+                  // Jika URL thumbnail statis gagal, coba gunakan thumbnailLink bawaan API yang mungkin masih hidup
+                  if (!target.src.includes(video.thumbnailLink) && video.thumbnailLink) {
+                    target.src = video.thumbnailLink.replace('=s220', '=s800');
+                    return;
+                  }
+
                   target.src = '/logo_utama.png';
                   target.style.objectFit = 'contain';
                   target.style.padding = '3rem';
