@@ -684,7 +684,8 @@ export default function Backroom() {
               )}
             </div>
 
-            <table className={styles.table}>
+            <div className={styles.tableWrapper}>
+<table className={styles.table}>
               <thead>
                 <tr>
                   <th>Kategori</th>
@@ -787,6 +788,7 @@ export default function Backroom() {
                 ))}
               </tbody>
             </table>
+</div>
             
             <div style={{ marginTop: '3rem', paddingTop: '2rem', borderTop: '2px dashed rgba(255,255,255,0.1)' }}>
               <h3 className={styles.cardTitle} style={{ fontSize: '1.2rem' }}>[ BARU ] Buat Kategori Baru</h3>
@@ -851,7 +853,8 @@ export default function Backroom() {
               {data.organization.leadership.map((role, roleIdx) => (
                 <div key={roleIdx} style={{ marginBottom: '1.5rem', paddingLeft: '1rem', borderLeft: '2px solid var(--border-color)' }}>
                   <h4 style={{ fontSize: '0.95rem', marginBottom: '0.5rem', color: 'var(--osmis-yellow)' }}>{role.title}</h4>
-                  <table className={styles.table}>
+                  <div className={styles.tableWrapper}>
+<table className={styles.table}>
                     <tbody>
                       {role.name && (
                         <tr>
@@ -901,6 +904,7 @@ export default function Backroom() {
                       ))}
                     </tbody>
                   </table>
+</div>
                 </div>
               ))}
             </div>
@@ -913,7 +917,8 @@ export default function Backroom() {
                     <img src={div.icon} alt={div.name} width={24} height={24} style={{ filter: 'brightness(0) invert(1)' }} />
                     {div.name}
                   </h4>
-                  <table className={styles.table}>
+                  <div className={styles.tableWrapper}>
+<table className={styles.table}>
                     <tbody>
                       {/* HEADS */}
                       {div.heads?.map((h, idx) => (
@@ -969,6 +974,7 @@ export default function Backroom() {
                       ))}
                     </tbody>
                   </table>
+</div>
                 </div>
               ))}
             </div>
@@ -992,7 +998,8 @@ export default function Backroom() {
             <h2 className={styles.cardTitle}>TikTok Video Folders</h2>
             <p className={styles.cardDesc}>Atur Folder ID Google Drive untuk setiap kategori video di halaman profil ala TikTok.</p>
             
-            <table className={styles.table}>
+            <div className={styles.tableWrapper}>
+<table className={styles.table}>
               <thead>
                 <tr>
                   <th>Kategori</th>
@@ -1084,6 +1091,7 @@ export default function Backroom() {
                 ))}
               </tbody>
             </table>
+</div>
           </div>
         );
 

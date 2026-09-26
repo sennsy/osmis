@@ -93,6 +93,9 @@ export const translations = {
     mbtiTitle: "Tes Kepribadian MBTI",
     mbtiDesc: "Temukan tipe kepribadianmu dan perannya yang paling optimal dalam dakwah serta kehidupan mahad.",
     openFeature: "BUKA FITUR",
+    recapTitle: "OSMIS Rekap",
+    recapDesc: "Kilas balik momen-momen terbaik dan kegiatan paling berkesan para santri.",
+    watchRecap: "Tonton Rekap",
   },
   en: {
     osmisName: "OSMIS",
@@ -188,6 +191,9 @@ export const translations = {
     mbtiTitle: "MBTI Personality Test",
     mbtiDesc: "Discover your personality type and its most optimal role in Mahad life and dakwah.",
     openFeature: "OPEN TOOL",
+    recapTitle: "OSMIS Rekap",
+    recapDesc: "A throwback to the best moments and most memorable student activities.",
+    watchRecap: "Watch Recap",
   },
   ar: {
     osmisName: "جمعية طلاب",
@@ -283,5 +289,8 @@ export const translations = {
     mbtiTitle: "اختبار الشخصية (MBTI)",
     mbtiDesc: "اكتشف نمط شخصيتك ودورها الأكثر فعالية في حياة المعهد والدعوة.",
     openFeature: "افتح الأداة",
+    recapTitle: "OSMIS Rekap",
+    recapDesc: "استرجاع لأفضل اللحظات والأنشطة الطلابية الأكثر تميزًا في المعهد.",
+    watchRecap: "شاهد الملخص",
   }
 };

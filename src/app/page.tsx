@@ -9,7 +9,7 @@ import { useLanguage } from '../components/LanguageProvider';
 import styles from './page.module.css';
 
 import Gallery from '../components/Gallery';
-import { Camera, Sparkles, Gamepad2, Languages, Clock } from 'lucide-react';
+import { Camera, Sparkles, Gamepad2, Languages, Clock, Film } from 'lucide-react';
 
 export default function Home() {
   const { t } = useLanguage();
@@ -88,6 +88,24 @@ export default function Home() {
         </div>
 
         <div className={styles.featuresGrid}>
+          {/* Card 6: OSMIS Rewind (HOT) */}
+          <div className={styles.featureCard} style={{ position: 'relative' }}>
+            <div style={{ position: 'absolute', top: '-12px', right: '-12px', background: '#e74c3c', color: 'white', padding: '4px 12px', borderRadius: '20px', fontWeight: 'bold', fontSize: '0.8rem', boxShadow: '0 4px 10px rgba(231, 76, 60, 0.4)', zIndex: 10, display: 'flex', alignItems: 'center', gap: '4px' }}>🔥 HOT</div>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <div className={styles.featureIcon}>
+                <Film size={40} strokeWidth={1.5} />
+              </div>
+              <h3 className={`display-font ${styles.featureName}`}>{t.recapTitle}</h3>
+              <p className={styles.featureDesc}>{t.recapDesc}</p>
+            </div>
+            <button 
+              className={styles.featureBtn}
+              onClick={() => window.location.href = '/recap'}
+            >
+              [ {t.watchRecap} ]
+            </button>
+          </div>
+
           {/* Card 1: SMISFrame */}
           <div className={styles.featureCard}>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -155,6 +173,7 @@ export default function Home() {
               [ Belajar ]
             </button>
           </div>
+
         </div>
       </section>
 

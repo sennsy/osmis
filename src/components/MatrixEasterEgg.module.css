@@ -149,3 +149,28 @@
   25% { transform: translateX(-10px); }
   75% { transform: translateX(10px); }
 }
+
+.fingerprintBtn {
+  background: transparent;
+  border: 1px solid #0F0;
+  color: #0F0;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all 0.2s;
+  margin-top: 1rem;
+}
+.fingerprintBtn:hover {
+  background: rgba(0, 255, 0, 0.1);
+  box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+}
+.fingerprintBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
