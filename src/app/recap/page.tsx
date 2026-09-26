@@ -70,7 +70,6 @@ export default function RecapPage() {
           grabCursor={true}
           centeredSlides={true}
           slidesPerView={'auto'}
-          slideToClickedSlide={true}
           coverflowEffect={{
             rotate: 35,
             stretch: 0,
@@ -100,19 +99,18 @@ export default function RecapPage() {
                     e.currentTarget.currentTime = 0;
                   }}
                 />
-                <div 
+                <button 
+                  type="button"
                   className={`${styles.fullscreenBtn} swiper-no-swiping`}
-                  onClickCapture={(e) => {
+                  onClick={(e) => {
+                    e.preventDefault();
                     e.stopPropagation();
                     setPlayingVideo(vid.url);
-                  }}
-                  onPointerDownCapture={(e) => {
-                    e.stopPropagation();
                   }}
                   title="Full Screen"
                 >
                   <Maximize size={20} />
-                </div>
+                </button>
                 <div className={styles.videoTitle}>{vid.title}</div>
               </div>
             </SwiperSlide>
