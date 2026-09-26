@@ -1,6 +1,7 @@
+"use client";
+
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Fingerprint, Plus } from 'lucide-react';
 import styles from './MatrixEasterEgg.module.css';
 
 interface MatrixEasterEggProps {
@@ -24,19 +25,6 @@ const ASCII_PHASE2 = `
 |__/|__/\\____/_/_/\\___/\\____/_/ /_/ /_/\\___//_/  |_\\__,_/_/ /_/ /_/_/_/ /_/ 
 `;
 
-
-// Convert Base64URL to Uint8Array
-const base64UrlToUint8Array = (base64UrlData: string) => {
-  const padding = '='.repeat((4 - base64UrlData.length % 4) % 4);
-  const base64 = (base64UrlData + padding).replace(/\-/g, '+').replace(/_/g, '/');
-  const rawData = window.atob(base64);
-  const outputArray = new Uint8Array(rawData.length);
-  for (let i = 0; i < rawData.length; ++i) {
-    outputArray[i] = rawData.charCodeAt(i);
-  }
-  return outputArray;
-};
-
 export default function MatrixEasterEgg({ onClose }: MatrixEasterEggProps) {
   const router = useRouter();
   
@@ -50,6 +38,7 @@ export default function MatrixEasterEgg({ onClose }: MatrixEasterEggProps) {
     let interval: NodeJS.Timeout;
     
     if (phase === 1) {
+      // Phase 1: just draw ASCII
       setDisplayedText("");
       setShowInput(false);
       let charIndex = 0;
@@ -63,6 +52,7 @@ export default function MatrixEasterEgg({ onClose }: MatrixEasterEggProps) {
         }
       }, 20);
     } else {
+      // Phase 2: just draw ASCII
       setDisplayedText("");
       setShowInput(false);
       let charIndex = 0;
@@ -102,45 +92,9 @@ export default function MatrixEasterEgg({ onClose }: MatrixEasterEggProps) {
     }
   };
 
-  const handleFingerprintLogin = async () => {
-    try {
-      if (!window.PublicKeyCredential) {
-        alert("WebAuthn / Biometrics not supported on this device/browser.");
-        return;
-      }
-      
-      const challenge = new Uint8Array(32);
-      crypto.getRandomValues(challenge);
-
-      const credentialId = "QuwMDREIKzv6jzZAhqHy4w";
-      const allowCredentialId = base64UrlToUint8Array(credentialId);
-
-      const credential = await navigator.credentials.get({
-        publicKey: {
-          challenge: challenge,
-          rpId: window.location.hostname,
-          userVerification: "required",
-          allowCredentials: [{
-            id: allowCredentialId,
-            type: "public-key"
-          }]
-        }
-      });
-
-      if (credential) {
-        sessionStorage.setItem('backroom_auth', 'granted');
-        router.push('/backroom');
-        onClose();
-      }
-    } catch (err: any) {
-      console.error(err);
-      alert("Akses Ditolak! Sidik jari tidak dikenali atau dibatalkan.");
-    }
-  };
-
   return (
-    <div className={styles.overlay} onClick={onClose}>
-      <div className={styles.uiContainer} onClick={e => e.stopPropagation()}>
+    <div className={styles.overlay}>
+      <div className={styles.uiContainer}>
         <pre className={`${styles.asciiText} ${phase === 2 ? styles.phase2Color : ''}`}>
           {displayedText}
         </pre>
@@ -161,20 +115,11 @@ export default function MatrixEasterEgg({ onClose }: MatrixEasterEggProps) {
               autoFocus
               placeholder="_"
             />
-            
-            <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
-              <button 
-                type="button" 
-                onClick={handleFingerprintLogin}
-                className={styles.fingerprintBtn}
-                title="Login with Fingerprint"
-              >
-                <Fingerprint size={20} /> Login Biometrik
-              </button>
-            </div>
           </form>
         )}
       </div>
+      
+      <button className={styles.closeBtn} onClick={onClose}>[ ABORT ]</button>
     </div>
   );
 }
