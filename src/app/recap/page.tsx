@@ -92,6 +92,8 @@ export default function RecapPage() {
                   muted
                   loop
                   playsInline
+                  controlsList="nodownload"
+                  onContextMenu={(e) => e.preventDefault()}
                   onMouseEnter={(e) => e.currentTarget.play().catch(() => {})}
                   onMouseLeave={(e) => {
                     e.currentTarget.pause();
@@ -134,6 +136,8 @@ export default function RecapPage() {
             controls
             autoPlay
             playsInline
+            controlsList="nodownload"
+            onContextMenu={(e) => e.preventDefault()}
             onClick={(e) => e.stopPropagation()}
           />
         </div>
