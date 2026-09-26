@@ -76,7 +76,7 @@ export default function RecapPage() {
             stretch: 0,
             depth: 250,
             modifier: 1,
-            slideShadows: true,
+            slideShadows: false,
           }}
           pagination={{ clickable: true }}
           navigation={true}
@@ -102,9 +102,12 @@ export default function RecapPage() {
                 />
                 <div 
                   className={`${styles.fullscreenBtn} swiper-no-swiping`}
-                  onClick={(e) => {
+                  onClickCapture={(e) => {
                     e.stopPropagation();
                     setPlayingVideo(vid.url);
+                  }}
+                  onPointerDownCapture={(e) => {
+                    e.stopPropagation();
                   }}
                   title="Full Screen"
                 >
