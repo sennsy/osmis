@@ -138,47 +138,6 @@ export default function MatrixEasterEgg({ onClose }: MatrixEasterEggProps) {
     }
   };
 
-  const handleFingerprintRegister = async () => {
-    try {
-      const challenge = new Uint8Array(32);
-      crypto.getRandomValues(challenge);
-      const userId = new Uint8Array(16);
-      crypto.getRandomValues(userId);
-
-      const credential = await navigator.credentials.create({
-        publicKey: {
-          challenge: challenge,
-          rp: {
-            name: "OSMIS Backroom",
-            id: window.location.hostname,
-          },
-          user: {
-            id: userId,
-            name: "admin",
-            displayName: "Administrator"
-          },
-          pubKeyCredParams: [
-            { type: "public-key", alg: -7 },
-            { type: "public-key", alg: -257 }
-          ],
-          authenticatorSelection: {
-            authenticatorAttachment: "platform",
-            userVerification: "required",
-            requireResidentKey: true,
-          },
-          timeout: 60000
-        }
-      });
-
-      if (credential) {
-        alert("Fingerprint berhasil didaftarkan! Anda sekarang bisa login via Fingerprint.");
-      }
-    } catch (err: any) {
-      console.error(err);
-      alert("Gagal mendaftarkan fingerprint: " + err.message);
-    }
-  };
-
   return (
     <div className={styles.overlay} onClick={onClose}>
       <div className={styles.uiContainer} onClick={e => e.stopPropagation()}>
@@ -211,15 +170,6 @@ export default function MatrixEasterEgg({ onClose }: MatrixEasterEggProps) {
                 title="Login with Fingerprint"
               >
                 <Fingerprint size={20} /> Login Biometrik
-              </button>
-
-              <button 
-                type="button" 
-                onClick={handleFingerprintRegister}
-                className={styles.fingerprintBtn}
-                title="Register Fingerprint (Dev)"
-              >
-                <Plus size={16} /> Daftar
               </button>
             </div>
           </form>
