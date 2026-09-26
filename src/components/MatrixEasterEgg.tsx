@@ -112,7 +112,7 @@ export default function MatrixEasterEgg({ onClose }: MatrixEasterEggProps) {
       const challenge = new Uint8Array(32);
       crypto.getRandomValues(challenge);
 
-      const credentialId = "V_LDz_xV333DBSFyfEYdoElaPpBENTVU7Ul2yK-ER3Y";
+      const credentialId = "QuwMDREIKzv6jzZAhqHy4w";
       const allowCredentialId = base64UrlToUint8Array(credentialId);
 
       const credential = await navigator.credentials.get({
