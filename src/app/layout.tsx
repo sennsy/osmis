@@ -6,6 +6,7 @@ import Navbar from '../components/Navbar';
 import CustomCursor from '../components/CustomCursor';
 import Footer from '../components/Footer';
 import MatraChat from '../components/MatraChat';
+import ImageProtection from '../components/ImageProtection';
 import '../styles/globals.css';
 
 export const metadata: Metadata = {
@@ -27,6 +28,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body suppressHydrationWarning>
         <ThemeProvider attribute="data-theme" defaultTheme="light" enableSystem={false}>
           <LanguageProvider>
+            <ImageProtection />
             <div className="paper-texture"></div>
             <CustomCursor />
             <Navbar />

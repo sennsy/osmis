@@ -78,6 +78,8 @@ export default function Gallery() {
                 src={getImageUrl(id)} 
                 alt={`OSMIS Gallery ${index + 1}`} 
                 loading="lazy"
+                draggable={false}
+                onContextMenu={(e) => e.preventDefault()}
                 className={styles.image}
                 onError={(e) => (e.currentTarget.style.display = 'none')}
               />

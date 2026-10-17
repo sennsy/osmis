@@ -78,7 +78,7 @@ export default function DivisionCards() {
                                       setPhotoModalData({ image: h.image, name: language === 'ar' && h.nameAr ? h.nameAr : h.name, role: roleStr }); 
                                     }}
                                   >
-                                    <img src={getImageUrl(h.image)} alt={h.name} style={{ width: '48px', height: '48px', borderRadius: '50%', objectFit: 'cover', objectPosition: 'top', border: '1px solid var(--border-color)' }} onError={(e) => (e.currentTarget.style.display = 'none')} />
+                                    <img src={getImageUrl(h.image)} alt={h.name} draggable={false} onContextMenu={(e) => e.preventDefault()} style={{ width: '48px', height: '48px', borderRadius: '50%', objectFit: 'cover', objectPosition: 'top', border: '1px solid var(--border-color)' }} onError={(e) => (e.currentTarget.style.display = 'none')} />
                                     <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(0,0,0,0.4)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0, transition: 'opacity 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.opacity = '1'} onMouseLeave={(e) => e.currentTarget.style.opacity = '0'}>
                                       <Maximize2 size={16} color="#fff" />
                                     </div>
@@ -106,7 +106,7 @@ export default function DivisionCards() {
                                       setPhotoModalData({ image: m.image, name: language === 'ar' && m.nameAr ? m.nameAr : m.name, role: roleStr }); 
                                     }}
                                   >
-                                    <img src={getImageUrl(m.image)} alt={m.name} style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover', objectPosition: 'top', border: '1px solid var(--border-color)' }} onError={(e) => (e.currentTarget.style.display = 'none')} />
+                                    <img src={getImageUrl(m.image)} alt={m.name} draggable={false} onContextMenu={(e) => e.preventDefault()} style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover', objectPosition: 'top', border: '1px solid var(--border-color)' }} onError={(e) => (e.currentTarget.style.display = 'none')} />
                                     <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(0,0,0,0.4)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0, transition: 'opacity 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.opacity = '1'} onMouseLeave={(e) => e.currentTarget.style.opacity = '0'}>
                                       <Maximize2 size={14} color="#fff" />
                                     </div>

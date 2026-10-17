@@ -52,7 +52,7 @@ export default function OrganizationChart() {
                           style={{ position: 'relative', cursor: 'pointer' }}
                           onClick={() => setPhotoModalData({ image: leader.image, name: language === 'ar' && leader.nameAr ? leader.nameAr : leader.name, role: leader.titleKey ? (t as any)[leader.titleKey] : leader.title })}
                         >
-                          <img src={getImageUrl(leader.image)} alt={leader.name} style={{ width: '64px', height: '64px', borderRadius: '50%', objectFit: 'cover', objectPosition: 'top', border: '1px solid var(--border-color)' }} onError={(e) => (e.currentTarget.style.display = 'none')} />
+                          <img src={getImageUrl(leader.image)} alt={leader.name} draggable={false} onContextMenu={(e) => e.preventDefault()} style={{ width: '64px', height: '64px', borderRadius: '50%', objectFit: 'cover', objectPosition: 'top', border: '1px solid var(--border-color)' }} onError={(e) => (e.currentTarget.style.display = 'none')} />
                           <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(0,0,0,0.4)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0, transition: 'opacity 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.opacity = '1'} onMouseLeave={(e) => e.currentTarget.style.opacity = '0'}>
                             <Maximize2 size={20} color="#fff" />
                           </div>
@@ -70,7 +70,7 @@ export default function OrganizationChart() {
                               style={{ position: 'relative', cursor: 'pointer' }}
                               onClick={() => setPhotoModalData({ image: m.image, name: language === 'ar' && m.nameAr ? m.nameAr : m.name, role: leader.titleKey ? (t as any)[leader.titleKey] : leader.title })}
                             >
-                              <img src={getImageUrl(m.image)} alt={m.name} style={{ width: '48px', height: '48px', borderRadius: '50%', objectFit: 'cover', objectPosition: 'top', border: '1px solid var(--border-color)' }} onError={(e) => (e.currentTarget.style.display = 'none')} />
+                              <img src={getImageUrl(m.image)} alt={m.name} draggable={false} onContextMenu={(e) => e.preventDefault()} style={{ width: '48px', height: '48px', borderRadius: '50%', objectFit: 'cover', objectPosition: 'top', border: '1px solid var(--border-color)' }} onError={(e) => (e.currentTarget.style.display = 'none')} />
                               <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(0,0,0,0.4)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0, transition: 'opacity 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.opacity = '1'} onMouseLeave={(e) => e.currentTarget.style.opacity = '0'}>
                                 <Maximize2 size={16} color="#fff" />
                               </div>

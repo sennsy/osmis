@@ -54,12 +54,15 @@ export default function PhotoModal({ isOpen, onClose, image, name, role }: Photo
           <motion.img 
             src={getImageUrl(image)} 
             alt={name}
+            draggable={false}
+            onContextMenu={(e) => e.preventDefault()}
             style={{
               maxWidth: '100%',
               maxHeight: '70vh',
               objectFit: 'contain',
               borderRadius: '12px',
-              boxShadow: '0 10px 50px rgba(0,0,0,0.5)'
+              boxShadow: '0 10px 50px rgba(0,0,0,0.5)',
+              userSelect: 'none'
             }}
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}

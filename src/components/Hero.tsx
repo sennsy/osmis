@@ -94,6 +94,8 @@ export default function Hero() {
           className={styles.videoWatermark}
           style={{ opacity: showAnimation ? 0.5 : 0 }}
           alt="Video Utama"
+          draggable={false}
+          onContextMenu={(e) => e.preventDefault()}
           onError={() => setShowAnimation(false)}
         />
       )}
@@ -101,6 +103,8 @@ export default function Hero() {
         src="/logo_utama.png" 
         alt="Watermark OSMIS" 
         className={styles.watermark}
+        draggable={false}
+        onContextMenu={(e) => e.preventDefault()}
         style={{ opacity: isDark || !showAnimation ? 0.5 : 0 }}
       />
     </section>

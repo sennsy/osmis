@@ -7,3 +7,10 @@ scratch/
 **/bin/
 **/obj/
 .config/
+*.tsbuildinfo
+.agents/
+.taste-skill/
+AGENTS.md
+GEMINI.md
+agen/
+skills-lock.json

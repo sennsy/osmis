@@ -104,6 +104,8 @@ export default function Lightbox({ ids, currentIndex, isOpen, onClose, onNavigat
                   src={getImageUrl(ids[currentIndex])}
                   alt={`Gallery ${currentIndex + 1}`}
                   className={styles.image}
+                  draggable={false}
+                  onContextMenu={(e) => e.preventDefault()}
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 1.05 }}
