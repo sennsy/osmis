@@ -1,18 +1,82 @@
 [
   {
+    "id": "leader-2017",
+    "name": "Alamsyah",
+    "periodId": "2017-2018",
+    "photo": "/images/leaders/placeholder.jpg",
+    "biography": "Ketua OSMIS Periode I (2017-2018) yang meletakkan fondasi awal kepengurusan organisasi santri.",
+    "achievements": ["Perintisan struktur dan pembagian divisi kerja pertama", "Pembentukan tata tertib awal asrama dan peribadatan"]
+  },
+  {
     "id": "leader-2018",
-    "name": "Ahmad Fulan",
+    "name": "Alam",
     "periodId": "2018-2019",
-    "photo": "/images/leaders/2018.jpg",
-    "biography": "Ketua pertama OSMIS yang merintis sistem kepengurusan dasar.",
-    "achievements": ["Merumuskan AD/ART pertama", "Membangun sistem keamanan asrama"]
+    "photo": "/images/leaders/placeholder.jpg",
+    "biography": "Ketua OSMIS Periode II (2018-2019) yang melanjutkan pemantapan organisasi santri.",
+    "achievements": ["Penguatan kedisiplinan dan keamanan santri", "Pengembangan kegiatan kebahasaan dan muhadharah"]
+  },
+  {
+    "id": "leader-2019",
+    "name": "Trisna Adi Prasetyo",
+    "periodId": "2019-2020",
+    "photo": "/images/leaders/placeholder.jpg",
+    "biography": "Ketua OSMIS Periode III (2019-2020) yang mengarahkan pembinaan karakter dan kebersihan lingkungan santri.",
+    "achievements": ["Optimalisasi peran divisi Boska dan fasilitas santri", "Peningkatan koordinasi kegiatan ibadah dan pengajaran"]
+  },
+  {
+    "id": "leader-2020",
+    "name": "Anaty Bawazier",
+    "periodId": "2020-2021",
+    "photo": "/images/leaders/placeholder.jpg",
+    "biography": "Ketua OSMIS Periode IV (2020-2021) yang memimpin di masa adaptasi dan ketertiban disiplin santri.",
+    "achievements": ["Penegakan protokol ketertiban dan kesehatan asrama", "Pembinaan kegiatan bahasa Arab dan Inggris"]
+  },
+  {
+    "id": "leader-2021",
+    "name": "Fandi Uwayz Herlambang",
+    "periodId": "2021-2022",
+    "photo": "/images/leaders/placeholder.jpg",
+    "biography": "Ketua OSMIS Periode V (2021-2022) yang berfokus pada kolaborasi antardivisi dan kedisiplinan beribadah.",
+    "achievements": ["Penataan ulang sistem administrasi kesekretariatan dan bendahara", "Penyelenggaraan kegiatan olahraga dan perlombaan antarkelas"]
+  },
+  {
+    "id": "leader-2022",
+    "name": "Ryamizard Haykal Putra Mulyantoro",
+    "periodId": "2022-2023",
+    "photo": "/images/leaders/placeholder.jpg",
+    "biography": "Ketua OSMIS Periode VI (2022-2023) yang membawa dinamika kepemimpinan aktif dan soliditas pengurus.",
+    "achievements": ["Peningkatan program kerja mingguan dan bulanan seluruh divisi", "Penegakan kedisiplinan dan keamanan santri terpadu"]
+  },
+  {
+    "id": "leader-2023",
+    "name": "Hanif Zaky Prasetyo",
+    "periodId": "2023-2024",
+    "photo": "/images/leaders/placeholder.jpg",
+    "biography": "Ketua OSMIS Periode VII (2023-2024) yang memajukan program kebahasaan dan tata tertib asrama.",
+    "achievements": ["Pengembangan program muhadharah dan qismul lughah", "Penyelenggaraan event santri dan penguatan BPH"]
+  },
+  {
+    "id": "leader-2024",
+    "name": "Nashzar as Syifa",
+    "periodId": "2024-2025",
+    "photo": "/images/leaders/placeholder.jpg",
+    "biography": "Ketua OSMIS Periode VIII (2024-2025) yang memperkuat sinergi organisasi dan kebersamaan santri.",
+    "achievements": ["Pengelolaan sarana dan prasarana pondok yang lebih terstruktur", "Optimalisasi kegiatan peribadatan berjamaah dan ketertiban malam"]
+  },
+  {
+    "id": "leader-2025",
+    "name": "Ahmad Hanif Abdillah",
+    "periodId": "2025-2026",
+    "photo": "/images/leaders/placeholder.jpg",
+    "biography": "Ketua OSMIS Periode IX (2025-2026) yang memimpin estafet kepengurusan menuju era modernisasi.",
+    "achievements": ["Penguatan kepemimpinan dan keteladanan pengurus santri", "Penyempurnaan evaluasi dan pelaporan berkala organisasi"]
   },
   {
     "id": "leader-2026",
-    "name": "Budi Santoso",
+    "name": "Muhammad Tegar Bimantoro",
     "periodId": "2026-2027",
-    "photo": "/images/leaders/2026.jpg",
-    "biography": "Ketua di era modern yang menginisiasi digitalisasi OSMIS.",
-    "achievements": ["Digitalisasi arsip dengan Matra AI", "Optimalisasi divisi Cleanliness & Sports"]
+    "photo": "/images/periode_2026_2027_new.png",
+    "biography": "Ketua OSMIS Periode X (2026-2027) di era digitalisasi, ekspansi divisi, dan modernisasi arsip cerdas OSMIS.",
+    "achievements": ["Pemekaran dan penataan struktur divisi resmi (Sarpras, Olahraga, Kesehatan)", "Digitalisasi arsip organisasi resmi OSMIS"]
   }
 ]

@@ -214,8 +214,8 @@
 }
 
 /* Customizing Swiper Nav */
-:global(.swiper-button-next),
-:global(.swiper-button-prev) {
+.container :global(.swiper-button-next),
+.container :global(.swiper-button-prev) {
   color: #1a1a1a !important;
   background: rgba(255,255,255,0.8);
   width: 50px !important;
@@ -224,15 +224,15 @@
   box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 
-:global(.swiper-button-next::after),
-:global(.swiper-button-prev::after) {
+.container :global(.swiper-button-next::after),
+.container :global(.swiper-button-prev::after) {
   font-size: 1.2rem !important;
   font-weight: bold;
 }
 
 @media (max-width: 767px) {
-  :global(.swiper-button-next),
-  :global(.swiper-button-prev) {
+  .container :global(.swiper-button-next),
+  .container :global(.swiper-button-prev) {
     display: none !important;
   }
 }
@@ -263,7 +263,7 @@
   box-shadow: 0 6px 20px rgba(0,0,0,0.15);
 }
 
-:global(.swiper-slide) {
+.container :global(.swiper-slide) {
   pointer-events: auto !important;
 }
 

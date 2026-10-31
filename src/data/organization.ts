@@ -4,8 +4,8 @@ export const organization = {
     { 
       titleKey: "titleKetua", 
       title: "KETUA OSMIS", 
-      name: "Muhammad Hanan", 
-      nameAr: "محمد حنان", 
+      name: "Muhammad Tegar Bimantoro", 
+      nameAr: "محمد تغار بيمانتورو", 
       image: "",
       programs: [
         {
@@ -632,7 +632,7 @@ o Malam: 10 menit sebelum azan Isya berkumandang. (5)`,
       name: "IBADAH",
       icon: "/ibadah.png",
       heads: [
-        { name: "Muhammad Tegar Bimantoro", nameAr: "محمد تغار بيمانتورو", image: "" }
+        { name: "Muhammad Hanan", nameAr: "محمد حنان", image: "" }
       ],
       members: [
         { name: "Zakaria Akhsya", nameAr: "زكريا أخشى", image: "" },

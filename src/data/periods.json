@@ -1,37 +1,168 @@
 [
   {
+    "id": "2017-2018",
+    "year": "2017–2018",
+    "theme": "vintage",
+    "coverImage": "/images/periods/2017.jpg",
+    "summary": "Masa perintisan dan pembentukan fondasi awal kepengurusan OSMIS di Ma'had Imam Syafi'i Brebes.",
+    "structure": [
+      { "role": "Ketua: Alamsyah", "member": "Alamsyah" },
+      { "role": "Wakil: Fadhil", "member": "Fadhil" },
+      { "role": "Sekben: Zahid", "member": "Zahid" },
+      { "role": "Keamanan: Ananda Yudha", "member": "Ananda Yudha" },
+      { "role": "Peribadatan: Syam Husein", "member": "Syam Husein" },
+      { "role": "Boska: Hasan Al bashri", "member": "Hasan Al bashri" },
+      { "role": "Bahasa: Sulthon", "member": "Sulthon" }
+    ],
+    "programs": ["Pembentukan Divisi Perdana", "Perumusan Tata Tertib Asrama", "Pengenalan Muhadharah"]
+  },
+  {
     "id": "2018-2019",
     "year": "2018–2019",
     "theme": "vintage",
     "coverImage": "/images/periods/2018.jpg",
-    "summary": "Masa awal perintisan dan pembentukan fondasi OSMIS.",
+    "summary": "Masa pemantapan tata tertib santri dan perintisan program kebahasaan serta muhadharah.",
     "structure": [
-      { "role": "Chairman", "member": "leader-2018" },
-      { "role": "Secretary & Treasurer", "member": "member-sec-2018" },
-      { "role": "Security", "member": "member-secu-2018" },
-      { "role": "Boska", "member": "member-bos-2018" },
-      { "role": "Language", "member": "member-lang-2018" },
-      { "role": "Worship", "member": "member-wor-2018" }
+      { "role": "Ketua: Alam", "member": "Alam" },
+      { "role": "Wakil: Fajar", "member": "Fajar" },
+      { "role": "Sekben: Zahid, Adam", "member": "Zahid, Adam" },
+      { "role": "Keamanan: Ananda Yudha", "member": "Ananda Yudha" },
+      { "role": "Peribadatan: Syam Husein", "member": "Syam Husein" },
+      { "role": "Boska: Hasan Al Bashri", "member": "Hasan Al Bashri" },
+      { "role": "Bahasa: Ghaitsa Qonita Mushollini", "member": "Ghaitsa Qonita Mushollini" }
     ],
     "programs": ["Perumusan AD/ART", "Muhadharah Perdana", "Class Meeting 1"]
+  },
+  {
+    "id": "2019-2020",
+    "year": "2019–2020",
+    "theme": "vintage",
+    "coverImage": "/images/periods/2019.jpg",
+    "summary": "Peningkatan kedisiplinan beribadah dan pembinaan fasilitas santri.",
+    "structure": [
+      { "role": "Ketua: Trisna Adi Prasetyo", "member": "Trisna Adi Prasetyo" },
+      { "role": "Wakil: Muhammad Fajar Nur", "member": "Muhammad Fajar Nur" },
+      { "role": "Sekben: Adam", "member": "Adam" },
+      { "role": "Keamanan: Ahmad Muhadzib", "member": "Ahmad Muhadzib" },
+      { "role": "Peribadatan: Tsani Fathuzzaki Muharram", "member": "Tsani Fathuzzaki Muharram" },
+      { "role": "Boska: Muhammad Akhdan", "member": "Muhammad Akhdan" },
+      { "role": "Bahasa: Muhammad Nashiruddin", "member": "Muhammad Nashiruddin" }
+    ],
+    "programs": ["Pekan Disiplin Asrama", "Gerakan Sholat Berjamaah Tepat Waktu", "Pengelolaan Sarana Bersama"]
+  },
+  {
+    "id": "2020-2021",
+    "year": "2020–2021",
+    "theme": "vintage",
+    "coverImage": "/images/periods/2020.jpg",
+    "summary": "Adaptasi ketertiban dan kesehatan asrama serta penguatan program kebahasaan.",
+    "structure": [
+      { "role": "Ketua: Anaty Bawazier", "member": "Anaty Bawazier" },
+      { "role": "Sekben: Salman", "member": "Salman" },
+      { "role": "Keamanan: Fathur Al Ghozi", "member": "Fathur Al Ghozi" },
+      { "role": "Peribadatan: Muhammad Vivid Zuhdi", "member": "Muhammad Vivid Zuhdi" },
+      { "role": "Boska: Muhammad Raihan", "member": "Muhammad Raihan" },
+      { "role": "Bahasa: Fawwaz", "member": "Fawwaz" }
+    ],
+    "programs": ["Penataan Protokol Kebersihan Asrama", "Pengayaan Mufrodat Harian", "Evaluasi Kedisiplinan Santri"]
+  },
+  {
+    "id": "2021-2022",
+    "year": "2021–2022",
+    "theme": "vintage",
+    "coverImage": "/images/periods/2021.jpg",
+    "summary": "Restrukturisasi administrasi kesekretariatan dan penguatan sinergi antardivisi.",
+    "structure": [
+      { "role": "Ketua: Fandi Uwayz Herlambang", "member": "Fandi Uwayz Herlambang" },
+      { "role": "Sekben: Farhan Basalamah, Faruk Huwel", "member": "Farhan Basalamah, Faruk Huwel" },
+      { "role": "Keamanan: Panut Agis Januardani", "member": "Panut Agis Januardani" },
+      { "role": "Peribadatan: Muhammad Fauzi Wibowo", "member": "Muhammad Fauzi Wibowo" },
+      { "role": "Boska: M. Nabil Mufid", "member": "M. Nabil Mufid" },
+      { "role": "Bahasa: Rafi Yudha Pratama", "member": "Rafi Yudha Pratama" }
+    ],
+    "programs": ["Penataan Arsip Surat & Kas", "Kompetisi Olahraga Antarkelas", "Halqah Bahasa & Pidato"]
+  },
+  {
+    "id": "2022-2023",
+    "year": "2022–2023",
+    "theme": "vintage",
+    "coverImage": "/images/periods/2022.jpg",
+    "summary": "Dinamisasi program kerja terpadu dan pembinaan kedisiplinan santri harian.",
+    "structure": [
+      { "role": "Ketua: Ryamizard Haykal Putra Mulyantoro", "member": "Ryamizard Haykal Putra Mulyantoro" },
+      { "role": "Sekben: Ahmad Zaki Fannani, Faruk Huwel, Haidar Rahman At Tamimi", "member": "Ahmad Zaki Fannani, Faruk Huwel, Haidar Rahman At Tamimi" },
+      { "role": "Keamanan: Muhammad Daffa Dzulfaqar", "member": "Muhammad Daffa Dzulfaqar" },
+      { "role": "Peribadatan: Effan Maulana", "member": "Effan Maulana" },
+      { "role": "Boska: Imam Fazry Al Araf", "member": "Imam Fazry Al Araf" },
+      { "role": "Bahasa: Azziyad Nawaf Caturhiban", "member": "Azziyad Nawaf Caturhiban" }
+    ],
+    "programs": ["Rapat Kerja Evaluasi Berkala", "Operasi Ketertiban Asrama", "Festival Bahasa & Muhadharah Akbar"]
+  },
+  {
+    "id": "2023-2024",
+    "year": "2023–2024",
+    "theme": "vintage",
+    "coverImage": "/images/periods/2023.jpg",
+    "summary": "Konsolidasi kepengurusan dan modernisasi pembukuan kesekretariatan organisasi.",
+    "structure": [
+      { "role": "Ketua: Hanif Zaky Prasetyo", "member": "Hanif Zaky Prasetyo" },
+      { "role": "Sekben: Haidar Rahman At Tamimi, Syarif Faishal Firdaus", "member": "Haidar Rahman At Tamimi, Syarif Faishal Firdaus" },
+      { "role": "Keamanan: Ernanda Prawiro Wicaksono", "member": "Ernanda Prawiro Wicaksono" },
+      { "role": "Peribadatan: Muhammad Ardiyansyah Arifin", "member": "Muhammad Ardiyansyah Arifin" },
+      { "role": "Boska: Muhammad Farel Albayhaqi", "member": "Muhammad Farel Albayhaqi" },
+      { "role": "Bahasa: Salman Al Pariji", "member": "Salman Al Pariji" }
+    ],
+    "programs": ["Sistem Pembukuan Kas Terbuka", "Perapihan Sarpras Asrama", "Program Pembiasaan Sunnah Harian"]
+  },
+  {
+    "id": "2024-2025",
+    "year": "2024–2025",
+    "theme": "vintage",
+    "coverImage": "/images/periods/2024.jpg",
+    "summary": "Penguatan disiplin peribadatan dan peremajaan sarana olahraga santri.",
+    "structure": [
+      { "role": "Ketua: Nashzar as Syifa", "member": "Nashzar as Syifa" },
+      { "role": "Sekben: Syarif Faishal Firdaus, Zidan Achmad Alfitroh", "member": "Syarif Faishal Firdaus, Zidan Achmad Alfitroh" },
+      { "role": "Keamanan: Azkal Fikri Faut", "member": "Azkal Fikri Faut" },
+      { "role": "Peribadatan: Leysath Aksa", "member": "Leysath Aksa" },
+      { "role": "Boska: Arrafi Fahrezi", "member": "Arrafi Fahrezi" },
+      { "role": "Bahasa: Naufal Shiddiq", "member": "Naufal Shiddiq" }
+    ],
+    "programs": ["Lomba Seni & Olahraga Santri", "Pekan Evaluasi Kebersihan Kamar", "Karantina Bahasa Asing"]
+  },
+  {
+    "id": "2025-2026",
+    "year": "2025–2026",
+    "theme": "modern",
+    "coverImage": "/images/periods/2025.jpg",
+    "summary": "Transformasi koordinasi terpadu dan persiapan era arsip digital OSMIS.",
+    "structure": [
+      { "role": "Ketua: Ahmad Hanif Abdillah", "member": "Ahmad Hanif Abdillah" },
+      { "role": "Sekben: Zidan Achmad Alfitroh", "member": "Zidan Achmad Alfitroh" },
+      { "role": "Keamanan: Muhammad Salman Alfarisy", "member": "Muhammad Salman Alfarisy" },
+      { "role": "Peribadatan: Naufal Maulana Insani", "member": "Naufal Maulana Insani" },
+      { "role": "Boska: Alfaruq Dhiaul Haq Purwantoro", "member": "Alfaruq Dhiaul Haq Purwantoro" },
+      { "role": "Bahasa: Muhammad Khanza Lu’ay", "member": "Muhammad Khanza Lu’ay" }
+    ],
+    "programs": ["Inisiasi Digitalisasi Dokumen", "Revitalisasi Disiplin Asrama", "Festival Tahunan Santri"]
   },
   {
     "id": "2026-2027",
     "year": "2026–2027",
     "theme": "modern",
-    "coverImage": "/images/periods/2026.jpg",
-    "summary": "Era digitalisasi dan modernisasi arsip OSMIS.",
+    "coverImage": "/images/periode_2026_2027_new.png",
+    "summary": "Era kepengurusan aktif dengan struktur divisi komprehensif dan sistem arsip digital modern.",
     "structure": [
-      { "role": "Chairman", "member": "leader-2026" },
-      { "role": "Vice Chairman", "member": "member-vice-2026" },
-      { "role": "Secretary & Treasurer", "member": "member-sec-2026" },
-      { "role": "Security", "member": "member-secu-2026" },
-      { "role": "Cleanliness & Sports", "member": "member-clean-2026" },
-      { "role": "Kitchen & Health", "member": "member-kitch-2026" },
-      { "role": "Facilities", "member": "member-fac-2026" },
-      { "role": "Language", "member": "member-lang-2026" },
-      { "role": "Worship", "member": "member-wor-2026" }
+      { "role": "Ketua: Muhammad Tegar Bimantoro", "member": "Muhammad Tegar Bimantoro" },
+      { "role": "Wakil: Abdullah Muadz", "member": "Abdullah Muadz" },
+      { "role": "Sekben: Ibrahim Zaki Maulana, Jarir", "member": "Ibrahim Zaki Maulana, Jarir" },
+      { "role": "Keamanan: Khadafi Agista Musyaffa", "member": "Khadafi Agista Musyaffa" },
+      { "role": "Peribadatan: Muhammad Hanan", "member": "Muhammad Hanan" },
+      { "role": "Kebersihan & Olahraga: Raykhan Dwi Fardani", "member": "Raykhan Dwi Fardani" },
+      { "role": "Kesehatan & Dapur: Muhammad Azzam Tsabit", "member": "Muhammad Azzam Tsabit" },
+      { "role": "Bahasa: Maula Ali Hudzaifah", "member": "Maula Ali Hudzaifah" },
+      { "role": "Sarpras: Simbian Mahesa Nazhwi", "member": "Simbian Mahesa Nazhwi" }
     ],
-    "programs": ["OSMIS Digital Archive", "Matra AI Integration", "Pekan Olahraga Nasional"]
+    "programs": ["OSMIS Digital Archive", "Matra AI Integration", "Pekan Olahraga Santri"]
   }
 ]

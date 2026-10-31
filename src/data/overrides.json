@@ -6,7 +6,7 @@
         "titleKey": "titleKetua",
         "title": "KETUA OSMIS",
         "name": "Muhammad Tegar Bimantoro",
-        "nameAr": "محمد حنان",
+        "nameAr": "محمد تغار بيمانتورو",
         "image": "https://drive.google.com/file/d/1Fyma9Ye1oMHGPmaXp2GxMtslxnDNbP_D/view?usp=drive_link",
         "programs": [
           {
@@ -645,7 +645,7 @@
         "heads": [
           {
             "name": "Muhammad Hanan",
-            "nameAr": "محمد تغار بيمانتورو",
+            "nameAr": "محمد حنان",
             "image": "https://drive.google.com/file/d/1TtnvnVzwTlwOGhcGnYRcEZ9B6aYudsZd/view?usp=drive_link"
           }
         ],
@@ -1701,9 +1701,9 @@
   },
   "periods": [
     {
-      "year": "2018–2019",
-      "leader": "Fiqih Aditya A",
-      "leaderAr": "فقه أديتيا أ",
+      "year": "2017–2018",
+      "leader": "Alamsyah",
+      "leaderAr": "عالم شاه",
       "description": null,
       "image": null,
       "structure": [
@@ -1711,68 +1711,128 @@
           "role": "KETUA OSMIS",
           "roleAr": "رئيس جمعية الطلاب",
           "members": [
-            "Fiqih Aditya A"
+            "Alamsyah"
           ]
         },
         {
           "role": "WAKIL KETUA",
           "roleAr": "نائب الرئيس",
           "members": [
-            "Nur Fadhillah R A"
+            "Fadhil"
           ]
         },
         {
-          "role": "SEKRETARIS",
-          "roleAr": "الأمين العام",
+          "role": "SEKRETARIS & BENDAHARA",
+          "roleAr": "الأمين العام وأمين الصندوق",
           "members": [
-            "Muhammad Rivaldi",
-            "Arib Mufid",
-            "Zahid Abdurrahim Fauzan"
-          ]
-        },
-        {
-          "role": "BENDAHARA",
-          "roleAr": "أمينات الصندوق",
-          "members": [
-            "Aziiz Izhar",
-            "Lukmanul Hakim (Bendahara 2)"
+            "Zahid"
           ]
         },
         {
           "role": "BAG. KEAMANAN",
           "roleAr": "قسم الأمن",
           "members": [
-            "Ahmad Jauhari Al Faruq"
+            "Ananda Yudha (Ketua)",
+            "Ammar Izuddin",
+            "Faishal A."
           ]
         },
         {
-          "role": "BAG. IBADAH & PENGAJARAN",
-          "roleAr": "قسم العبادة والتعليم",
+          "role": "BAG. PERIBADATAN",
+          "roleAr": "قسم العبادة",
           "members": [
-            "Zulfikar Ali Sya’ban",
-            "Muhammad Faqihudin"
+            "Syam Husein (Ketua)",
+            "Amin Al Ghifari",
+            "M. Ridwan Yoga Maulana",
+            "Ikhsani"
+          ]
+        },
+        {
+          "role": "BAG. BOSKA",
+          "roleAr": "قسم المرافق والصحة",
+          "members": [
+            "Hasan Al Bashri (Ketua)",
+            "Hudzaifah Dhia Ulhaq",
+            "Titis Puji Laksono",
+            "Irfan"
           ]
         },
         {
           "role": "BAG. BAHASA",
           "roleAr": "قسم اللغة",
           "members": [
-            "Sulthon Hadid Ismail Haq"
+            "Sulthon (Ketua)",
+            "Muhammad Aqshal Ilham",
+            "Hasbi"
+          ]
+        }
+      ]
+    },
+    {
+      "year": "2018–2019",
+      "leader": "Alam",
+      "leaderAr": "عالم",
+      "description": null,
+      "image": null,
+      "structure": [
+        {
+          "role": "KETUA OSMIS",
+          "roleAr": "رئيس جمعية الطلاب",
+          "members": [
+            "Alam"
           ]
         },
         {
-          "role": "BAG. K4",
-          "roleAr": "قسم النظافة والصحة (K4)",
+          "role": "WAKIL KETUA",
+          "roleAr": "نائب الرئيس",
           "members": [
-            "Ahmad Farhan Putratama",
-            "Madzudin"
+            "Fajar"
           ]
         },
         {
-          "role": "BAG. OLAHRAGA",
-          "roleAr": "قسم الرياضة",
+          "role": "SEKRETARIS & BENDAHARA",
+          "roleAr": "الأمين العام وأمين الصندوق",
           "members": [
-            "Bhima Pangestu Wardhiyani"
+            "Zahid",
+            "Adam"
+          ]
+        },
+        {
+          "role": "BAG. KEAMANAN",
+          "roleAr": "قسم الأمن",
+          "members": [
+            "Ananda Yudha (Ketua)",
+            "Ahmad Muhadzib",
+            "Anaty Bawazier"
+          ]
+        },
+        {
+          "role": "BAG. PERIBADATAN",
+          "roleAr": "قسم العبادة",
+          "members": [
+            "Syam Husein (Ketua)",
+            "Ikhsani",
+            "M. Ridwan Yoga Maulana",
+            "Salman"
+          ]
+        },
+        {
+          "role": "BAG. BOSKA",
+          "roleAr": "قسم المرافق والصحة",
+          "members": [
+            "Hasan Al Bashri (Ketua)",
+            "Hudzaifah Dhia Ulhaq",
+            "Ammar Izuddin",
+            "M. Akhdan"
+          ]
+        },
+        {
+          "role": "BAG. BAHASA",
+          "roleAr": "قسم اللغة",
+          "members": [
+            "Ghaitsa Qonita Mushollini (Ketua)",
+            "Muhammad Nashir",
+            "Salman"
           ]
         }
       ]
@@ -1792,38 +1852,57 @@
           ]
         },
         {
+          "role": "WAKIL KETUA",
+          "roleAr": "نائب الرئيس",
+          "members": [
+            "Muhammad Fajar Nur"
+          ]
+        },
+        {
           "role": "SEKRETARIS & BENDAHARA",
           "roleAr": "الأمين العام وأمين الصندوق",
           "members": [
-            "Adam Rizki Putra Roseno"
+            "Adam"
           ]
         },
         {
           "role": "BAG. KEAMANAN",
           "roleAr": "قسم الأمن",
           "members": [
-            "Ahmad Muhadzib (Ketua)"
+            "Ahmad Muhadzib (Ketua)",
+            "Anaty Bawazier",
+            "Fathur Al Ghozi"
           ]
         },
         {
-          "role": "BAG. IBADAH",
+          "role": "BAG. PERIBADATAN",
           "roleAr": "قسم العبادة",
           "members": [
-            "Tsani Fathuzzaki Muharrom (Ketua)"
-          ]
-        },
-        {
-          "role": "BAG. BAHASA",
-          "roleAr": "قسم اللغة",
-          "members": [
-            "Muhammad Nashiruddin (Ketua)"
+            "Tsani Fathuzzaki Muharram (Ketua)",
+            "Thoriq",
+            "Muhammad Vivid Zuhdi",
+            "Fawwaz Alifiyanto"
           ]
         },
         {
           "role": "BAG. BOSKA",
           "roleAr": "قسم المرافق والصحة",
           "members": [
-            "Muhammad Akhdan (Ketua)"
+            "Muhammad Akhdan (Ketua)",
+            "Muhammad Nadzif Hawaari",
+            "Adit",
+            "Abi",
+            "Rifky",
+            "Muhammad Raihan"
+          ]
+        },
+        {
+          "role": "BAG. BAHASA",
+          "roleAr": "قسم اللغة",
+          "members": [
+            "Muhammad Nashiruddin (Ketua)",
+            "Salman",
+            "Muhammad Marzuq Naufal"
           ]
         }
       ]
@@ -1854,29 +1933,18 @@
           "roleAr": "قسم الأمن",
           "members": [
             "Fathur Al Ghozi (Ketua)",
-            "Mohammad Fauzi Wibowo",
+            "Muhammad Fauzi Wibowo",
             "Panut Agis Januardani"
           ]
         },
         {
-          "role": "BAG. IBADAH",
+          "role": "BAG. PERIBADATAN",
           "roleAr": "قسم العبادة",
           "members": [
-            "Mukhamad Vivid Zuhdi (Ketua)",
+            "Muhammad Vivid Zuhdi (Ketua)",
             "Faizal Abda’u",
-            "Effan Maulana",
-            "M.Yusuf Syafi’i"
-          ]
-        },
-        {
-          "role": "BAG. BAHASA",
-          "roleAr": "قسم اللغة",
-          "members": [
-            "Fawwaz Afif (Ketua)",
-            "Rafi Yudha Pratama",
-            "Muhammad Marzuq Naufal",
-            "Azziyad Nawaf Caturhiban",
-            "Ali Hasan Yahya"
+            "Muhammad Yusuf Syafii",
+            "Effan Maulana"
           ]
         },
         {
@@ -1884,10 +1952,19 @@
           "roleAr": "قسم المرافق والصحة",
           "members": [
             "Muhammad Raihan (Ketua)",
-            "Muhammad Fawwaz Alifianto",
+            "Fawwaz Alifiyanto",
             "Fandi Uwayz Herlambang",
-            "Iksan Muhammad Fadel",
             "Satria Putut Albayhaqi"
+          ]
+        },
+        {
+          "role": "BAG. BAHASA",
+          "roleAr": "قسم اللغة",
+          "members": [
+            "Fawwaz (Ketua)",
+            "Muhammad Marzuq Naufal",
+            "Rafi Yudha Pratama",
+            "Azziyad Nawaf Caturhiban"
           ]
         }
       ]
@@ -1919,20 +1996,31 @@
           "roleAr": "قسم الأمن",
           "members": [
             "Panut Agis Januardani (Ketua)",
-            "Ryamizard Haikal Putra Mulyantoro",
-            "Danu Addin Maulana",
-            "Almas Fazlul Haq"
+            "Ryamizard Haykal Putra Mulyantoro",
+            "Almaz Fazhul Haq",
+            "Danu Addin Maulana"
           ]
         },
         {
-          "role": "BAG. IBADAH",
+          "role": "BAG. PERIBADATAN",
           "roleAr": "قسم العبادة",
           "members": [
-            "Mohammad Fauzi Wibowo (Ketua)",
+            "Muhammad Fauzi Wibowo (Ketua)",
             "Effan Maulana",
-            "Muhammad Daffa Dzulfaqor",
+            "Muhammad Daffa Dzulfaqar",
             "Satrio Abdhi Wagito",
-            "Imam Fazry Al’Araf"
+            "Imam Fazry Al Araf"
+          ]
+        },
+        {
+          "role": "BAG. BOSKA",
+          "roleAr": "قسم المرافق والصحة",
+          "members": [
+            "M. Nabil Mufid (Ketua)",
+            "Adhtya Muhammad Firdaus",
+            "M. Ubaidillah",
+            "Ahmad Feisal Reynaldi",
+            "Dimas Cahyono"
           ]
         },
         {
@@ -1941,19 +2029,8 @@
           "members": [
             "Rafi Yudha Pratama (Ketua)",
             "Azziyad Nawaf Caturhiban",
-            "Dani Erlangga",
-            "Ahmad Zaki Fanani"
-          ]
-        },
-        {
-          "role": "BAG. BOSKA",
-          "roleAr": "قسم المرافق والصحة",
-          "members": [
-            "Muhammad Nabil Mufid (Ketua)",
-            "Dimas Cahyono",
-            "Adhitia Muhammad Firdaus",
-            "Ahmad Feisal Reynaldi",
-            "Muhammad Ubaidillah"
+            "Danny Erlangga",
+            "Ahmad Zaki Fannani"
           ]
         }
       ]
@@ -1977,28 +2054,43 @@
           "roleAr": "الأمين العام وأمين الصندوق",
           "members": [
             "Ahmad Zaki Fannani",
-            "Faruk Huwel"
+            "Faruk Huwel",
+            "Haidar Rahman At Tamimi"
           ]
         },
         {
           "role": "BAG. KEAMANAN",
           "roleAr": "قسم الأمن",
           "members": [
-            "Muhammad Daffa Dzulfaqor (Ketua)",
+            "Muhammad Daffa Dzulfaqar (Ketua)",
             "Danu Addin Maulana",
-            "R Ahmad Thoriqul Jannah",
-            "M Adzka Pratama Putra"
+            "Muhammad Adzka Predika Putra",
+            "Raden Ahmad Thoriqul Jannah",
+            "Ernanda Prawiro Wicaksono"
           ]
         },
         {
-          "role": "BAG. IBADAH",
+          "role": "BAG. PERIBADATAN",
           "roleAr": "قسم العبادة",
           "members": [
             "Effan Maulana (Ketua)",
+            "Satrio Abdhi Wagito",
             "Saddad Ma’ruf",
             "Fariel Ayman Aslam",
-            "Agus Rizky Assyifa",
-            "Satrio Abdhi Wagito"
+            "Agus Rizky Asy Syifa",
+            "Muhammad Ardiyansyah Arifin"
+          ]
+        },
+        {
+          "role": "BAG. BOSKA",
+          "roleAr": "قسم المرافق والصحة",
+          "members": [
+            "Imam Fazry Al Araf (Ketua)",
+            "Moch. Dimas Cahyono",
+            "Adhitia Muhammad Firdaus",
+            "Muhammad Ryan Fikri",
+            "Muhammad Faiz Khadiq",
+            "Muhammad Farel Albayhaqi"
           ]
         },
         {
@@ -2008,17 +2100,8 @@
             "Azziyad Nawaf Caturhiban (Ketua)",
             "Danny Erlangga",
             "Muhammad Faaiz Fadhlan",
-            "Tholhah"
-          ]
-        },
-        {
-          "role": "BAG. BOSKA",
-          "roleAr": "قسم المرافق والصحة",
-          "members": [
-            "Imam Fazry Al A’raf (Ketua)",
-            "Muhammad Dimas Cahyono",
-            "Adhitia Muhammad Firdaus",
-            "Muhammad Faiz Khadiq"
+            "Tholhah",
+            "Hanif Zaky Prasetyo"
           ]
         }
       ]
@@ -2041,42 +2124,63 @@
           "role": "SEKRETARIS & BENDAHARA",
           "roleAr": "الأمين العام وأمين الصندوق",
           "members": [
-            "Haidar Rahman Attamimi"
+            "Haidar Rahman At Tamimi",
+            "Syarif Faishal Firdaus"
           ]
         },
         {
           "role": "BAG. KEAMANAN",
           "roleAr": "قسم الأمن",
           "members": [
-            "Prawiro Wicaksana (Ketua)"
+            "Ernanda Prawiro Wicaksono (Ketua)",
+            "Moh. Zacky Satriani",
+            "Rayhan Maulana",
+            "M. Irsyad Maulana",
+            "Azkal Fikri Faut"
           ]
         },
         {
-          "role": "BAG. IBADAH",
+          "role": "BAG. PERIBADATAN",
           "roleAr": "قسم العبادة",
           "members": [
-            "Muhammad (Ketua)"
-          ]
-        },
-        {
-          "role": "BAG. BAHASA",
-          "roleAr": "قسم اللغة",
-          "members": [
-            "Nasywa Ulhaq Fiarda (Ketua)"
+            "Muhammad Ardiyansyah Arifin (Ketua)",
+            "Muhammad",
+            "Naufal",
+            "Erlan Putra Bastiar",
+            "Naufal Riza",
+            "Fadhel Arfan",
+            "Laysath Aksa"
           ]
         },
         {
           "role": "BAG. BOSKA",
           "roleAr": "قسم المرافق والصحة",
           "members": [
-            "Muhammad Farel Albayhaqi (Ketua)"
+            "Muhammad Farel Albayhaqi (Ketua)",
+            "Azhar Al Rasyid",
+            "Muhammad Hafiz Ar Razi",
+            "Muhammad Al Fazary",
+            "Faris Ilham Prianto",
+            "Nashzar As Syifa"
+          ]
+        },
+        {
+          "role": "BAG. BAHASA",
+          "roleAr": "قسم اللغة",
+          "members": [
+            "Salman Al Pariji (Ketua)",
+            "Nasywa Ulhaq Fiarda",
+            "Fawwaz Jundi",
+            "M. Ridwan Hawari",
+            "Restu Akbar",
+            "Naufal Shiddiq"
           ]
         }
       ]
     },
     {
       "year": "2024–2025",
-      "leader": "Nashzar Asy sifa",
+      "leader": "Nashzar as Syifa",
       "leaderAr": "ناشزار أسي شيفا",
       "description": null,
       "image": null,
@@ -2085,53 +2189,58 @@
           "role": "KETUA OSMIS",
           "roleAr": "رئيس جمعية الطلاب",
           "members": [
-            "Nashzar Asy sifa"
+            "Nashzar as Syifa"
           ]
         },
         {
           "role": "SEKRETARIS & BENDAHARA",
           "roleAr": "الأمين العام وأمين الصندوق",
           "members": [
-            "Syarif Faishal Firdaus"
+            "Syarif Faishal Firdaus",
+            "Zidan Achmad Alfitroh"
           ]
         },
         {
           "role": "BAG. KEAMANAN",
           "roleAr": "قسم الأمن",
           "members": [
-            "Azkal Fikri Faut",
-            "Huzaifah Ramadhan Maulia Wibowo",
-            "M.Berlian Izal Khaq"
+            "Azkal Fikri Faut (Ketua)",
+            "Hudzaifah Ramadhan Maulia Wibowo",
+            "Berlian Izal Khaq",
+            "Muhammad Zaenul Akmal",
+            "Ahmad Hanif Abdillah"
           ]
         },
         {
-          "role": "BAG. IBADAH",
+          "role": "BAG. PERIBADATAN",
           "roleAr": "قسم العبادة",
           "members": [
-            "Leysath Aksa",
+            "Leysath Aksa (Ketua)",
             "Muhammad Tsani Najib",
-            "Rafif Nafi Irwansyah Putra"
-          ]
-        },
-        {
-          "role": "BAG. BAHASA",
-          "roleAr": "قسم اللغة",
-          "members": [
-            "Naufal Siddiq",
-            "Mohammad Fatih Haikal",
-            "Rashesha Azema Hyde",
-            "Muhammad Habib Farhan"
+            "Rafif Nafi Irwansyah Putra",
+            "Abdul wahab",
+            "Abi Habieb Santoso"
           ]
         },
         {
           "role": "BAG. BOSKA",
           "roleAr": "قسم المرافق والصحة",
           "members": [
-            "Arrafi Fahrezi",
-            "Firdaus Al fath",
+            "Arrafi Fahrezi (Ketua)",
+            "Muhammad Firdaus Alfath",
+            "M. Tsabit azka",
             "Aimanal Husaini",
-            "Muhammad Tsabit Azka",
-            "M.Zainun Akmal"
+            "Mukhammad Abiy Al Habdzi"
+          ]
+        },
+        {
+          "role": "BAG. BAHASA",
+          "roleAr": "قسم اللغة",
+          "members": [
+            "Naufal Shiddiq (Ketua)",
+            "M. Fatih Haykal",
+            "Rashesa Azheema Hyde",
+            "Muhammad Habib Farhan"
           ]
         }
       ]
@@ -2161,46 +2270,131 @@
           "role": "BAG. KEAMANAN",
           "roleAr": "قسم الأمن",
           "members": [
-            "M. Salman Alfarisy",
+            "Muhammad Salman Alfarisy (Ketua)",
             "Rasya Assyauka Alaya",
-            "Mahdi Al Jaidi"
+            "Mahdi Jaidi",
+            "Muhammad Fardan Adika Raihan"
           ]
         },
         {
-          "role": "BAG. IBADAH",
+          "role": "BAG. PERIBADATAN",
           "roleAr": "قسم العبادة",
           "members": [
-            "Naufal Maulana Insani",
-            "M. Shidqi Abgori",
+            "Naufal Maulana Insani (Ketua)",
+            "Muhammad Shidqi Abqori",
             "Abdullah Basumbul"
-          ]
-        },
-        {
-          "role": "BAG. BAHASA",
-          "roleAr": "قسم اللغة",
-          "members": [
-            "M. Khanza Lu'ay",
-            "M. Abdullah Faqih Al."
           ]
         },
         {
           "role": "BAG. BOSKA",
           "roleAr": "قسم المرافق والصحة",
           "members": [
-            "Alfarug Dhiaul Haq P.",
-            "M. Zuhda Abrori",
+            "Alfaruq Dhiaul Haq Purwantoro (Ketua)",
             "Misbahuzzaman",
+            "Muhammad Zuhda Abrori",
             "Urwah"
+          ]
+        },
+        {
+          "role": "BAG. BAHASA",
+          "roleAr": "قسم اللغة",
+          "members": [
+            "Muhammad Khanza Lu’ay (Ketua)",
+            "Muhammad Abdullah Faqih Al Kumaili"
           ]
         }
       ]
     },
     {
       "year": "2026–2027",
-      "leader": "Muhammad Hanan",
-      "leaderAr": "محمد حنان",
+      "leader": "Muhammad Tegar Bimantoro",
+      "leaderAr": "محمد تغار بيمانتورو",
       "descriptionKey": "theCurrentGeneration",
-      "image": "/images/periode_2026_2027.png"
+      "image": "/images/periode_2026_2027_new.png",
+      "structure": [
+        {
+          "role": "KETUA OSMIS",
+          "roleAr": "رئيس جمعية الطلاب",
+          "members": [
+            "Muhammad Tegar Bimantoro"
+          ]
+        },
+        {
+          "role": "WAKIL KETUA",
+          "roleAr": "نائب الرئيس",
+          "members": [
+            "Abdullah Muadz"
+          ]
+        },
+        {
+          "role": "SEKRETARIS & BENDAHARA",
+          "roleAr": "الأمين العام وأمين الصندوق",
+          "members": [
+            "Ibrahim Zaki Maulana",
+            "Jarir"
+          ]
+        },
+        {
+          "role": "BAG. KEAMANAN",
+          "roleAr": "قسم الأمن",
+          "members": [
+            "Khadafi Agista Musyaffa (Ketua)",
+            "Yahya Bin Abu Muhammad",
+            "Faqihuddin Rahman",
+            "Maulana Zaidan Nugroho"
+          ]
+        },
+        {
+          "role": "BAG. PERIBADATAN",
+          "roleAr": "قسم العبادة",
+          "members": [
+            "Muhammad Hanan (Ketua)",
+            "Abdillah Muchsin Al Anshori",
+            "Abdul Mu'min",
+            "Haidar Muafa",
+            "Zakariya Akhsya"
+          ]
+        },
+        {
+          "role": "BAG. KEBERSIHAN & OLAHRAGA",
+          "roleAr": "قسم النظافة والرياضة",
+          "members": [
+            "Raykhan Dwi Fardani (Ketua)",
+            "Nawwaf Hafidz Kautsar",
+            "Muhammad Said Mahfouz",
+            "Luqman Athaillah Artundaya",
+            "Khoirul Azzam"
+          ]
+        },
+        {
+          "role": "BAG. KESEHATAN & DAPUR",
+          "roleAr": "قسم الصحة والمطبخ",
+          "members": [
+            "Muhammad Azzam Tsabit (Ketua)",
+            "Alfajar Maulana Aris",
+            "Fathlih Dhifan",
+            "Mustofa Al Ghifari"
+          ]
+        },
+        {
+          "role": "BAG. BAHASA",
+          "roleAr": "قسم اللغة",
+          "members": [
+            "Maula Ali Hudzaifah (Ketua)",
+            "Dharma Adhiyaksa",
+            "Hariz Al Atsary",
+            "Farhan Ismail"
+          ]
+        },
+        {
+          "role": "BAG. SARPRAS",
+          "roleAr": "قسم المرافق والبنية التحتية",
+          "members": [
+            "Simbian Mahesa Nazhwi (Ketua)",
+            "Faishal Syarif Putra Aji"
+          ]
+        }
+      ]
     }
   ],
   "gallery": [
