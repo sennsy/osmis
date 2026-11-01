@@ -5,6 +5,7 @@ import { useLanguage } from './LanguageProvider';
 import { useTheme } from 'next-themes';
 import { organization } from '../data/organization';
 import { toArabicNumerals } from '../utils/arabicNumerals';
+import { HalftoneWordmarkFooter } from './ui/halftone-wordmark-footer';
 import styles from './Hero.module.css';
 
 export default function Hero() {
@@ -54,7 +55,25 @@ export default function Hero() {
   return (
     <section className={styles.hero} ref={heroRef}>
       <div className={styles.content}>
-        <h1 className={`${styles.title} display-font`}>{t.osmisName}</h1>
+        {/* Interactive Halftone Wordmark "OSMIS" (Stabilized Spring Physics + Gentle Shockwave) */}
+        <div className={styles.halftoneContainer} title="Sentuh atau klik tulisan OSMIS untuk efek gelombang titik!">
+          <HalftoneWordmarkFooter
+            heroMode={true}
+            wordmark={t.osmisName || "OSMIS"}
+            preset={isDark ? "osmisDark" : "osmisLight"}
+            dotGap={6}
+            radius={120}
+            crop={0.92}
+            grain={0}
+            interactive={true}
+            height="clamp(115px, 16vw, 190px)"
+          />
+        </div>
+
+        <h1 className="sr-only" style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0,0,0,0)' }}>
+          {t.osmisName} — {t.orgNameLong}
+        </h1>
+
         <h2 className={`${styles.subtitle} mono-font`}>{t.orgNameLong.toUpperCase()}</h2>
         <p className={`${styles.est} mono-font`}>{t.est} {language === 'ar' ? '٢٠١٨' : '2018'}</p>
         

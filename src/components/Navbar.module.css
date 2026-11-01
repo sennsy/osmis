@@ -6,77 +6,65 @@
   z-index: 1000;
   transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
   background: transparent;
-  padding: 1rem 0;
+  padding: 0.9rem 0;
 }
 
 .scrolled {
-  background-color: rgba(244, 241, 234, 0.85); /* Light mode bg var */
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  padding: 0.5rem 0;
+  background-color: rgba(248, 246, 240, 0.82);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  padding: 0.45rem 0;
 }
 
 [data-theme='dark'] .scrolled {
-  background-color: rgba(13, 17, 23, 0.85); /* Dark mode bg var */
+  background-color: rgba(11, 15, 25, 0.82);
 }
 
-/* Add a sketch bottom border only when scrolled */
 .scrolled::after {
   content: '';
   position: absolute;
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 2px;
-  background: var(--sketch-line);
-  opacity: 0.3;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--osmis-yellow), var(--osmis-green), transparent);
+  opacity: 0.45;
 }
 
 .container {
-  max-width: 1200px;
+  max-width: 1280px;
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 0 1.5rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 1rem;
 }
 
 .logo a {
   font-family: var(--font-display);
-  font-size: 1.8rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
+  font-size: 1.65rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
   position: relative;
-  display: inline-block;
-  padding: 0.2rem 0.5rem;
-  /* Cyberpunk / Sketch Logo treatment */
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.6rem;
+  border-radius: 14px;
+  transition: transform 0.25s ease;
 }
 
-.logo a::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border: 1px solid var(--text-color);
-  clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-
-.logo a:hover::before {
-  opacity: 0.5;
+.logo a:hover {
+  transform: translateY(-1px);
 }
 
 .centerNav {
   display: flex;
   align-items: center;
   justify-content: center;
-  flex: 1; /* Center it */
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .centerNav {
     display: none;
   }
@@ -85,61 +73,24 @@
 .desktopNav {
   display: flex;
   align-items: center;
-  gap: 3rem;
-  background: var(--card-bg);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  padding: 0.5rem 2rem;
-  border-radius: 24px;
-  border: 1px solid var(--border-color);
-  box-shadow: 0 4px 16px rgba(0,0,0,0.05);
-}
-
-[data-theme='dark'] .desktopNav {
-  box-shadow: 0 4px 16px rgba(0, 255, 136, 0.05);
-}
-
-.navLinks {
-  display: flex;
-  gap: 2rem;
-}
-
-.navLinks a {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  opacity: 0.7;
-  transition: all 0.2s;
-  position: relative;
-}
-
-.navLinks a::after {
-  content: '';
-  position: absolute;
-  bottom: -4px;
-  left: 0;
-  width: 0%;
-  height: 2px;
-  background-color: var(--osmis-green);
-  transition: width 0.3s ease;
-}
-
-.navLinks a:hover {
-  opacity: 1;
-  color: var(--osmis-green);
-}
-
-.navLinks a:hover::after {
-  width: 100%;
+  gap: 0.85rem;
 }
 
 .actions {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
-  border-left: 1px solid var(--border-color);
-  padding-left: 1.5rem;
+  gap: 0.6rem;
+  background: var(--card-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  padding: 0.48rem 0.95rem;
+  border-radius: 999px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+}
+
+[data-theme='dark'] .actions {
+  box-shadow: 0 6px 20px rgba(0, 255, 136, 0.06);
 }
 
 .iconBtn {
@@ -147,19 +98,21 @@
   border: none;
   color: inherit;
   cursor: pointer;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  opacity: 0.7;
-  transition: all 0.2s;
-  font-size: 0.8rem;
-  position: relative;
+  opacity: 0.82;
+  transition: all 0.2s ease;
+  font-size: 0.76rem;
+  font-weight: 700;
+  padding: 0.25rem 0.45rem;
+  border-radius: 999px;
 }
 
 .iconBtn:hover {
   opacity: 1;
   color: var(--osmis-yellow);
-  transform: translateY(-2px);
+  background: rgba(214, 159, 48, 0.1);
 }
 
 .mobileToggle {
@@ -170,7 +123,7 @@
   display: none;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 860px) {
   .desktopNav {
     display: none;
   }
@@ -186,32 +139,33 @@
     top: 100%;
     left: 0;
     width: 100%;
-    background-color: var(--card-bg);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    padding: 2rem;
+    background-color: var(--bg-color);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    padding: 1.5rem 2rem 2rem;
     border-bottom: 1px solid var(--border-color);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.18);
   }
   
   .mobileNavLinks {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
-    margin-bottom: 2rem;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
   }
   
   .mobileNavLinks a {
     font-family: var(--font-display);
-    font-size: 1.5rem;
+    font-size: 1.35rem;
     border-bottom: 1px solid var(--border-color);
-    padding: 0.75rem 0; /* Increased padding for better touch target */
+    padding: 0.65rem 0;
     display: block;
   }
   
   .mobileActions {
     display: flex;
-    gap: 2rem;
-    padding-top: 1rem;
+    gap: 1.5rem;
+    padding-top: 0.85rem;
     border-top: 1px solid var(--border-color);
   }
 }

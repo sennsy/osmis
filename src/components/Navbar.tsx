@@ -1,28 +1,42 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useTheme } from 'next-themes';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useLanguage } from './LanguageProvider';
 import Link from 'next/link';
 import { Sun, Moon, Globe, Menu, X } from 'lucide-react';
 import LiveClock from './LiveClock';
+import { LiquidNavbar, NimbusIcons, type LiquidNavItem } from './ui/liquid-glass-navbar';
 import styles from './Navbar.module.css';
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [activeNavIdx, setActiveNavIdx] = useState(0);
   const { theme, setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const { language, setLanguage, t } = useLanguage();
   const pathname = usePathname();
+  const router = useRouter();
 
   useEffect(() => {
     setMounted(true);
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
+
+      // Update active section indicator based on scroll position on homepage
+      const sectionIds = ['history', 'organization', 'divisions', 'gallery', 'features'];
+      const scrollPos = window.scrollY + 240;
+      for (let i = sectionIds.length - 1; i >= 0; i--) {
+        const el = document.getElementById(sectionIds[i]);
+        if (el && el.offsetTop <= scrollPos) {
+          setActiveNavIdx(i);
+          break;
+        }
+      }
     };
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     
     // Visit Tracking Simulator
     const lastVisit = sessionStorage.getItem('session_visited');
@@ -35,13 +49,35 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const navLinks = [
-    { name: t.history, href: '/#history' },
-    { name: t.organization, href: '/#organization' },
-    { name: t.divisions, href: '/#divisions' },
-    { name: t.archive, href: '/#gallery' },
-    { name: t.features, href: '/#features' }
-  ];
+  const navLinks = useMemo(() => [
+    { name: t.history, href: '/#history', id: 'history', icon: NimbusIcons.globe, fx: 'spin' as const },
+    { name: t.organization, href: '/#organization', id: 'organization', icon: NimbusIcons.user, fx: 'glow' as const },
+    { name: t.divisions, href: '/#divisions', id: 'divisions', icon: NimbusIcons.home, fx: 'pop' as const },
+    { name: t.archive, href: '/#gallery', id: 'gallery', icon: NimbusIcons.drop, fx: 'drop' as const },
+    { name: t.features, href: '/#features', id: 'features', icon: NimbusIcons.plane, fx: 'wave' as const }
+  ], [t.history, t.organization, t.divisions, t.archive, t.features]);
+
+  const liquidItems: LiquidNavItem[] = useMemo(() => navLinks.map((link) => ({
+    label: link.name.toUpperCase(),
+    href: link.href,
+    icon: link.icon,
+    fx: link.fx,
+  })), [navLinks]);
+
+  const handleLiquidSelect = (index: number, item: LiquidNavItem) => {
+    setActiveNavIdx(index);
+    const targetSection = navLinks[index]?.id;
+    if (pathname === '/' && targetSection) {
+      const el = document.getElementById(targetSection);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+        return;
+      }
+    }
+    if (item.href) {
+      router.push(item.href);
+    }
+  };
 
   const handleLanguageChange = () => {
     const langs: ('id' | 'en' | 'ar')[] = ['id', 'en', 'ar'];
@@ -53,14 +89,23 @@ export default function Navbar() {
     return null;
   }
 
+  const currentTheme = mounted ? (theme === 'system' ? resolvedTheme : theme) : 'light';
+  const liquidTone = currentTheme === 'dark' ? 'dark' : 'light';
+
   return (
     <nav className={`${styles.navbar} ${scrolled ? styles.scrolled : ''}`}>
       <div className={styles.container}>
         <div className={styles.logo}>
-          <a href="/">
-            <img src="/logo_utama.png" alt="OSMIS Logo" width={32} height={32} style={{ verticalAlign: 'middle', marginRight: '8px' }} />
-            OSMIS
-          </a>
+          <Link href="/">
+            <img
+              src="/logo_utama.png"
+              alt="OSMIS Logo"
+              width={34}
+              height={34}
+              style={{ verticalAlign: 'middle', marginRight: '10px' }}
+            />
+            <span>OSMIS</span>
+          </Link>
         </div>
         
         <div className={styles.centerNav}>
@@ -68,16 +113,17 @@ export default function Navbar() {
         </div>
         
         <div className={styles.desktopNav}>
-          <ul className={styles.navLinks}>
-            {navLinks.map((link, idx) => (
-              <li key={idx}>
-                <Link href={link.href} className="mono-font">{link.name.toUpperCase()}</Link>
-              </li>
-            ))}
-          </ul>
+          <LiquidNavbar
+            items={liquidItems}
+            active={activeNavIdx}
+            onChange={handleLiquidSelect}
+            tone={liquidTone}
+            sound={true}
+          />
           
           <div className={styles.actions}>
-            <button onClick={handleLanguageChange} className={styles.iconBtn} aria-label="Change Language">
+            <button onClick={handleLanguageChange} className={styles.iconBtn} aria-label="Change Language" title="Ganti Bahasa (ID / EN / AR)">
+              <Globe size={15} style={{ marginRight: 5, opacity: 0.8 }} />
               <span className="mono-font">{t.langName}</span>
             </button>
             <button 
@@ -87,14 +133,15 @@ export default function Navbar() {
               }} 
               className={styles.iconBtn}
               aria-label="Toggle Theme"
+              title="Ubah Tema Terang / Gelap"
             >
-              {mounted && ((theme === 'system' ? resolvedTheme : theme) === 'dark' ? <Moon size={16} /> : <Sun size={16} />)}
+              {mounted && (currentTheme === 'dark' ? <Moon size={16} /> : <Sun size={16} />)}
             </button>
           </div>
         </div>
 
         <div className={styles.mobileToggle}>
-          <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className={styles.iconBtn}>
+          <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className={styles.iconBtn} aria-label="Menu">
             {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
@@ -103,6 +150,19 @@ export default function Navbar() {
       {/* Mobile Menu */}
       {mobileMenuOpen && (
         <div className={styles.mobileMenu}>
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.25rem' }}>
+            <LiquidNavbar
+              items={liquidItems}
+              active={activeNavIdx}
+              onChange={(i, item) => {
+                setMobileMenuOpen(false);
+                handleLiquidSelect(i, item);
+              }}
+              tone={liquidTone}
+              compact={true}
+              sound={true}
+            />
+          </div>
           <ul className={styles.mobileNavLinks}>
             {navLinks.map((link, idx) => (
               <li key={idx}>
@@ -114,13 +174,13 @@ export default function Navbar() {
           </ul>
           <div className={styles.mobileActions}>
             <button onClick={handleLanguageChange} className={styles.iconBtn}>
-              <Globe size={18} /> <span className="mono-font">{t.langName}</span>
+              <Globe size={18} /> <span className="mono-font" style={{ marginLeft: 6 }}>{t.langName}</span>
             </button>
             <button onClick={() => {
               const current = theme === 'system' ? resolvedTheme : theme;
               setTheme(current === 'dark' ? 'light' : 'dark');
             }} className={styles.iconBtn}>
-              {mounted && ((theme === 'system' ? resolvedTheme : theme) === 'dark' ? <><Moon size={18} /> Dark</> : <><Sun size={18} /> Light</>)}
+              {mounted && (currentTheme === 'dark' ? <><Moon size={18} /> <span style={{ marginLeft: 6 }}>Dark</span></> : <><Sun size={18} /> <span style={{ marginLeft: 6 }}>Light</span></>)}
             </button>
           </div>
         </div>
