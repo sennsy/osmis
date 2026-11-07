@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Download, MousePointerClick } from 'lucide-react';
 import { useLanguage } from './LanguageProvider';
 import { toArabicNumerals } from '../utils/arabicNumerals';
 import { getImageUrl } from '../utils/driveImages';
-import { PortalCarousel, type PortalCarouselImage } from './ui/portal-carousel';
+import PortalCarousel, { type PortalCarouselImage } from './ui/portal-carousel';
 
 interface LightboxProps {
   ids: string[];
@@ -24,6 +24,8 @@ export default function Lightbox({
   onNavigate,
 }: LightboxProps) {
   const { language } = useLanguage();
+  const activeIndexRef = useRef<number>(currentIndex);
+  activeIndexRef.current = currentIndex;
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -56,7 +58,8 @@ export default function Lightbox({
 
   const handleDownload = (e: React.MouseEvent) => {
     e.stopPropagation();
-    const id = ids[currentIndex];
+    const idx = activeIndexRef.current;
+    const id = ids[idx];
     if (!id) return;
 
     let downloadUrl = id;
@@ -68,7 +71,7 @@ export default function Lightbox({
     link.href = downloadUrl;
     link.target = '_blank';
     link.rel = 'noopener noreferrer';
-    link.download = `osmis-gallery-${currentIndex + 1}.jpg`;
+    link.download = `osmis-gallery-${idx + 1}.jpg`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -81,12 +84,19 @@ export default function Lightbox({
         ? 'CLICK FOR NEXT PHOTO'
         : 'KLIK LAYAR → FOTO BERIKUTNYA';
 
+  const guideTitle =
+    language === 'ar'
+      ? 'دليل التصفح:'
+      : language === 'en'
+        ? 'How to Navigate:'
+        : 'Cara Ganti Foto:';
+
   const guideText =
     language === 'ar'
-      ? '💡 نصيحة: انقر في أي مكان على الشاشة للانتقال إلى الصورة التالية'
+      ? 'انقر في أي مكان على الشاشة أو على مربع المعاينة للانتقال إلى الصورة التالية (بدون أزرار جانبية).'
       : language === 'en'
-        ? '💡 Tip: Click anywhere on the screen or preview box to view the next photo'
-        : '💡 Petunjuk: Klik di mana saja pada layar atau kotak preview untuk melihat foto selanjutnya';
+        ? 'Click anywhere on the screen or the floating preview box to expand the next photo.'
+        : 'Klik di mana saja pada layar atau kotak foto kecil untuk membuka foto berikutnya.';
 
   return (
     <AnimatePresence>
@@ -99,7 +109,7 @@ export default function Lightbox({
             position: 'fixed',
             inset: 0,
             zIndex: 9999,
-            background: '#060b08',
+            background: '#000000',
             width: '100vw',
             height: '100vh',
           }}
@@ -107,10 +117,16 @@ export default function Lightbox({
           <PortalCarousel
             images={portalImages}
             initialIndex={currentIndex}
-            onIndexChange={onNavigate}
+            onIndexChange={(idx) => {
+              activeIndexRef.current = idx;
+              onNavigate(idx);
+            }}
             label={cursorLabel}
+            thumbWidth={200}
+            followSpeed={0.14}
+            duration={1.1}
           >
-            {/* Top Bar: Counter + Beginner Guide + Download & Keluar Buttons */}
+            {/* Top Bar: Beginner Guide on Left + Download & Keluar Buttons on Right */}
             <div
               style={{
                 position: 'absolute',
@@ -119,35 +135,43 @@ export default function Lightbox({
                 right: 0,
                 padding: 'clamp(14px, 2.5vw, 28px)',
                 display: 'flex',
-                alignItems: 'center',
+                alignItems: 'flex-start',
                 justifyContent: 'space-between',
-                gap: '12px',
+                gap: '14px',
                 flexWrap: 'wrap',
                 background:
-                  'linear-gradient(to bottom, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.35) 65%, transparent 100%)',
+                  'linear-gradient(to bottom, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.38) 68%, transparent 100%)',
                 pointerEvents: 'none',
               }}
             >
-              {/* Photo Counter */}
+              {/* Beginner-friendly Navigation Notice */}
               <div
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '10px',
-                  background: 'rgba(6, 20, 14, 0.8)',
-                  backdropFilter: 'blur(10px)',
-                  border: '1px solid rgba(16, 185, 129, 0.35)',
-                  padding: '8px 16px',
-                  borderRadius: '999px',
+                  maxWidth: 'min(520px, calc(100vw - 32px))',
+                  background: 'rgba(6, 20, 14, 0.85)',
+                  backdropFilter: 'blur(12px)',
+                  WebkitBackdropFilter: 'blur(12px)',
+                  border: '1px solid rgba(52, 211, 153, 0.45)',
+                  padding: '10px 16px',
+                  borderRadius: '14px',
                   color: '#ecfdf5',
-                  fontSize: '0.9rem',
-                  fontWeight: 700,
+                  fontSize: '0.8rem',
+                  lineHeight: 1.4,
+                  boxShadow: '0 10px 28px rgba(0,0,0,0.5)',
                 }}
               >
-                <span className="mono-font">
-                  {language === 'ar'
-                    ? toArabicNumerals(`${currentIndex + 1} / ${ids.length}`)
-                    : `${currentIndex + 1} / ${ids.length}`}
+                <MousePointerClick
+                  size={19}
+                  style={{ color: '#34d399', flexShrink: 0 }}
+                />
+                <span>
+                  <strong style={{ color: '#fde68a', marginRight: '5px' }}>
+                    {guideTitle}
+                  </strong>
+                  {guideText}
                 </span>
               </div>
 
@@ -157,8 +181,9 @@ export default function Lightbox({
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '12px',
+                  gap: '10px',
                   pointerEvents: 'auto',
+                  marginLeft: 'auto',
                 }}
               >
                 <button
@@ -172,17 +197,17 @@ export default function Lightbox({
                     gap: '8px',
                     padding: '10px 18px',
                     borderRadius: '999px',
-                    background: 'rgba(16, 185, 129, 0.92)',
+                    background: 'rgba(16, 185, 129, 0.94)',
                     color: '#022c22',
-                    border: '1px solid rgba(167, 243, 208, 0.5)',
+                    border: '1px solid rgba(167, 243, 208, 0.6)',
                     fontWeight: 800,
                     fontSize: '0.82rem',
                     letterSpacing: '0.04em',
                     cursor: 'pointer',
-                    boxShadow: '0 8px 24px rgba(0,0,0,0.45)',
+                    boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
                   }}
                 >
-                  <Download size={18} />
+                  <Download size={17} />
                   <span>
                     {language === 'ar'
                       ? 'تحميل'
@@ -206,17 +231,17 @@ export default function Lightbox({
                     gap: '8px',
                     padding: '10px 18px',
                     borderRadius: '999px',
-                    background: 'rgba(239, 68, 68, 0.9)',
+                    background: 'rgba(239, 68, 68, 0.92)',
                     color: '#ffffff',
-                    border: '1px solid rgba(252, 165, 165, 0.45)',
+                    border: '1px solid rgba(252, 165, 165, 0.5)',
                     fontWeight: 800,
                     fontSize: '0.82rem',
                     letterSpacing: '0.04em',
                     cursor: 'pointer',
-                    boxShadow: '0 8px 24px rgba(0,0,0,0.45)',
+                    boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
                   }}
                 >
-                  <X size={18} />
+                  <X size={17} />
                   <span>
                     {language === 'ar'
                       ? 'خروج'
@@ -226,35 +251,6 @@ export default function Lightbox({
                   </span>
                 </button>
               </div>
-            </div>
-
-            {/* Bottom Guide Banner for Beginners */}
-            <div
-              style={{
-                position: 'absolute',
-                bottom: '22px',
-                left: 'clamp(16px, 4vw, 48px)',
-                maxWidth: 'min(560px, calc(100vw - 32px))',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '10px',
-                background: 'rgba(6, 20, 14, 0.85)',
-                backdropFilter: 'blur(12px)',
-                border: '1px solid rgba(16, 185, 129, 0.4)',
-                padding: '10px 16px',
-                borderRadius: '14px',
-                color: '#d1fae5',
-                fontSize: '0.82rem',
-                lineHeight: 1.4,
-                boxShadow: '0 12px 32px rgba(0,0,0,0.55)',
-                pointerEvents: 'none',
-              }}
-            >
-              <MousePointerClick
-                size={18}
-                style={{ color: '#34d399', flexShrink: 0 }}
-              />
-              <span>{guideText}</span>
             </div>
           </PortalCarousel>
         </motion.div>

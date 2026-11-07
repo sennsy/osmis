@@ -92,6 +92,12 @@ export default function MatraChat() {
           className={styles.floatingGlowCard}
           onClick={toggleChat}
           title="Tanya Matra AI"
+          style={{
+            '--radius': '20',
+            '--border': '2.5',
+            '--size': '140',
+            '--bg-spot-opacity': '0.32',
+          } as React.CSSProperties}
         >
           <div className={styles.floatingBtnContent}>
             <img src="/matra_logo.jpg" alt="Matra AI" className={styles.logo} />
@@ -105,68 +111,76 @@ export default function MatraChat() {
           customSize
           glowColor="green"
           className={styles.panelGlowCard}
+          style={{
+            '--radius': '24',
+            '--border': '2.5',
+            '--size': '340',
+            '--bg-spot-opacity': '0.18',
+          } as React.CSSProperties}
         >
-          <div className={styles.header}>
-            <div className={styles.headerInfo}>
-              <img src="/matra_logo.jpg" alt="Matra AI Logo" className={styles.headerLogo} />
-              <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <span className={styles.headerTitle}>Matra AI</span>
-                <span style={{ fontSize: '0.68rem', opacity: 0.65, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--osmis-green, #2e5942)' }}>
-                  Asisten Digital OSMIS
-                </span>
+          <div className={styles.panelInner}>
+            <div className={styles.header}>
+              <div className={styles.headerInfo}>
+                <img src="/matra_logo.jpg" alt="Matra AI Logo" className={styles.headerLogo} />
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  <span className={styles.headerTitle}>Matra AI</span>
+                  <span style={{ fontSize: '0.68rem', opacity: 0.65, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--osmis-green, #2e5942)' }}>
+                    Asisten Digital OSMIS
+                  </span>
+                </div>
               </div>
+              <button className={styles.closeBtn} onClick={toggleChat} aria-label="Tutup Matra AI">
+                <svg
+                  width="22"
+                  height="22"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
             </div>
-            <button className={styles.closeBtn} onClick={toggleChat} aria-label="Tutup Matra AI">
-              <svg
-                width="22"
-                height="22"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-              </svg>
-            </button>
-          </div>
 
-        <div style={{ flex: 1, position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-          <div className={styles.messages} style={{ paddingBottom: '6.75rem' }}>
-            {messages.map((msg, i) => (
-              <div key={i} className={`${styles.message} ${styles[msg.role]}`}>
-                <div className={styles.messageRole}>
-                  {msg.role === 'user' ? 'Anda' : 'Matra AI'}
-                </div>
-                <div className={styles.messageContent}>
-                  {msg.content.split('\n').map((line, idx) => (
-                    <React.Fragment key={idx}>
-                      {line}
-                      <br />
-                    </React.Fragment>
-                  ))}
-                </div>
+            <div style={{ flex: 1, position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+              <div className={styles.messages} style={{ paddingBottom: '6.75rem' }}>
+                {messages.map((msg, i) => (
+                  <div key={i} className={`${styles.message} ${styles[msg.role]}`}>
+                    <div className={styles.messageRole}>
+                      {msg.role === 'user' ? 'Anda' : 'Matra AI'}
+                    </div>
+                    <div className={styles.messageContent}>
+                      {msg.content.split('\n').map((line, idx) => (
+                        <React.Fragment key={idx}>
+                          {line}
+                          <br />
+                        </React.Fragment>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+                <div ref={messagesEndRef} />
               </div>
-            ))}
-            <div ref={messagesEndRef} />
-          </div>
 
-          <MorphOrb
-            placeholder="Tanyakan sesuatu pada Matra AI…"
-            answerTitle="Matra AI"
-            resetLabel="Lanjut Chat"
-            labels={["Memikirkan", "Mencari Data", "Menganalisis", "Menyusun Jawaban"]}
-            minThinkMs={2100}
-            onInterceptSubmit={(text) => checkAskaaCode(text)}
-            onSubmit={async (text) => {
-              if (checkAskaaCode(text)) return '';
-              const reply = await askMatraBackend(text);
-              return reply.replace(/\*\*/g, '');
-            }}
-          />
-        </div>
+              <MorphOrb
+                placeholder="Tanyakan sesuatu pada Matra AI…"
+                answerTitle="Matra AI"
+                resetLabel="Lanjut Chat"
+                labels={["Memikirkan", "Mencari Data", "Menganalisis", "Menyusun Jawaban"]}
+                minThinkMs={2100}
+                onInterceptSubmit={(text) => checkAskaaCode(text)}
+                onSubmit={async (text) => {
+                  if (checkAskaaCode(text)) return '';
+                  const reply = await askMatraBackend(text);
+                  return reply.replace(/\*\*/g, '');
+                }}
+              />
+            </div>
+          </div>
         </GlowCard>
       </div>
     </>
