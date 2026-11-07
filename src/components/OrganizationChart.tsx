@@ -9,7 +9,44 @@ import styles from './OrganizationChart.module.css';
 import { getImageUrl } from '../utils/driveImages';
 import { toArabicNumerals } from '../utils/arabicNumerals';
 import PhotoModal from './PhotoModal';
-import { Team01, type Team01Member } from './ui/team-01';
+import { CoffeePourMenu, type CoffeeItem } from './ui/coffee-pour-menu';
+
+const DRINK_PRESETS: Array<
+  Pick<CoffeeItem, 'vessel' | 'layers' | 'crema' | 'foam' | 'art' | 'blend'>
+> = [
+  {
+    vessel: 'cup',
+    layers: [
+      { type: 'espresso', amount: 0.3 },
+      { type: 'milk', amount: 0.44 },
+    ],
+    foam: 0.14,
+    art: 'heart',
+  },
+  {
+    vessel: 'glass-mug',
+    layers: [
+      { type: 'water', amount: 0.54 },
+      { type: 'espresso', amount: 0.24 },
+    ],
+    crema: true,
+    blend: 0.9,
+  },
+  {
+    vessel: 'tall-glass',
+    layers: [
+      { type: 'espresso', amount: 0.25 },
+      { type: 'milk', amount: 0.51 },
+    ],
+    foam: 0.11,
+    blend: 0.15,
+  },
+  {
+    vessel: 'demitasse',
+    layers: [{ type: 'espresso', amount: 0.72 }],
+    crema: true,
+  },
+];
 
 export default function OrganizationChart() {
   const { t, language } = useLanguage();
@@ -25,8 +62,10 @@ export default function OrganizationChart() {
   const activeLeader =
     modalLeaderIdx !== null ? organization.leadership[modalLeaderIdx] : null;
 
-  const teamMembers: Team01Member[] = useMemo(() => {
-    const list: Team01Member[] = [];
+  const coffeeItems: CoffeeItem[] = useMemo(() => {
+    const list: CoffeeItem[] = [];
+    let personIndex = 0;
+
     organization.leadership.forEach((leader: any, idx: number) => {
       const roleTitle = leader.titleKey
         ? (t as any)[leader.titleKey]
@@ -47,12 +86,17 @@ export default function OrganizationChart() {
           const imgSrc = m.image
             ? getImageUrl(m.image)
             : '/logo_utama.png';
+          const preset = DRINK_PRESETS[personIndex % DRINK_PRESETS.length];
+          const numBadge = `BPH INTI #0${personIndex + 1}`;
+          personIndex++;
+
           list.push({
             id: `leader-${idx}-${mIdx}`,
-            image: imgSrc,
             name: displayName,
-            role: roleTitle,
-            badgeText: `BPH INTI #0${idx + 1}`,
+            subtitle: roleTitle,
+            badgeText: numBadge,
+            description: `${displayName} — ${roleTitle}`,
+            image: imgSrc,
             actionLabel,
             onImageClick: () =>
               setPhotoModalData({
@@ -63,6 +107,7 @@ export default function OrganizationChart() {
             onActionClick: hasPrograms
               ? () => setModalLeaderIdx(idx)
               : undefined,
+            ...preset,
           });
         });
       } else if (leader.name) {
@@ -71,12 +116,17 @@ export default function OrganizationChart() {
         const imgSrc = leader.image
           ? getImageUrl(leader.image)
           : '/logo_utama.png';
+        const preset = DRINK_PRESETS[personIndex % DRINK_PRESETS.length];
+        const numBadge = `BPH INTI #0${personIndex + 1}`;
+        personIndex++;
+
         list.push({
           id: `leader-${idx}`,
-          image: imgSrc,
           name: displayName,
-          role: roleTitle,
-          badgeText: `BPH INTI #0${idx + 1}`,
+          subtitle: roleTitle,
+          badgeText: numBadge,
+          description: `${displayName} — ${roleTitle}`,
+          image: imgSrc,
           actionLabel,
           onImageClick: () =>
             setPhotoModalData({
@@ -87,6 +137,7 @@ export default function OrganizationChart() {
           onActionClick: hasPrograms
             ? () => setModalLeaderIdx(idx)
             : undefined,
+          ...preset,
         });
       }
     });
@@ -107,17 +158,9 @@ export default function OrganizationChart() {
           <h3 className="mono-font">{t.theCurrentGeneration}</h3>
         </div>
 
-        <Team01
-          badgeText={
-            language === 'ar'
-              ? 'الهيئة الأساسية // OSMIS 26—27'
-              : language === 'en'
-                ? 'CORE LEADERSHIP // OSMIS 26—27'
-                : 'STRUKTUR BAGIAN INTI // OSMIS 26—27'
-          }
-          title={t.orgStructure}
-          subtitle={t.orgSubtitle}
-          teamMembers={teamMembers}
+        <CoffeePourMenu
+          items={coffeeItems}
+          defaultValue={coffeeItems[0]?.id}
         />
       </div>
 
