@@ -1,117 +1,116 @@
-.floatingBtn {
+.floatingBtnWrap {
   position: fixed;
   bottom: 2rem;
   left: 0;
-  width: 60px;
-  height: 80px;
-  border-radius: 0 20px 20px 0;
-  background: rgba(20, 20, 20, 0.8);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-left: none;
-  box-shadow: 4px 0 16px rgba(0, 0, 0, 0.2);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
   z-index: 9999;
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-  overflow: hidden;
+  cursor: pointer;
 }
 
-[data-theme='light'] .floatingBtn {
-  background: rgba(255, 255, 255, 0.8);
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-left: none;
-  box-shadow: 4px 0 16px rgba(0, 0, 0, 0.1);
+.floatingGlowCard {
+  width: 68px !important;
+  height: 84px !important;
+  border-radius: 0 24px 24px 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.25) !important;
+  transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+  padding: 0 !important;
 }
 
-.floatingBtn:hover {
-  transform: translateX(5px);
-  box-shadow: 8px 0 20px rgba(0, 0, 0, 0.3);
+.floatingBtnWrap:hover .floatingGlowCard {
+  transform: translateX(6px);
+  box-shadow: 8px 0 28px rgba(46, 89, 66, 0.4) !important;
 }
 
-[data-theme='light'] .floatingBtn:hover {
-  box-shadow: 8px 0 20px rgba(0, 0, 0, 0.15);
+.floatingBtnContent {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
 }
 
-.floatingBtn::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: conic-gradient(
-    transparent, 
-    rgba(255, 255, 255, 0.1), 
-    transparent 30%
-  );
-  animation: rotate 4s linear infinite;
-  pointer-events: none;
+.floatingBtnBadge {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: var(--osmis-green, #2e5942);
+  background: rgba(214, 159, 48, 0.25);
+  border: 1px solid rgba(214, 159, 48, 0.5);
+  padding: 1px 5px;
+  border-radius: 999px;
+  line-height: 1.1;
 }
 
-[data-theme='light'] .floatingBtn::before {
-  background: conic-gradient(
-    transparent, 
-    rgba(0, 0, 0, 0.05), 
-    transparent 30%
-  );
+[data-theme='dark'] .floatingBtnBadge {
+  color: #a7f3d0;
+  background: rgba(0, 255, 136, 0.18);
+  border-color: rgba(0, 255, 136, 0.4);
 }
 
 .logo {
-  width: 45px;
-  height: 45px;
+  width: 44px;
+  height: 44px;
   object-fit: cover;
   border-radius: 50%;
+  border: 1.5px solid rgba(214, 159, 48, 0.6);
   z-index: 2;
   transition: transform 0.3s ease;
 }
 
-.floatingBtn:hover .logo {
-  transform: scale(1.1);
+.floatingBtnWrap:hover .logo {
+  transform: scale(1.08);
 }
 
-/* Chat Panel */
-.chatPanel {
+/* Chat Panel with Spotlight GlowCard */
+.chatPanelWrap {
   position: fixed;
   top: 0;
   left: 0;
   width: 600px;
   max-width: 90vw;
   height: 100vh;
-  max-height: 100vh;
-  background: rgba(15, 15, 15, 0.95);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-right: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 10px 0 40px rgba(0, 0, 0, 0.5);
-  display: flex;
-  flex-direction: column;
   z-index: 10000;
-  overflow: hidden;
   transform: translateX(-100%);
   transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
 }
 
-[data-theme='light'] .chatPanel {
-  background: rgba(255, 255, 255, 0.95);
-  border-right: 1px solid rgba(0, 0, 0, 0.1);
-  box-shadow: 10px 0 40px rgba(0, 0, 0, 0.15);
-}
-
-.chatPanel.open {
+.chatPanelWrap.open {
   transform: translateX(0);
+  pointer-events: auto;
+}
+
+.panelGlowCard {
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 0 24px 24px 0 !important;
+  border-left: none !important;
+  display: flex !important;
+  flex-direction: column !important;
+  padding: 0 !important;
+  gap: 0 !important;
+  overflow: hidden !important;
+  box-shadow: 12px 0 50px rgba(0, 0, 0, 0.5) !important;
+}
+
+.chatPanel {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
 }
 
 .header {
-  padding: 1.5rem;
+  padding: 1.25rem 1.5rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  background: linear-gradient(to right, rgba(255, 255, 255, 0.02), transparent);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(to right, rgba(255, 255, 255, 0.04), transparent);
 }
 
 [data-theme='light'] .header {
