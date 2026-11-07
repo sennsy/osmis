@@ -51,9 +51,9 @@ const measureContainer = (root?: HTMLElement | null) => {
   const w = root?.clientWidth || (typeof window !== "undefined" ? window.innerWidth : 560);
   const h = root?.clientHeight || (typeof window !== "undefined" ? window.innerHeight : 720);
   return {
-    pw: Math.min(520, Math.max(260, w - 32)),
-    cw: Math.min(440, Math.max(260, w - 32)),
-    H: Math.max(120, h * 0.54 - 88), // pill centre is ~88px above stage bottom; stage centre is at top:46%
+    pw: Math.min(520, Math.max(260, w - 36)),
+    cw: Math.min(460, Math.max(260, w - 36)),
+    H: Math.max(100, h * 0.54 - 48), // pill centre is 48px above stage bottom; stage centre is at top:46%
   };
 };
 
@@ -1355,7 +1355,7 @@ export default function MorphOrb(props: MorphOrbProps) {
       data-phase={phase}
       ref={rootRef}
     >
-      <div className="mo-bg" aria-hidden="true" />
+      <div className="mo-bg" aria-hidden="true" onClick={onReset} />
       <div className="mo-halo" aria-hidden="true" />
 
       <div className="mo-mover" ref={moverRef}>

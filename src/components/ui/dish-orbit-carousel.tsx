@@ -154,32 +154,29 @@ const CSS =
   ".dsh-btn{appearance:none;border:0;background:none;color:inherit;font:inherit;padding:0;margin:0;cursor:pointer}" +
   ".dsh-btn:focus-visible{outline:2px solid var(--color-primary,#2e5942);outline-offset:3px;border-radius:10px}" +
   ".dsh-ico{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}" +
-  ".dsh-top{position:absolute;left:800px;top:42px;display:flex;gap:14px}" +
-  ".dsh-top .dsh-btn{width:36px;height:36px;display:grid;place-items:center;border-radius:10px;background:color-mix(in oklab,var(--color-foreground,#1a1a1a) 5%,transparent);transition:background .2s}" +
-  ".dsh-top .dsh-btn:hover{background:color-mix(in oklab,var(--color-foreground,#1a1a1a) 12%,transparent)}" +
   ".dsh-pager{position:absolute;left:76px;top:172px;display:flex;flex-direction:column;align-items:center;gap:7px}" +
   ".dsh-dot{width:14px;height:10px;display:grid;place-items:center}" +
   ".dsh-dot i{display:block;width:3px;height:3px;border-radius:3px;background:var(--color-foreground,#1a1a1a);opacity:.45;transition:height .45s cubic-bezier(.3,.7,.2,1),opacity .3s}" +
   ".dsh-dot[aria-current] i{height:22px;opacity:.9}" +
   ".dsh-dot[aria-current]{height:26px}" +
   ".dsh-dot{transition:height .45s cubic-bezier(.3,.7,.2,1)}" +
-  ".dsh-plates{position:absolute;left:130px;top:82px;width:245px;height:245px;touch-action:pan-y}" +
+  ".dsh-plates{position:absolute;left:124px;top:82px;width:245px;height:245px;touch-action:pan-y}" +
   ".dsh-orbit{position:absolute;inset:0;transform-origin:69% -217%;visibility:hidden;will-change:transform}" +
   ".dsh-orbit>img{display:block;width:245px;height:245px;max-width:none;object-fit:contain;user-select:none;-webkit-user-drag:none;" +
   "filter:drop-shadow(0 16px 22px rgba(0,0,0,.2)) drop-shadow(0 3px 5px rgba(0,0,0,.12))}" +
-  ".dsh-head{position:absolute;left:388px;top:92px;width:295px;height:160px}" +
-  ".dsh-hd{position:absolute;inset:0;visibility:hidden}" +
-  ".dsh-eye{font-size:12.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--osmis-green,#2e5942);margin:0 0 6px 2px}" +
-  ".dsh-t1,.dsh-t2{display:block;white-space:nowrap;line-height:1.05;margin:0}" +
-  ".dsh-t1{font-weight:300;letter-spacing:-.015em;margin-top:6px;text-transform:uppercase}" +
+  ".dsh-head{position:absolute;left:382px;top:92px;width:296px;max-width:296px;height:165px;z-index:2;pointer-events:none}" +
+  ".dsh-hd{position:absolute;inset:0;visibility:hidden;display:flex;flex-direction:column;justify-content:center}" +
+  ".dsh-eye{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--osmis-green,#2e5942);margin:0 0 6px 2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}" +
+  ".dsh-t1,.dsh-t2{display:block;white-space:nowrap;line-height:1.08;margin:0}" +
+  ".dsh-t1{font-weight:400;letter-spacing:-.02em;margin-top:4px;text-transform:uppercase}" +
   ".dsh-t2{font-weight:800;letter-spacing:-.025em;margin-top:6px;color:color-mix(in oklab,var(--color-foreground,#1a1a1a) 86%,transparent)}" +
-  ".dsh-acts{position:absolute;left:392px;top:274px;display:flex;gap:20px;font-size:13px;font-weight:600}" +
+  ".dsh-acts{position:absolute;left:386px;top:274px;display:flex;gap:20px;font-size:13px;font-weight:600;z-index:2}" +
   ".dsh-acts .dsh-btn{display:flex;align-items:center;gap:10px;padding:10px 18px;border-radius:99px;background:var(--osmis-green,#2e5942);color:#fff;box-shadow:0 8px 20px -6px rgba(0,0,0,.25);transition:transform .2s,background .2s}" +
   "[data-theme='dark'] .dsh-acts .dsh-btn{color:#0b0f19}" +
   ".dsh-acts .dsh-btn:hover{transform:translateY(-2px);background:var(--osmis-yellow,#d69f30);color:#000}" +
   ".dsh-acts .dsh-ico{width:15px;height:15px}" +
   ".dsh-acts .dsh-fill{fill:currentColor;stroke:none}" +
-  ".dsh-card{position:absolute;left:688px;top:98px;width:258px;padding:16px 18px 18px;border-radius:20px;" +
+  ".dsh-card{position:absolute;left:696px;top:76px;width:254px;padding:16px 18px 18px;border-radius:20px;z-index:1;" +
   "background:color-mix(in oklab,var(--color-background,#f8f6f0) 78%,transparent);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);" +
   "border:1px solid color-mix(in oklab,var(--color-foreground,#1a1a1a) 10%,transparent);" +
   "box-shadow:0 1px 0 color-mix(in oklab,var(--color-foreground,#1a1a1a) 6%,transparent) inset,0 18px 40px -24px rgba(0,0,0,.25)}" +
@@ -227,11 +224,10 @@ const CSS =
   "@container (max-width:639px){" +
   ".dsh-canvas{position:relative;left:auto;top:auto;width:100%;height:auto;transform:none;display:flex;flex-direction:column;align-items:center;padding:14px 16px 18px}" +
   ".dsh-arc{width:200%;height:auto;left:-60%;top:-30px}" +
-  ".dsh-top{position:relative;left:auto;top:auto;align-self:flex-end}" +
   ".dsh-pager{left:14px;top:150px}" +
   ".dsh-plates{position:relative;left:auto;top:auto;width:min(48vw,28svh);height:min(48vw,28svh);margin-top:0}" +
   ".dsh-orbit>img{width:100%;height:100%}" +
-  ".dsh-head{position:relative;left:auto;top:auto;width:100%;height:126px;margin-top:10px}" +
+  ".dsh-head{position:relative;left:auto;top:auto;width:100%;max-width:100%;height:126px;margin-top:10px}" +
   ".dsh-hd{text-align:center;transform:scale(.82);transform-origin:50% 0}" +
   ".dsh-acts{position:relative;left:auto;top:auto;margin-top:4px}" +
   ".dsh-card{position:relative;left:auto;top:auto;width:100%;max-width:420px;margin-top:12px}" +
@@ -495,27 +491,6 @@ export function DishOrbitCarousel({
           <path ref={arcRef} style={{ opacity: 0.34 }} />
         </svg>
 
-        <div className="dsh-top">
-          <button
-            type="button"
-            className="dsh-btn"
-            aria-label={playLabel}
-            title={playLabel}
-            onClick={() => dish && onPlay?.(dish, index)}
-          >
-            {Icon.users}
-          </button>
-          <button
-            type="button"
-            className="dsh-btn"
-            aria-label={detailButtonLabel}
-            title={detailButtonLabel}
-            onClick={() => dish && onOpenDetail?.(dish, index, tab)}
-          >
-            {Icon.menu}
-          </button>
-        </div>
-
         <div className="dsh-pager" role="tablist" aria-label="Pilih Bagian">
           {dishes.map((d, i) => (
             <button key={i} type="button" role="tab" className="dsh-btn dsh-dot" aria-selected={i === index}
@@ -538,8 +513,8 @@ export function DishOrbitCarousel({
             <div key={i} ref={(el) => { heads.current[i] = el }} className="dsh-hd" aria-hidden={i !== index}>
               <p className="dsh-eye">{d.eyebrow ?? "#" + (i + 1) + " Qism"}</p>
               <h2 style={{ margin: 0, font: "inherit" }}>
-                <span className="dsh-t1" style={{ fontSize: fitSize(d.title.length, 46, 290, 0.56) + "px" }}>{d.title}</span>
-                <span className="dsh-t2" style={{ fontSize: fitSize(d.subtitle.length, 54, 290, 0.62) + "px" }}>{d.subtitle}</span>
+                <span className="dsh-t1" style={{ fontSize: fitSize(d.title.length, 36, 265, 0.84) + "px" }}>{d.title}</span>
+                <span className="dsh-t2" style={{ fontSize: fitSize(d.subtitle.length, 42, 265, 0.72) + "px" }}>{d.subtitle}</span>
               </h2>
             </div>
           ))}
