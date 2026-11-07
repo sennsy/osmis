@@ -370,7 +370,7 @@ export const periods = [
     leader: "Muhammad Tegar Bimantoro", 
     leaderAr: "محمد تغار بيمانتورو",
     descriptionKey: "theCurrentGeneration",
-    image: "/images/periode_2026_2027.jpg",
+    image: "/assets/aistudio/MVIMG_20260725_212959_1_b6359f91.jpg",
     structure: [
       {
         role: "KETUA OSMIS",
