@@ -1620,6 +1620,15 @@ Malam: 45 menit setelah qism dapur mulai membagikan makan (minggu: 16.50-17.20)`
             "إصلاح ممتلكات المعهد التالفة."
           ]
         }
+      ],
+      rules: [
+        "Seluruh santri wajib menjaga dan merawat fasilitas serta inventaris milik Ma'had Imam Syafi'i.",
+        "Santri dilarang merusak, mencoret-coret, atau memindahkan barang inventaris pondok tanpa izin Bagian Sarpras.",
+        "Wajib mematikan kipas angin, lampu, dan keran air apabila ruangan atau kamar mandi sudah tidak digunakan.",
+        "Dilarang memindahkan ember dan gayung antar kamar mandi yang telah diberi tanda inventaris.",
+        "Setiap kerusakan fasilitas asrama, kelas, atau kamar mandi wajib segera dilaporkan kepada pengurus Bagian Sarpras.",
+        "Santri yang merusak atau menghilangkan barang inventaris pondok karena kelalaian wajib mengganti atau memperbaikinya.",
+        "BAGI SANTRI YANG MELANGGAR PERATURAN YANG TERTERA DIATAS, MAKA AKAN ADA KONSEKUENSINYA"
       ]
     }
   ]
