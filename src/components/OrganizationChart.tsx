@@ -87,14 +87,12 @@ export default function OrganizationChart() {
             ? getImageUrl(m.image)
             : '/logo_utama.png';
           const preset = DRINK_PRESETS[personIndex % DRINK_PRESETS.length];
-          const numBadge = `BPH INTI #0${personIndex + 1}`;
           personIndex++;
 
           list.push({
             id: `leader-${idx}-${mIdx}`,
             name: displayName,
             subtitle: roleTitle,
-            badgeText: numBadge,
             description: `${displayName} — ${roleTitle}`,
             image: imgSrc,
             actionLabel,
@@ -117,14 +115,12 @@ export default function OrganizationChart() {
           ? getImageUrl(leader.image)
           : '/logo_utama.png';
         const preset = DRINK_PRESETS[personIndex % DRINK_PRESETS.length];
-        const numBadge = `BPH INTI #0${personIndex + 1}`;
         personIndex++;
 
         list.push({
           id: `leader-${idx}`,
           name: displayName,
           subtitle: roleTitle,
-          badgeText: numBadge,
           description: `${displayName} — ${roleTitle}`,
           image: imgSrc,
           actionLabel,
