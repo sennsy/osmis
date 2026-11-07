@@ -108,7 +108,7 @@ export default function Lightbox({
           style={{
             position: 'fixed',
             inset: 0,
-            zIndex: 9999,
+            zIndex: 10050,
             background: '#000000',
             width: '100vw',
             height: '100vh',

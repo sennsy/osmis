@@ -201,9 +201,17 @@ function ExpandingLayer({
       <img
         src={image.src}
         alt=""
+        aria-hidden="true"
         draggable={false}
         referrerPolicy="no-referrer"
-        className="pc-layer-img h-full w-full object-cover"
+        className="pc-bg-blur"
+      />
+      <img
+        src={image.src}
+        alt=""
+        draggable={false}
+        referrerPolicy="no-referrer"
+        className="pc-layer-img h-full w-full object-contain"
       />
     </div>
   )
@@ -402,32 +410,47 @@ export function PortalCarousel({
           cursor: pointer;
           user-select: none;
           overflow: hidden;
-          background: #000000;
+          background: #050806;
+        }
+        .pc-bg-blur {
+          position: absolute;
+          inset: -24px;
+          width: calc(100% + 48px);
+          height: calc(100% + 48px);
+          object-fit: cover;
+          filter: blur(32px) brightness(0.28);
+          pointer-events: none;
+          display: block;
+          z-index: 0;
         }
         .pc-bg-img {
           position: absolute;
           inset: 0;
           height: 100%;
           width: 100%;
-          object-fit: cover;
+          object-fit: contain;
           display: block;
+          z-index: 1;
         }
         .pc-layers-wrap {
           position: absolute;
           inset: 0;
-          z-index: 1;
+          z-index: 2;
           pointer-events: none;
         }
         .pc-expanding-layer {
           position: absolute;
           overflow: hidden;
           border-radius: 10px;
+          background: #050806;
           will-change: left, top, width, height;
         }
         .pc-layer-img {
+          position: relative;
+          z-index: 1;
           height: 100%;
           width: 100%;
-          object-fit: cover;
+          object-fit: contain;
           display: block;
         }
         .pc-children-overlay {
@@ -574,10 +597,19 @@ export function PortalCarousel({
 
       <img
         src={currentImage.src}
+        alt=""
+        aria-hidden="true"
+        draggable={false}
+        referrerPolicy="no-referrer"
+        className="pc-bg-blur"
+      />
+
+      <img
+        src={currentImage.src}
         alt={currentImage.alt ?? ''}
         draggable={false}
         referrerPolicy="no-referrer"
-        className="pc-bg-img absolute inset-0 h-full w-full object-cover"
+        className="pc-bg-img absolute inset-0 h-full w-full object-contain"
       />
 
       {/* Own stacking context: layer z-order never climbs over the overlays */}
