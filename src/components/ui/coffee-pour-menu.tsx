@@ -459,40 +459,32 @@ export function CoffeePourMenu({
           box-shadow: 0 6px 16px rgba(214, 159, 48, 0.35);
         }
 
-        /* Center Individual Portrait Showcase */
+        /* Full-Bleed Individual Portrait Showcase */
         .cpm-portrait-stage {
-          position: relative;
-          z-index: 5;
-          flex: 1;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 0.75rem 1.25rem 1.25rem;
-          perspective: 900px;
+          position: absolute;
+          inset: 0;
+          z-index: 4;
+          width: 100%;
+          height: 100%;
+          overflow: hidden;
         }
         .cpm-portrait-card {
-          position: relative;
-          width: min(74%, 268px);
-          aspect-ratio: 3 / 3.7;
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
           border-radius: 26px;
-          padding: 8px;
-          background: linear-gradient(145deg, #d69f30 0%, #2e5942 52%, #f59e0b 100%);
-          box-shadow:
-            0 26px 50px -14px rgba(23, 56, 38, 0.42),
-            0 0 0 1px rgba(255, 255, 255, 0.5) inset;
+          padding: 0;
+          background: #173826;
           cursor: pointer;
           user-select: none;
-        }
-        [data-theme='dark'] .cpm-portrait-card {
-          box-shadow:
-            0 28px 55px -14px rgba(0, 0, 0, 0.75),
-            0 0 28px rgba(214, 159, 48, 0.2);
+          overflow: hidden;
         }
         .cpm-portrait-inner {
           position: relative;
           width: 100%;
           height: 100%;
-          border-radius: 20px;
+          border-radius: 26px;
           overflow: hidden;
           background: #173826;
         }
@@ -500,26 +492,26 @@ export function CoffeePourMenu({
           width: 100%;
           height: 100%;
           object-fit: cover;
-          object-position: top center;
+          object-position: center 18%;
           display: block;
-          transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+          transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
         }
         .cpm-portrait-card:hover .cpm-portrait-img {
-          transform: scale(1.05);
+          transform: scale(1.04);
         }
         .cpm-portrait-overlay {
           position: absolute;
           inset: 0;
           background: linear-gradient(
             to top,
-            rgba(15, 38, 26, 0.94) 0%,
-            rgba(15, 38, 26, 0.38) 38%,
-            transparent 68%
+            rgba(12, 32, 22, 0.92) 0%,
+            rgba(12, 32, 22, 0.42) 34%,
+            transparent 62%
           );
           display: flex;
           flex-direction: column;
           justify-content: flex-end;
-          padding: 1.1rem 1rem 0.95rem;
+          padding: 1.5rem 1.4rem 1.35rem;
           color: #ffffff;
         }
         .cpm-portrait-badge {
@@ -527,51 +519,54 @@ export function CoffeePourMenu({
           align-items: center;
           gap: 0.3rem;
           align-self: flex-start;
-          padding: 0.22rem 0.65rem;
+          padding: 0.24rem 0.7rem;
           border-radius: 999px;
           background: rgba(214, 159, 48, 0.92);
           color: #173826;
           font-family: var(--font-mono, monospace);
-          font-size: 0.62rem;
+          font-size: 0.64rem;
           font-weight: 800;
           letter-spacing: 0.12em;
           text-transform: uppercase;
-          margin-bottom: 0.4rem;
+          margin-bottom: 0.45rem;
           box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
         }
         .cpm-portrait-title {
           font-family: var(--font-display, serif);
-          font-size: clamp(1.05rem, 1.9vw, 1.32rem);
+          font-size: clamp(1.35rem, 2.3vw, 1.75rem);
           font-weight: 700;
-          line-height: 1.18;
+          line-height: 1.15;
           color: #ffffff;
           margin: 0;
-          text-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+          text-shadow: 0 2px 10px rgba(0, 0, 0, 0.55);
+          padding-right: 3rem;
         }
         .cpm-portrait-role {
           font-family: var(--font-mono, monospace);
-          font-size: 0.68rem;
+          font-size: 0.75rem;
           font-weight: 700;
           color: #fde68a;
-          letter-spacing: 0.08em;
+          letter-spacing: 0.1em;
           text-transform: uppercase;
-          margin-top: 0.2rem;
+          margin-top: 0.28rem;
         }
         .cpm-zoom-pill {
           position: absolute;
-          top: 10px;
-          right: 10px;
-          width: 32px;
-          height: 32px;
+          bottom: 1.35rem;
+          right: 1.35rem;
+          z-index: 6;
+          width: 38px;
+          height: 38px;
           border-radius: 50%;
-          background: rgba(23, 56, 38, 0.78);
-          backdrop-filter: blur(6px);
-          border: 1px solid rgba(214, 159, 48, 0.65);
+          background: rgba(23, 56, 38, 0.82);
+          backdrop-filter: blur(8px);
+          border: 1.5px solid rgba(214, 159, 48, 0.75);
           color: #fef08a;
           display: flex;
           align-items: center;
           justify-content: center;
           transition: transform 0.2s ease, background-color 0.2s ease;
+          box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
         }
         .cpm-portrait-card:hover .cpm-zoom-pill {
           transform: scale(1.1);
@@ -673,12 +668,6 @@ export function CoffeePourMenu({
 
       {/* Right Stage: Individual Portrait Showcase (Green & Gold) */}
       <div className="cpm-stage-wrap">
-        <div className="cpm-stage-rings">
-          <div className="cpm-stage-ring-1" />
-          <div className="cpm-stage-ring-2" />
-        </div>
-        <div className="cpm-stage-floor" />
-
         {selected && (
           <div className="cpm-stage-card">
             <div className="cpm-stage-person">
@@ -718,22 +707,22 @@ export function CoffeePourMenu({
                 initial={
                   reduce
                     ? { opacity: 0 }
-                    : { opacity: 0, x: 140, y: 20, rotate: 10, scale: 0.88 }
+                    : { opacity: 0, scale: 1.08 }
                 }
                 animate={
                   reduce
                     ? { opacity: 1 }
-                    : { opacity: 1, x: 0, y: 0, rotate: 0, scale: 1 }
+                    : { opacity: 1, scale: 1 }
                 }
                 exit={
                   reduce
                     ? { opacity: 0 }
-                    : { opacity: 0, x: -130, y: 120, rotate: -16, scale: 0.86 }
+                    : { opacity: 0, scale: 0.96 }
                 }
                 transition={
                   reduce
                     ? { duration: 0.2 }
-                    : { type: "spring", stiffness: 260, damping: 22, mass: 0.85 }
+                    : { type: "spring", stiffness: 260, damping: 26, mass: 0.85 }
                 }
                 onClick={() => selected.onImageClick?.()}
                 className="cpm-portrait-card"
@@ -752,7 +741,7 @@ export function CoffeePourMenu({
                   />
 
                   <span className="cpm-zoom-pill" aria-hidden="true">
-                    <Maximize2 size={14} />
+                    <Maximize2 size={15} />
                   </span>
 
                   <div className="cpm-portrait-overlay">

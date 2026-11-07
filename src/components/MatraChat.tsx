@@ -95,7 +95,6 @@ export default function MatraChat() {
         >
           <div className={styles.floatingBtnContent}>
             <img src="/matra_logo.jpg" alt="Matra AI" className={styles.logo} />
-            <span className={styles.floatingBtnBadge} aria-hidden="true">AI</span>
           </div>
         </GlowCard>
       </div>

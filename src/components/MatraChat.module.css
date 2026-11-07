@@ -8,7 +8,7 @@
 
 .floatingGlowCard {
   width: 68px !important;
-  height: 84px !important;
+  height: 68px !important;
   border-radius: 0 24px 24px 0 !important;
   display: flex !important;
   align-items: center !important;
@@ -26,29 +26,8 @@
 .floatingBtnContent {
   position: relative;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 3px;
-}
-
-.floatingBtnBadge {
-  font-family: var(--font-mono, monospace);
-  font-size: 0.6rem;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-  color: var(--osmis-green, #2e5942);
-  background: rgba(214, 159, 48, 0.25);
-  border: 1px solid rgba(214, 159, 48, 0.5);
-  padding: 1px 5px;
-  border-radius: 999px;
-  line-height: 1.1;
-}
-
-[data-theme='dark'] .floatingBtnBadge {
-  color: #a7f3d0;
-  background: rgba(0, 255, 136, 0.18);
-  border-color: rgba(0, 255, 136, 0.4);
 }
 
 .logo {
