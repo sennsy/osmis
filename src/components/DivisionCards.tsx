@@ -2,7 +2,7 @@
 
 import React, { useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Maximize2, Users, ClipboardList } from 'lucide-react';
+import { X, ClipboardList } from 'lucide-react';
 import { useLanguage } from './LanguageProvider';
 import { useOsmisData } from '../lib/storage';
 import styles from './DivisionCards.module.css';
@@ -10,6 +10,7 @@ import { getImageUrl } from '../utils/driveImages';
 import { toArabicNumerals } from '../utils/arabicNumerals';
 import PhotoModal from './PhotoModal';
 import { DishOrbitCarousel, type Dish } from './ui/dish-orbit-carousel';
+import { TeamLanyardRail, type LanyardMember } from './ui/team-lanyard-rail';
 
 const ACCENT_PALETTE = [
   '#34d399', // 01 Keamanan - Emerald
@@ -46,6 +47,100 @@ export default function DivisionCards() {
 
   const activeDivForModal = organization.divisions.find((d: any) => d.id === modalDivId);
   const activeDivForMembers = organization.divisions.find((d: any) => d.id === membersModalDivId);
+
+  const lanyardMembers: LanyardMember[] = useMemo(() => {
+    if (!activeDivForMembers) return [];
+    const divName =
+      activeDivForMembers.nameKey && (t as any)[activeDivForMembers.nameKey]
+        ? (t as any)[activeDivForMembers.nameKey]
+        : activeDivForMembers.name;
+    const qismLogo = (activeDivForMembers as any).icon || '/logo_utama.png';
+    const mainLogo = '/logo_utama.png';
+
+    const headsList: LanyardMember[] = (activeDivForMembers.heads || []).map((h: any, idx: number) => {
+      const displayName = language === 'ar' && h.nameAr ? h.nameAr : h.name;
+      const roleStr =
+        language === 'ar'
+          ? `رئيس قسم ${divName}`
+          : language === 'en'
+            ? `HEAD OF ${divName}`
+            : `KETUA ${divName}`;
+      return {
+        id: `${activeDivForMembers.id}-head-${idx}`,
+        name: displayName,
+        role: 'KETUA-ne',
+        team: `OSMIS · ${divName}`,
+        image: h.image ? getImageUrl(h.image) : qismLogo,
+        bio:
+          language === 'ar'
+            ? `رئيس قسم ${divName} في منظمة طلاب معهد دار السنة الإسلامي (OSMIS) ٢٠٢٦-٢٠٢٧.`
+            : language === 'en'
+              ? `Head of ${divName} Division — OSMIS Cabinet 2026/2027.`
+              : `Ketua Bagian ${divName} — Pengurus OSMIS Masa Bakti 2026/2027.`,
+        tags: ['KETUA-ne', divName, 'OSMIS 26/27'],
+        tone: 1,
+        mainLogo,
+        qismLogo,
+        links: h.image
+          ? [
+              {
+                label: language === 'ar' ? 'تكبير الصورة' : language === 'en' ? 'Zoom Photo' : 'Perbesar Foto',
+                onClick: () =>
+                  setPhotoModalData({
+                    image: h.image,
+                    name: displayName,
+                    role: roleStr,
+                  }),
+              },
+            ]
+          : undefined,
+      };
+    });
+
+    const membersList: LanyardMember[] = (activeDivForMembers.members || []).map((m: any, idx: number) => {
+      const displayName = language === 'ar' && m.nameAr ? m.nameAr : m.name;
+      const tones: Array<1 | 2 | 3 | 4 | 5> = [2, 3, 4, 5];
+      const roleLabel = language === 'ar' ? 'عضو القسم' : language === 'en' ? 'MEMBER' : 'ANGGOTA';
+      const roleStr =
+        language === 'ar'
+          ? `عضو ${divName}`
+          : language === 'en'
+            ? `MEMBER OF ${divName}`
+            : `ANGGOTA ${divName}`;
+      return {
+        id: `${activeDivForMembers.id}-member-${idx}`,
+        name: displayName,
+        role: roleLabel,
+        team: `OSMIS · ${divName}`,
+        image: m.image ? getImageUrl(m.image) : qismLogo,
+        bio:
+          language === 'ar'
+            ? `عضو قسم ${divName} في منظمة طلاب معهد دار السنة الإسلامي (OSMIS) ٢٠٢٦-٢٠٢٧.`
+            : language === 'en'
+              ? `Member of ${divName} Division — OSMIS Cabinet 2026/2027.`
+              : `Anggota Bagian ${divName} — Pengurus OSMIS Masa Bakti 2026/2027.`,
+        tags: [roleLabel, divName, 'OSMIS 26/27'],
+        tone: tones[idx % tones.length],
+        mainLogo,
+        qismLogo,
+        links: m.image
+          ? [
+              {
+                label: language === 'ar' ? 'تكبير الصورة' : language === 'en' ? 'Zoom Photo' : 'Perbesar Foto',
+                onClick: () =>
+                  setPhotoModalData({
+                    image: m.image,
+                    name: displayName,
+                    role: roleStr,
+                  }),
+              },
+            ]
+          : undefined,
+      };
+    });
+
+    return [...headsList, ...membersList];
+  }, [activeDivForMembers, language, t]);
 
   const dishes: Dish[] = useMemo(() => {
     return organization.divisions.map((div: any, idx: number) => {
@@ -138,7 +233,7 @@ export default function DivisionCards() {
         }}
       />
 
-      {/* MODAL LIHAT ANGGOTA (Triggered by "Lihat Anggota" button) */}
+      {/* MODAL LIHAT ANGGOTA — TeamLanyardRail (Triggered by "Lihat Anggota" button) */}
       <AnimatePresence>
         {membersModalDivId && activeDivForMembers && (
           <motion.div
@@ -154,205 +249,44 @@ export default function DivisionCards() {
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: 20, opacity: 0 }}
+              style={{
+                maxWidth: '1080px',
+                width: '95vw',
+                padding: '0.5rem 0 1.5rem',
+                overflowX: 'hidden',
+              }}
             >
-              <button className={styles.closeBtn} onClick={() => setMembersModalDivId(null)}>
+              <button
+                className={styles.closeBtn}
+                onClick={() => setMembersModalDivId(null)}
+                style={{ zIndex: 30 }}
+                aria-label="Close"
+              >
                 <X size={24} />
               </button>
 
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', marginBottom: '1rem', paddingRight: '2.5rem' }}>
-                {(activeDivForMembers as any).icon && (
-                  <img
-                    src={(activeDivForMembers as any).icon}
-                    alt={activeDivForMembers.name}
-                    width={44}
-                    height={44}
-                    style={{ objectFit: 'contain' }}
-                  />
-                )}
-                <div>
-                  <div className="mono-font" style={{ fontSize: '0.78rem', color: 'var(--osmis-green)', fontWeight: 700 }}>
-                    #{language === 'ar' ? toArabicNumerals(activeDivForMembers.id) : activeDivForMembers.id} •{' '}
-                    {language === 'ar'
-                      ? toArabicNumerals(activeDivForMembers.heads.length + activeDivForMembers.members.length)
-                      : activeDivForMembers.heads.length + activeDivForMembers.members.length}{' '}
-                    {t.members}
-                  </div>
-                  <h3 className={`${styles.modalTitle} display-font`} style={{ marginBottom: 0, paddingRight: 0 }}>
-                    {activeDivForMembers.nameKey ? (t as any)[activeDivForMembers.nameKey] : activeDivForMembers.name}
-                  </h3>
-                </div>
-              </div>
+              <TeamLanyardRail
+                items={lanyardMembers}
+                mainLogo="/logo_utama.png"
+                qismLogo={(activeDivForMembers as any).icon}
+                eyebrow={`#${language === 'ar' ? toArabicNumerals(activeDivForMembers.id) : activeDivForMembers.id} • ${
+                  language === 'ar' ? toArabicNumerals(lanyardMembers.length) : lanyardMembers.length
+                } ${t.members || 'Anggota'} OSMIS`}
+                heading={
+                  activeDivForMembers.nameKey && (t as any)[activeDivForMembers.nameKey]
+                    ? (t as any)[activeDivForMembers.nameKey]
+                    : activeDivForMembers.name
+                }
+                caption={
+                  language === 'ar'
+                    ? 'اسحب البطاقة للأسفل أو اضغط عليها لقلب البطاقة ورؤية التفاصيل'
+                    : language === 'en'
+                      ? 'Pull a badge down to swing it, or click any card to flip & zoom photo'
+                      : 'Tarik kartu ke bawah untuk mengayunkan, atau klik kartu untuk membalik & memperbesar foto'
+                }
+              />
 
-              <div className={styles.contentInner} style={{ marginTop: '1rem' }}>
-                <div className={styles.heads}>
-                  <h4 className="mono-font" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <Users size={14} /> {(t as any).divLeader || 'KETUA-ne (KETUA BAGIAN)'}
-                  </h4>
-                  <ul style={{ listStyle: 'none', padding: 0 }}>
-                    {activeDivForMembers.heads.map((h: any, i: number) => (
-                      <li key={i} style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
-                        {h.image && (
-                          <div
-                            style={{ position: 'relative', cursor: 'pointer', flexShrink: 0 }}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              const divName = activeDivForMembers.nameKey
-                                ? (t as any)[activeDivForMembers.nameKey]
-                                : activeDivForMembers.name;
-                              const roleStr =
-                                language === 'ar'
-                                  ? `رئيس قسم ${divName}`
-                                  : language === 'en'
-                                    ? `HEAD OF ${divName}`
-                                    : `KETUA ${divName}`;
-                              setPhotoModalData({
-                                image: h.image,
-                                name: language === 'ar' && h.nameAr ? h.nameAr : h.name,
-                                role: roleStr,
-                              });
-                            }}
-                          >
-                            <img
-                              src={getImageUrl(h.image)}
-                              alt={h.name}
-                              draggable={false}
-                              onContextMenu={(e) => e.preventDefault()}
-                              style={{
-                                width: '52px',
-                                height: '52px',
-                                borderRadius: '50%',
-                                objectFit: 'cover',
-                                objectPosition: 'top',
-                                border: '2px solid var(--osmis-green)',
-                              }}
-                              onError={(e) => (e.currentTarget.style.display = 'none')}
-                            />
-                            <div
-                              style={{
-                                position: 'absolute',
-                                inset: 0,
-                                backgroundColor: 'rgba(0,0,0,0.4)',
-                                borderRadius: '50%',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                opacity: 0,
-                                transition: 'opacity 0.2s',
-                              }}
-                              onMouseEnter={(e) => (e.currentTarget.style.opacity = '1')}
-                              onMouseLeave={(e) => (e.currentTarget.style.opacity = '0')}
-                            >
-                              <Maximize2 size={16} color="#fff" />
-                            </div>
-                          </div>
-                        )}
-                        <div>
-                          <div style={{ fontWeight: 700, fontSize: '1.05rem' }}>
-                            {language === 'ar' && h.nameAr ? h.nameAr : h.name}
-                          </div>
-                          <div className="mono-font" style={{ fontSize: '0.72rem', color: 'var(--osmis-green)' }}>
-                            KETUA-ne
-                          </div>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                <div className={styles.divider}></div>
-
-                <div className={styles.members}>
-                  <h4 className="mono-font">{t.members}</h4>
-                  <ul
-                    style={{
-                      listStyle: 'none',
-                      padding: 0,
-                      display: 'grid',
-                      gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
-                      gap: '10px',
-                    }}
-                  >
-                    {activeDivForMembers.members.map((m: any, i: number) => (
-                      <li
-                        key={i}
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '10px',
-                          padding: '8px 10px',
-                          borderRadius: '10px',
-                          background: 'rgba(128, 128, 128, 0.06)',
-                          border: '1px solid var(--border-color)',
-                        }}
-                      >
-                        <span className="mono-font opacity-50" style={{ fontSize: '0.75rem' }}>
-                          {language === 'ar'
-                            ? toArabicNumerals((i + 1).toString().padStart(2, '0'))
-                            : (i + 1).toString().padStart(2, '0')}
-                        </span>
-                        {m.image && (
-                          <div
-                            style={{ position: 'relative', cursor: 'pointer', flexShrink: 0 }}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              const divName = activeDivForMembers.nameKey
-                                ? (t as any)[activeDivForMembers.nameKey]
-                                : activeDivForMembers.name;
-                              const roleStr =
-                                language === 'ar'
-                                  ? `عضو ${divName}`
-                                  : language === 'en'
-                                    ? `MEMBER OF ${divName}`
-                                    : `ANGGOTA ${divName}`;
-                              setPhotoModalData({
-                                image: m.image,
-                                name: language === 'ar' && m.nameAr ? m.nameAr : m.name,
-                                role: roleStr,
-                              });
-                            }}
-                          >
-                            <img
-                              src={getImageUrl(m.image)}
-                              alt={m.name}
-                              draggable={false}
-                              onContextMenu={(e) => e.preventDefault()}
-                              style={{
-                                width: '40px',
-                                height: '40px',
-                                borderRadius: '50%',
-                                objectFit: 'cover',
-                                objectPosition: 'top',
-                                border: '1px solid var(--border-color)',
-                              }}
-                              onError={(e) => (e.currentTarget.style.display = 'none')}
-                            />
-                            <div
-                              style={{
-                                position: 'absolute',
-                                inset: 0,
-                                backgroundColor: 'rgba(0,0,0,0.4)',
-                                borderRadius: '50%',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                opacity: 0,
-                                transition: 'opacity 0.2s',
-                              }}
-                              onMouseEnter={(e) => (e.currentTarget.style.opacity = '1')}
-                              onMouseLeave={(e) => (e.currentTarget.style.opacity = '0')}
-                            >
-                              <Maximize2 size={14} color="#fff" />
-                            </div>
-                          </div>
-                        )}
-                        <span style={{ fontSize: '0.92rem', fontWeight: 500 }}>
-                          {language === 'ar' && m.nameAr ? m.nameAr : m.name}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
+              <div style={{ display: 'flex', justifyContent: 'center', padding: '0 1.5rem' }}>
                 <button
                   className={styles.viewProgramsBtn}
                   onClick={(e) => {
@@ -362,7 +296,14 @@ export default function DivisionCards() {
                     setModalDivId(id);
                     setActiveTab('programs');
                   }}
-                  style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '8px',
+                    maxWidth: '380px',
+                    marginTop: '0.25rem',
+                  }}
                 >
                   <ClipboardList size={16} />
                   {(t as any).viewPrograms || 'LIHAT PROGRAM KERJA & PERATURAN'}
