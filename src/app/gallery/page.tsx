@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useState, useMemo, useRef, useCallback } from 'react';
+import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
 import { useLanguage } from '../../components/LanguageProvider';
 import { useOsmisData } from '../../lib/storage';
 import { ArrowLeft } from 'lucide-react';
-import Lightbox from '../../components/Lightbox';
 import { toArabicNumerals } from '../../utils/arabicNumerals';
 import { getImageUrl, getHighResImageUrl } from '../../utils/driveImages';
 import {
@@ -18,6 +18,8 @@ import {
   GalleryImage,
 } from '@/components/ui/shared-element-gallery';
 import styles from './page.module.css';
+
+const Lightbox = dynamic(() => import('../../components/Lightbox'), { ssr: false });
 
 export default function FullGalleryPage() {
   const { t, language } = useLanguage();
@@ -56,7 +58,7 @@ export default function FullGalleryPage() {
         if (id && !items.some((existing) => existing.driveId === id)) {
           items.push({
             driveId: id,
-            src: getImageUrl(id),
+            src: getImageUrl(id, 's800'),
             title: catDisplayName,
           });
         }
@@ -69,7 +71,7 @@ export default function FullGalleryPage() {
       if (id && !items.some((existing) => existing.driveId === id)) {
         items.push({
           driveId: id,
-          src: getImageUrl(id),
+          src: getImageUrl(id, 's800'),
           title: t.archiveTitle || 'ARSIP OSMIS',
         });
       }
@@ -338,7 +340,7 @@ export default function FullGalleryPage() {
                   <GalleryImage
                     key={`${activeCategory}-${driveId}`}
                     id={`${activeCategory}-${driveId}`}
-                    src={getImageUrl(driveId, 's1600')}
+                    src={getImageUrl(driveId, 's800')}
                     downloadUrl={getHighResImageUrl(driveId)}
                     badge={numLabel}
                     alt={`OSMIS Gallery ${idx + 1}`}

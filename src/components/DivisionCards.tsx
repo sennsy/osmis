@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useMemo, useState } from 'react';
+import dynamic from 'next/dynamic';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ClipboardList } from 'lucide-react';
 import { useLanguage } from './LanguageProvider';
@@ -8,9 +9,14 @@ import { useOsmisData } from '../lib/storage';
 import styles from './DivisionCards.module.css';
 import { getImageUrl } from '../utils/driveImages';
 import { toArabicNumerals } from '../utils/arabicNumerals';
-import PhotoModal from './PhotoModal';
 import { DishOrbitCarousel, type Dish } from './ui/dish-orbit-carousel';
-import { TeamLanyardRail, type LanyardMember } from './ui/team-lanyard-rail';
+import type { LanyardMember } from './ui/team-lanyard-rail';
+
+const PhotoModal = dynamic(() => import('./PhotoModal'), { ssr: false });
+const TeamLanyardRail = dynamic(
+  () => import('./ui/team-lanyard-rail').then((m) => m.TeamLanyardRail),
+  { ssr: false }
+);
 
 const ACCENT_PALETTE = [
   '#34d399', // 01 Keamanan - Emerald
@@ -70,7 +76,7 @@ export default function DivisionCards() {
         name: displayName,
         role: 'KETUA-ne',
         team: `OSMIS · ${divName}`,
-        image: h.image ? getImageUrl(h.image) : qismLogo,
+        image: h.image ? getImageUrl(h.image, 's800') : qismLogo,
         bio:
           language === 'ar'
             ? `رئيس قسم ${divName} في منظمة طلاب معهد دار السنة الإسلامي (OSMIS) ٢٠٢٦-٢٠٢٧.`
@@ -112,7 +118,7 @@ export default function DivisionCards() {
         name: displayName,
         role: roleLabel,
         team: `OSMIS · ${divName}`,
-        image: m.image ? getImageUrl(m.image) : qismLogo,
+        image: m.image ? getImageUrl(m.image, 's800') : qismLogo,
         bio:
           language === 'ar'
             ? `عضو قسم ${divName} في منظمة طلاب معهد دار السنة الإسلامي (OSMIS) ٢٠٢٦-٢٠٢٧.`

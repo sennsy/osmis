@@ -45,6 +45,10 @@ const GlowCard: React.FC<GlowCardProps> = ({
   const innerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const el = cardRef.current;
+    if (!el) return;
+    let raf = 0;
+
     const updatePosition = (clientX: number, clientY: number) => {
       if (!cardRef.current) return;
       const rect = cardRef.current.getBoundingClientRect();
@@ -57,17 +61,20 @@ const GlowCard: React.FC<GlowCardProps> = ({
     };
 
     // Initialize with a pleasant default glow position on mount
-    if (cardRef.current) {
-      const rect = cardRef.current.getBoundingClientRect();
-      updatePosition(rect.left + rect.width * 0.5, rect.top + rect.height * 0.25);
-    }
+    const rect = el.getBoundingClientRect();
+    updatePosition(rect.left + rect.width * 0.5, rect.top + rect.height * 0.25);
 
     const syncPointer = (e: PointerEvent) => {
-      updatePosition(e.clientX, e.clientY);
+      if (e.pointerType === 'touch') return;
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => updatePosition(e.clientX, e.clientY));
     };
 
-    document.addEventListener('pointermove', syncPointer, { passive: true });
-    return () => document.removeEventListener('pointermove', syncPointer);
+    el.addEventListener('pointermove', syncPointer, { passive: true });
+    return () => {
+      cancelAnimationFrame(raf);
+      el.removeEventListener('pointermove', syncPointer);
+    };
   }, []);
 
   const { base, spread } = glowColorMap[glowColor] || glowColorMap.blue;

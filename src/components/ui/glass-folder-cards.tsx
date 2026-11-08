@@ -718,6 +718,8 @@ export default function GlassFolder({
                 alt=""
                 width={W + 24}
                 height={H + 24}
+                loading="lazy"
+                decoding="async"
                 draggable={false}
                 referrerPolicy="no-referrer"
               />
@@ -784,6 +786,8 @@ export default function GlassFolder({
                         alt=""
                         width={SHEET_W}
                         height={SHEET_H}
+                        loading="lazy"
+                        decoding="async"
                         draggable={false}
                         referrerPolicy="no-referrer"
                       />

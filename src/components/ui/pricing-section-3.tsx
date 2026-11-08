@@ -409,6 +409,40 @@ export default function PricingSection4() {
           background: linear-gradient(to top, #1e293b, #334155);
           border-color: rgba(255, 255, 255, 0.15);
         }
+        @media (max-width: 767px) {
+          .ps3-root {
+            padding: 3.5rem 1rem 3rem;
+          }
+          .ps3-header {
+            margin-bottom: 1.5rem;
+          }
+          .ps3-heading {
+            font-size: clamp(1.75rem, 6.5vw, 2.25rem);
+          }
+          .ps3-subheading {
+            font-size: 0.94rem;
+            line-height: 1.58;
+          }
+          .ps3-grid {
+            padding: 1rem;
+            gap: 1.15rem;
+            border-radius: 18px;
+          }
+          .ps3-card-content {
+            padding: 1.35rem 1.25rem 0.75rem;
+          }
+          .ps3-card-footer {
+            padding: 0.75rem 1.25rem 1.35rem;
+          }
+          .ps3-plan-title {
+            font-size: 1.55rem;
+          }
+          .ps3-cta-btn {
+            min-height: 48px;
+            font-size: 0.95rem;
+            padding: 0.85rem 1rem;
+          }
+        }
       `}</style>
 
       <article className="ps3-header flex sm:flex-row flex-col sm:pb-0 pb-4 sm:items-center items-start justify-between">

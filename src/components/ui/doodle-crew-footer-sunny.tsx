@@ -176,6 +176,7 @@ export function DoodleCrewFooter({
     if (!el) return;
     let raf = 0;
     const onMove = (e: PointerEvent) => {
+      if (e.pointerType === "touch") return;
       cancelAnimationFrame(raf);
       raf = requestAnimationFrame(() => {
         const r = el.getBoundingClientRect();
@@ -189,11 +190,11 @@ export function DoodleCrewFooter({
       });
     };
     const onLeave = () => setPointer((p) => ({ ...p, inside: false }));
-    window.addEventListener("pointermove", onMove, { passive: true });
+    el.addEventListener("pointermove", onMove, { passive: true });
     el.addEventListener("pointerleave", onLeave);
     return () => {
       cancelAnimationFrame(raf);
-      window.removeEventListener("pointermove", onMove);
+      el.removeEventListener("pointermove", onMove);
       el.removeEventListener("pointerleave", onLeave);
     };
   }, []);

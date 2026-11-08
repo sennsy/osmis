@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useState, useEffect, useMemo } from 'react';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useLanguage } from './LanguageProvider';
 import { useOsmisData } from '../lib/storage';
-import Lightbox from './Lightbox';
 import { toArabicNumerals } from '../utils/arabicNumerals';
 import { getImageUrl } from '../utils/driveImages';
 import GlassFolder, {
@@ -14,6 +14,8 @@ import GlassFolder, {
 } from './ui/glass-folder-cards';
 import { ArrowUpRight, FolderOpen } from 'lucide-react';
 import styles from './Gallery.module.css';
+
+const Lightbox = dynamic(() => import('./Lightbox'), { ssr: false });
 
 const ART_CYCLE: ArtPreset[] = ['verdant', 'aurora', 'dusk', 'ember', 'glacier'];
 
@@ -54,7 +56,7 @@ export default function Gallery() {
       }
     };
     handleResize();
-    window.addEventListener('resize', handleResize);
+    window.addEventListener('resize', handleResize, { passive: true });
 
     return () => {
       observer.disconnect();
@@ -82,7 +84,7 @@ export default function Gallery() {
         return {
           name: `${displayName} #${language === 'ar' ? toArabicNumerals(numStr) : numStr}`,
           meta: 'DRIVE · FOTO',
-          image: getImageUrl(driveId),
+          image: getImageUrl(driveId, 's600'),
         };
       });
 
@@ -93,7 +95,7 @@ export default function Gallery() {
             ? `${validIds.length} Photos`
             : `${validIds.length} Foto Dokumentasi`;
 
-      const coverImage = validIds[0] ? getImageUrl(validIds[0]) : undefined;
+      const coverImage = validIds[0] ? getImageUrl(validIds[0], 's800') : undefined;
 
       return {
         id: cat.id,

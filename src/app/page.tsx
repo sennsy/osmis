@@ -1,16 +1,19 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import Hero from '../components/Hero';
-import HistoryTimeline from '../components/HistoryTimeline';
-import OrganizationChart from '../components/OrganizationChart';
-import DivisionCards from '../components/DivisionCards';
+import PricingSection4 from '../components/ui/pricing-section-3';
 import { useLanguage } from '../components/LanguageProvider';
 import styles from './page.module.css';
 
-import Gallery from '../components/Gallery';
 import { Camera, Sparkles, Gamepad2, Languages, Film } from 'lucide-react';
 import { DotTiles, type DotTileData } from '../components/ui/dot-tiles';
+
+const HistoryTimeline = dynamic(() => import('../components/HistoryTimeline'));
+const OrganizationChart = dynamic(() => import('../components/OrganizationChart'));
+const DivisionCards = dynamic(() => import('../components/DivisionCards'));
+const Gallery = dynamic(() => import('../components/Gallery'));
 
 export default function Home() {
   const { t } = useLanguage();
@@ -18,16 +21,13 @@ export default function Home() {
   const [tileColumns, setTileColumns] = useState(3);
 
   useEffect(() => {
-    // Cache bust: 2026-09-19 14:55
-    console.log("OSMIS V2 Loaded");
-
     const updateCols = () => {
       if (window.innerWidth < 360) setTileColumns(1);
       else if (window.innerWidth < 960) setTileColumns(2);
       else setTileColumns(3);
     };
     updateCols();
-    window.addEventListener('resize', updateCols);
+    window.addEventListener('resize', updateCols, { passive: true });
     return () => window.removeEventListener('resize', updateCols);
   }, []);
 
@@ -120,41 +120,8 @@ export default function Home() {
       <Hero />
       
       {/* Vision & Mission Section */}
-      <section id="introduction" className={styles.introSection}>
-        <div className={styles.introContainer}>
-          <h2 className="display-font">{t.osmisName}</h2>
-          <h3 className="mono-font" style={{ letterSpacing: '0.1em' }}>{t.orgNameLong.toUpperCase()}</h3>
-          <p className="editorial-divider"></p>
-
-          <div className={styles.visiMisiGrid}>
-            {/* VISI */}
-            <div className={styles.visiCard}>
-              <div className={styles.vmLabel}>
-                <span className={`${styles.vmNumber} mono-font`}>١</span>
-                <h4 className={`${styles.vmTitle} mono-font`}>{t.visiLabel}</h4>
-              </div>
-              <p className={`${styles.vmText} display-font`}>"{t.visiText}"</p>
-            </div>
-
-            {/* MISI */}
-            <div className={styles.misiCard}>
-              <div className={styles.vmLabel}>
-                <span className={`${styles.vmNumber} mono-font`}>٢</span>
-                <h4 className={`${styles.vmTitle} mono-font`}>{t.misiLabel}</h4>
-              </div>
-              <ol className={styles.misiList}>
-                {t.misiItems.map((item: string, i: number) => (
-                  <li key={i} className={styles.misiItem}>
-                    <span className={`${styles.misiNum} mono-font`}>
-                      {String(i + 1).padStart(2, '0')}
-                    </span>
-                    <p>{item}</p>
-                  </li>
-                ))}
-              </ol>
-            </div>
-          </div>
-        </div>
+      <section id="introduction">
+        <PricingSection4 />
       </section>
 
       <HistoryTimeline />

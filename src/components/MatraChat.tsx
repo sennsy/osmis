@@ -1,15 +1,17 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import { usePathname } from 'next/navigation';
 import { useOsmisData } from '../lib/storage';
 import styles from './MatraChat.module.css';
-import MatrixEasterEgg from './MatrixEasterEgg';
 import MorphOrb, { ThinkingOrb } from './ui/ai-thiking-orb-and-input';
 import { GlowCard } from './ui/spotlight-card';
 import { PromptInputBox } from './ui/ai-prompt-box';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, MessageSquare } from 'lucide-react';
+
+const MatrixEasterEgg = dynamic(() => import('./MatrixEasterEgg'), { ssr: false });
 
 interface Message {
   role: 'user' | 'assistant' | 'system';
@@ -20,6 +22,7 @@ export default function MatraChat() {
   const pathname = usePathname();
   const { data: activeOsmisData } = useOsmisData();
   const [isOpen, setIsOpen] = useState(false);
+  const [hasOpenedDrawer, setHasOpenedDrawer] = useState(false);
   const [showPromptBox, setShowPromptBox] = useState(false);
   const [isPromptLoading, setIsPromptLoading] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
@@ -36,6 +39,7 @@ export default function MatraChat() {
 
   useEffect(() => {
     if (isOpen) {
+      setHasOpenedDrawer(true);
       scrollToBottom();
     }
   }, [messages, isOpen]);
@@ -238,90 +242,92 @@ export default function MatraChat() {
 
       {/* Spotlight Glow Chat Popup Panel (Slides in from the left) */}
       <div className={`${styles.chatPanelWrap} ${isOpen ? styles.open : ''}`}>
-        <GlowCard
-          customSize
-          glowColor="green"
-          className={styles.panelGlowCard}
-          style={{
-            '--radius': '24',
-            '--border': '2.5',
-            '--size': '340',
-            '--bg-spot-opacity': '0.18',
-          } as React.CSSProperties}
-        >
-          <div className={styles.panelInner}>
-            <div className={styles.header}>
-              <div className={styles.headerInfo}>
-                <img src="/matra_logo.jpg" alt="Matra AI Logo" className={styles.headerLogo} />
-                <div style={{ display: 'flex', flexDirection: 'column' }}>
-                  <span className={styles.headerTitle}>Matra AI</span>
-                  <span style={{ fontSize: '0.68rem', opacity: 0.65, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--osmis-green, #2e5942)' }}>
-                    Asisten Digital OSMIS
-                  </span>
+        {(isOpen || hasOpenedDrawer) && (
+          <GlowCard
+            customSize
+            glowColor="green"
+            className={styles.panelGlowCard}
+            style={{
+              '--radius': '24',
+              '--border': '2.5',
+              '--size': '340',
+              '--bg-spot-opacity': '0.18',
+            } as React.CSSProperties}
+          >
+            <div className={styles.panelInner}>
+              <div className={styles.header}>
+                <div className={styles.headerInfo}>
+                  <img src="/matra_logo.jpg" alt="Matra AI Logo" className={styles.headerLogo} />
+                  <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    <span className={styles.headerTitle}>Matra AI</span>
+                    <span style={{ fontSize: '0.68rem', opacity: 0.65, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--osmis-green, #2e5942)' }}>
+                      Asisten Digital OSMIS
+                    </span>
+                  </div>
                 </div>
-              </div>
-              <button className={styles.closeBtn} onClick={toggleChat} aria-label="Tutup Matra AI">
-                <svg
-                  width="22"
-                  height="22"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <line x1="18" y1="6" x2="6" y2="18"></line>
-                  <line x1="6" y1="6" x2="18" y2="18"></line>
-                </svg>
-              </button>
-            </div>
-
-            <div style={{ flex: 1, position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-              <div className={styles.messages} style={{ paddingBottom: '6.75rem' }}>
-                {messages.map((msg, i) => (
-                  <div key={i} className={`${styles.message} ${styles[msg.role]}`}>
-                    <div className={styles.messageRole}>
-                      {msg.role === 'user' ? 'Anda' : 'Matra AI'}
-                    </div>
-                    <div className={styles.messageContent}>
-                      {msg.content.split('\n').map((line, idx) => (
-                        <React.Fragment key={idx}>
-                          {line}
-                          <br />
-                        </React.Fragment>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-                {isPromptLoading && (
-                  <div className={`${styles.message} ${styles.assistant}`} style={{ width: '100%', maxWidth: '100%' }}>
-                    <div className={styles.messageRole}>Matra AI</div>
-                    <ThinkingOrb
-                      size={150}
-                      labels={["Memikirkan...", "Mencari Data OSMIS...", "Menganalisis Konteks...", "Menyusun Jawaban..."]}
-                    />
-                  </div>
-                )}
-                <div ref={messagesEndRef} />
+                <button className={styles.closeBtn} onClick={toggleChat} aria-label="Tutup Matra AI">
+                  <svg
+                    width="22"
+                    height="22"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                  </svg>
+                </button>
               </div>
 
-              <MorphOrb
-                placeholder="Tanyakan sesuatu pada Matra AI…"
-                answerTitle="Matra AI"
-                resetLabel="Lanjut Chat"
-                labels={["Memikirkan", "Mencari Data", "Menganalisis", "Menyusun Jawaban"]}
-                minThinkMs={2100}
-                onInterceptSubmit={(text) => checkAskaaCode(text)}
-                onSubmit={async (text) => {
-                  if (checkAskaaCode(text)) return '';
-                  const reply = await askMatraBackend(text);
-                  return reply.replace(/\*\*/g, '');
-                }}
-              />
+              <div style={{ flex: 1, position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+                <div className={styles.messages} style={{ paddingBottom: '6.75rem' }}>
+                  {messages.map((msg, i) => (
+                    <div key={i} className={`${styles.message} ${styles[msg.role]}`}>
+                      <div className={styles.messageRole}>
+                        {msg.role === 'user' ? 'Anda' : 'Matra AI'}
+                      </div>
+                      <div className={styles.messageContent}>
+                        {msg.content.split('\n').map((line, idx) => (
+                          <React.Fragment key={idx}>
+                            {line}
+                            <br />
+                          </React.Fragment>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                  {isPromptLoading && (
+                    <div className={`${styles.message} ${styles.assistant}`} style={{ width: '100%', maxWidth: '100%' }}>
+                      <div className={styles.messageRole}>Matra AI</div>
+                      <ThinkingOrb
+                        size={150}
+                        labels={["Memikirkan...", "Mencari Data OSMIS...", "Menganalisis Konteks...", "Menyusun Jawaban..."]}
+                      />
+                    </div>
+                  )}
+                  <div ref={messagesEndRef} />
+                </div>
+
+                <MorphOrb
+                  placeholder="Tanyakan sesuatu pada Matra AI…"
+                  answerTitle="Matra AI"
+                  resetLabel="Lanjut Chat"
+                  labels={["Memikirkan", "Mencari Data", "Menganalisis", "Menyusun Jawaban"]}
+                  minThinkMs={2100}
+                  onInterceptSubmit={(text) => checkAskaaCode(text)}
+                  onSubmit={async (text) => {
+                    if (checkAskaaCode(text)) return '';
+                    const reply = await askMatraBackend(text);
+                    return reply.replace(/\*\*/g, '');
+                  }}
+                />
+              </div>
             </div>
-          </div>
-        </GlowCard>
+          </GlowCard>
+        )}
       </div>
     </>
   );

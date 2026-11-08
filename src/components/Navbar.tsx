@@ -22,18 +22,30 @@ export default function Navbar() {
 
   useEffect(() => {
     setMounted(true);
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
+    const sectionIds = ['history', 'organization', 'divisions', 'gallery', 'features'];
+    let ticking = false;
+
+    const updateOnScroll = () => {
+      ticking = false;
+      const y = window.scrollY;
+      const isScrolledNow = y > 50;
+      setScrolled((prev) => (prev === isScrolledNow ? prev : isScrolledNow));
 
       // Update active section indicator based on scroll position on homepage
-      const sectionIds = ['history', 'organization', 'divisions', 'gallery', 'features'];
-      const scrollPos = window.scrollY + 240;
+      const scrollPos = y + 240;
       for (let i = sectionIds.length - 1; i >= 0; i--) {
         const el = document.getElementById(sectionIds[i]);
         if (el && el.offsetTop <= scrollPos) {
-          setActiveNavIdx(i);
+          setActiveNavIdx((prev) => (prev === i ? prev : i));
           break;
         }
+      }
+    };
+
+    const handleScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(updateOnScroll);
       }
     };
     window.addEventListener('scroll', handleScroll, { passive: true });

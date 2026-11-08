@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useMemo, useState } from 'react';
+import dynamic from 'next/dynamic';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 import { useLanguage } from './LanguageProvider';
@@ -8,8 +9,9 @@ import { useOsmisData } from '../lib/storage';
 import styles from './OrganizationChart.module.css';
 import { getImageUrl } from '../utils/driveImages';
 import { toArabicNumerals } from '../utils/arabicNumerals';
-import PhotoModal from './PhotoModal';
 import { CoffeePourMenu, type CoffeeItem } from './ui/coffee-pour-menu';
+
+const PhotoModal = dynamic(() => import('./PhotoModal'), { ssr: false });
 
 const DRINK_PRESETS: Array<
   Pick<CoffeeItem, 'vessel' | 'layers' | 'crema' | 'foam' | 'art' | 'blend'>
@@ -84,7 +86,7 @@ export default function OrganizationChart() {
           const displayName =
             language === 'ar' && m.nameAr ? m.nameAr : m.name;
           const imgSrc = m.image
-            ? getImageUrl(m.image)
+            ? getImageUrl(m.image, 's800')
             : '/logo_utama.png';
           const preset = DRINK_PRESETS[personIndex % DRINK_PRESETS.length];
           personIndex++;
@@ -112,7 +114,7 @@ export default function OrganizationChart() {
         const displayName =
           language === 'ar' && leader.nameAr ? leader.nameAr : leader.name;
         const imgSrc = leader.image
-          ? getImageUrl(leader.image)
+          ? getImageUrl(leader.image, 's800')
           : '/logo_utama.png';
         const preset = DRINK_PRESETS[personIndex % DRINK_PRESETS.length];
         personIndex++;
