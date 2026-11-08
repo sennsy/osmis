@@ -5,7 +5,7 @@ import dynamic from 'next/dynamic';
 import { usePathname } from 'next/navigation';
 import { useOsmisData } from '../lib/storage';
 import styles from './MatraChat.module.css';
-import MorphOrb, { ThinkingOrb } from './ui/ai-thiking-orb-and-input';
+import { ThinkingOrb } from './ui/ai-thiking-orb-and-input';
 import { GlowCard } from './ui/spotlight-card';
 import { PromptInputBox } from './ui/ai-prompt-box';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -42,7 +42,7 @@ export default function MatraChat() {
       setHasOpenedDrawer(true);
       scrollToBottom();
     }
-  }, [messages, isOpen]);
+  }, [messages, isOpen, isPromptLoading]);
 
   // Navbar trigger listener: Opens the centered prompt box, or closes the active chat drawer
   useEffect(() => {
@@ -117,19 +117,23 @@ export default function MatraChat() {
     }
   };
 
-  // When a query is sent from the centered PromptInputBox:
-  // Smoothly exit prompt box -> Open left panel -> Stream response
+  // When a query is sent from PromptInputBox (either modal or drawer):
+  // Smoothly exit prompt box (if modal) -> Open left panel -> Stream response with ThinkingOrb
   const handlePromptSend = async (message: string, _files?: File[]) => {
     const trimmed = message.trim();
     if (!trimmed) return;
 
     if (checkAskaaCode(trimmed)) return;
 
-    // Animate exit to the left, then open the left chat drawer
-    setShowPromptBox(false);
-    setTimeout(() => {
-      setIsOpen(true);
-    }, 160);
+    if (!isOpen) {
+      // Animate exit to the left, then open the left chat drawer
+      setShowPromptBox(false);
+      setTimeout(() => {
+        setIsOpen(true);
+      }, 160);
+    } else {
+      setShowPromptBox(false);
+    }
 
     setIsPromptLoading(true);
     try {
@@ -283,7 +287,7 @@ export default function MatraChat() {
               </div>
 
               <div style={{ flex: 1, position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-                <div className={styles.messages} style={{ paddingBottom: '6.75rem' }}>
+                <div className={styles.messages}>
                   {messages.map((msg, i) => (
                     <div key={i} className={`${styles.message} ${styles[msg.role]}`}>
                       <div className={styles.messageRole}>
@@ -311,19 +315,13 @@ export default function MatraChat() {
                   <div ref={messagesEndRef} />
                 </div>
 
-                <MorphOrb
-                  placeholder="Tanyakan sesuatu pada Matra AI…"
-                  answerTitle="Matra AI"
-                  resetLabel="Lanjut Chat"
-                  labels={["Memikirkan", "Mencari Data", "Menganalisis", "Menyusun Jawaban"]}
-                  minThinkMs={2100}
-                  onInterceptSubmit={(text) => checkAskaaCode(text)}
-                  onSubmit={async (text) => {
-                    if (checkAskaaCode(text)) return '';
-                    const reply = await askMatraBackend(text);
-                    return reply.replace(/\*\*/g, '');
-                  }}
-                />
+                <div className={styles.inputArea}>
+                  <PromptInputBox
+                    placeholder="Tanyakan apapun seputar OSMIS, divisi, program, atau ma'had..."
+                    isLoading={isPromptLoading}
+                    onSend={handlePromptSend}
+                  />
+                </div>
               </div>
             </div>
           </GlowCard>
