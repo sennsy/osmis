@@ -60,13 +60,13 @@ export default function HistoryTimeline() {
               flexDirection: 'column',
               width: '100%',
               minHeight: '100%',
-              padding: '16px 20px 20px 22px',
+              padding: '16px 20px 22px 22px',
               boxSizing: 'border-box',
-              gap: '14px',
+              gap: '16px',
               background: '#FAF6EE',
             }}
           >
-            {/* Khusus 2026-2027: tampilkan foto utuh tanpa terpotong (tanpa crop) di atas di dalam tray */}
+            {/* Khusus 2026-2027: foto dibuat penuh (full width tanpa sisa ruang hijau di kiri/kanan) */}
             {periodIs2627 && (
               <div
                 style={{
@@ -74,9 +74,8 @@ export default function HistoryTimeline() {
                   width: '100%',
                   borderRadius: '10px',
                   overflow: 'hidden',
-                  border: '1.5px solid rgba(22, 56, 40, 0.22)',
+                  border: '1.5px solid rgba(22, 56, 40, 0.18)',
                   flexShrink: 0,
-                  background: '#163828',
                   boxSizing: 'border-box',
                 }}
               >
@@ -88,18 +87,16 @@ export default function HistoryTimeline() {
                   style={{
                     width: '100%',
                     height: 'auto',
-                    maxHeight: '320px',
-                    objectFit: 'contain',
+                    objectFit: 'cover',
                     display: 'block',
-                    margin: '0 auto',
                   }}
                 />
                 <div
                   style={{
                     position: 'absolute',
-                    left: '10px',
-                    bottom: '10px',
-                    padding: '4px 10px',
+                    left: '12px',
+                    bottom: '12px',
+                    padding: '5px 12px',
                     borderRadius: '6px',
                     background: 'rgba(22, 56, 40, 0.9)',
                     color: '#FAF6EE',
@@ -114,7 +111,7 @@ export default function HistoryTimeline() {
               </div>
             )}
 
-            {/* Header Susunan Struktur — tidak terpotong di kiri maupun kanan */}
+            {/* Header Susunan Struktur — disusun ke bawah agar lega & tidak terpotong */}
             <div
               style={{
                 display: 'flex',
@@ -122,45 +119,41 @@ export default function HistoryTimeline() {
                 gap: '4px',
                 width: '100%',
                 boxSizing: 'border-box',
-                borderBottom: '2px solid rgba(22, 56, 40, 0.22)',
+                borderBottom: '2px solid rgba(22, 56, 40, 0.2)',
                 paddingBottom: '10px',
               }}
             >
               <div
                 style={{
-                  fontSize: 'clamp(13.5px, 1.18vw, 17px)',
+                  fontSize: 'clamp(14px, 1.25vw, 18px)',
                   fontWeight: 800,
                   letterSpacing: '0.05em',
                   textTransform: 'uppercase',
                   color: '#163828',
                   lineHeight: 1.3,
-                  wordBreak: 'break-word',
-                  overflowWrap: 'anywhere',
                 }}
               >
                 SUSUNAN STRUKTUR PENGURUS {yearLabel}
               </div>
               <div
                 style={{
-                  fontSize: 'clamp(12.5px, 1.05vw, 15.5px)',
+                  fontSize: 'clamp(13px, 1.1vw, 16px)',
                   fontWeight: 700,
                   color: '#8c5a18',
                   lineHeight: 1.35,
-                  wordBreak: 'break-word',
-                  overflowWrap: 'anywhere',
                 }}
               >
                 {language === 'ar' ? 'الرئيس' : language === 'en' ? 'President' : 'Ketua'}: {leaderName}
               </div>
             </div>
 
-            {/* Grid Susunan Pengurus yang proporsional & tidak terpotong */}
+            {/* Daftar Susunan Pengurus — disusun 1 kolom penuh ke bawah (tidak memaksa berjejer sempit di samping) */}
             {periodStructure && periodStructure.length > 0 ? (
               <div
                 style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fit, minmax(185px, 1fr))',
-                  gap: '10px 12px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '10px',
                   width: '100%',
                   boxSizing: 'border-box',
                 }}
@@ -171,46 +164,68 @@ export default function HistoryTimeline() {
                     style={{
                       display: 'flex',
                       flexDirection: 'column',
-                      gap: '4px',
-                      padding: '10px 12px',
+                      gap: '6px',
+                      padding: '12px 16px',
                       borderRadius: '8px',
                       background: 'rgba(22, 56, 40, 0.055)',
-                      borderLeft: '3.5px solid #163828',
+                      borderLeft: '4px solid #163828',
                       boxSizing: 'border-box',
-                      minWidth: 0,
+                      width: '100%',
                     }}
                   >
                     <span
                       style={{
-                        fontSize: 'clamp(11.5px, 0.96vw, 14px)',
+                        fontSize: 'clamp(12px, 1.02vw, 14.5px)',
                         fontWeight: 800,
-                        letterSpacing: '0.06em',
+                        letterSpacing: '0.07em',
                         color: '#8c5a18',
                         textTransform: 'uppercase',
                         lineHeight: 1.3,
-                        wordBreak: 'break-word',
-                        overflowWrap: 'anywhere',
                       }}
                     >
                       {language === 'ar' && row.roleAr ? row.roleAr : row.role}
                     </span>
-                    <span
+                    <div
                       style={{
-                        fontSize: 'clamp(13px, 1.1vw, 16px)',
-                        lineHeight: 1.45,
-                        color: '#141e17',
-                        fontWeight: 600,
-                        wordBreak: 'break-word',
-                        overflowWrap: 'anywhere',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '3px',
                       }}
                     >
-                      {row.members.join(' · ')}
-                    </span>
+                      {row.members.map((member, mIdx) => (
+                        <div
+                          key={mIdx}
+                          style={{
+                            fontSize: 'clamp(13.5px, 1.15vw, 16.5px)',
+                            lineHeight: 1.42,
+                            color: '#141e17',
+                            fontWeight: 600,
+                            display: 'flex',
+                            alignItems: 'baseline',
+                            gap: '8px',
+                          }}
+                        >
+                          {row.members.length > 1 && (
+                            <span
+                              style={{
+                                color: '#8c5a18',
+                                fontSize: '0.85em',
+                                fontWeight: 800,
+                                flexShrink: 0,
+                              }}
+                            >
+                              •
+                            </span>
+                          )}
+                          <span>{member}</span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 ))}
               </div>
             ) : (
-              <div style={{ fontSize: 'clamp(13px, 1.1vw, 16px)', opacity: 0.7 }}>{t.comingSoon}</div>
+              <div style={{ fontSize: 'clamp(13.5px, 1.15vw, 16.5px)', opacity: 0.7 }}>{t.comingSoon}</div>
             )}
           </div>
         ),
