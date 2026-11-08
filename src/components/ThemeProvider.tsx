@@ -4,15 +4,26 @@ import * as React from "react";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { type ThemeProviderProps } from "next-themes";
 
-export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
-  // Suppress the React 19 script tag warning in dev mode
-  if (typeof window !== "undefined" && process.env.NODE_ENV === "development") {
+if (typeof window !== "undefined") {
+  const win = window as unknown as { __osmisPatchedConsoleError?: boolean };
+  if (!win.__osmisPatchedConsoleError) {
+    win.__osmisPatchedConsoleError = true;
     const orig = console.error;
     console.error = (...args: unknown[]) => {
-      if (typeof args[0] === "string" && args[0].includes("Encountered a script tag")) return;
+      if (
+        args.some(
+          (arg) =>
+            typeof arg === "string" &&
+            arg.includes("Encountered a script tag")
+        )
+      ) {
+        return;
+      }
       orig.apply(console, args);
     };
   }
+}
 
+export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
   return <NextThemesProvider {...props}>{children}</NextThemesProvider>;
 }

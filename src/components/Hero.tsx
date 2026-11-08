@@ -67,7 +67,7 @@ export default function Hero() {
     }
   };
 
-  const estYear = language === 'ar' ? '٢٠١٨' : '2018';
+  const estYear = language === 'ar' ? '٢٠١٧' : '2017';
   const periodLabel = language === 'ar' ? toArabicNumerals('26 — 27') : '26 — 27';
   const divisions = organization.divisions as DivisionItem[];
 
@@ -182,7 +182,7 @@ export default function Hero() {
             {t.orgNameLong.toUpperCase()}
           </div>
 
-          {/* Period Label: EST. 2018 · 26 — 27 */}
+          {/* Period Label: EST. 2017 · 26 — 27 */}
           <p className={`${styles.periodMeta} mono-font`}>
             <span>
               {t.est} {estYear}

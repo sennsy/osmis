@@ -295,7 +295,7 @@ export default function Home() {
                 background: 'var(--bg-color)',
                 cursor: 'pointer',
                 transition: 'all 0.2s',
-                opacity: typeof window !== 'undefined' && window.innerWidth < 768 ? 0.6 : 1
+                opacity: tileColumns === 1 ? 0.6 : 1
               }}
               onClick={() => {
                 if (typeof window !== 'undefined' && window.innerWidth < 768) {

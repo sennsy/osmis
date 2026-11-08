@@ -173,7 +173,7 @@ export default function Footer() {
         <div>
           <h3 className="display-font" style={{ margin: 0, fontSize: '1.5rem' }}>{t.osmisName}</h3>
           <p className="mono-font" style={{ fontSize: '0.75rem', opacity: 0.7, margin: 0 }}>
-            {t.orgNameLong} · {t.est} {language === 'ar' ? '٢٠١٨' : '2018'}
+            {t.orgNameLong} · {t.est} {language === 'ar' ? '٢٠١٧' : '2017'}
           </p>
         </div>
       </div>
@@ -287,7 +287,7 @@ export default function Footer() {
     <>
       <DoodleCrewFooter
         wordmark="OSMIS"
-        eyebrow={`${t.orgNameLong} · ${t.est} ${language === 'ar' ? '٢٠١٨' : '2018'}`}
+        eyebrow={`${t.orgNameLong} · ${t.est} ${language === 'ar' ? '٢٠١٧' : '2017'}`}
         tagline={`"${t.heroSubtitle}" — Membina, Menjaga, dan Mengabdi bersama Kru Santri OSMIS.`}
         columns={footerColumns}
         topSlot={topSlotContent}

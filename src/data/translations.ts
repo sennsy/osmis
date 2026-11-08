@@ -38,7 +38,7 @@ export const translations = {
     currentPeriod: "PERIODE KEPENGURUSAN",
     theCurrentGeneration: "OSMIS SAAT INI",
     orgStructure: "STRUKTUR ORGANISASI",
-    orgSubtitle: "Orang-orang yang sedang menjalankan amanah yang sangat besar nan agung.",
+    orgSubtitle: "Para pengurus yang mengemban amanah dan tanggung jawab organisasi periode 2026–2027.",
     members: "ANGGOTA",
     values: {
       amanah: "AMANAH",
@@ -135,7 +135,7 @@ export const translations = {
     currentPeriod: "MANAGEMENT PERIOD",
     theCurrentGeneration: "OSMIS TODAY",
     orgStructure: "ORGANIZATIONAL STRUCTURE",
-    orgSubtitle: "Those who carry a great and noble trust upon their shoulders.",
+    orgSubtitle: "The administrators who carry the mandate and responsibility of the 2026–2027 organizational period.",
     members: "MEMBERS",
     values: {
       amanah: "TRUSTWORTHINESS",
@@ -233,7 +233,7 @@ export const translations = {
     currentPeriod: "فترة الإدارة",
     theCurrentGeneration: "جمعية الطلاب اليوم",
     orgStructure: "الهيكل التنظيمي",
-    orgSubtitle: "أولئك الذين يحملون أمانةً عظيمةً وجليلةً على عاتقهم.",
+    orgSubtitle: "الإداريون الذين يحملون أمانة ومسؤولية المنظمة لفترة ٢٠٢٦–٢٠٢٧.",
     members: "الأعضاء",
     values: {
       amanah: "الأمانة",

@@ -7,6 +7,7 @@
     "philosophy": "Disiplin adalah kunci dari ketenangan.",
     "responsibilities": ["Patroli malam", "Pengawasan gerbang", "Penegakan kedisiplinan"],
     "historicalMembers": [
+      { "periodId": "2017-2018", "member": "member-secu-2017" },
       { "periodId": "2018-2019", "member": "member-secu-2018" },
       { "periodId": "2026-2027", "member": "member-secu-2026" }
     ]
@@ -19,6 +20,7 @@
     "philosophy": "Bahasa adalah jendela dunia dan ilmu.",
     "responsibilities": ["Muhadharah 3 bahasa", "Ilqa' mufrodat", "Language Court"],
     "historicalMembers": [
+      { "periodId": "2017-2018", "member": "member-lang-2017" },
       { "periodId": "2018-2019", "member": "member-lang-2018" },
       { "periodId": "2026-2027", "member": "member-lang-2026" }
     ]

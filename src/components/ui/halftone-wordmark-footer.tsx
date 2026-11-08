@@ -153,7 +153,7 @@ const HWF_CSS = `
 export default function HalftoneWordmarkFooter({
   wordmark = "OSMIS",
   label = "OSMIS · Ma'had Imam Syafi'i",
-  meta = "EST. 2018 · Membina, Menjaga, Mengabdi",
+  meta = "EST. 2017 · Membina, Menjaga, Mengabdi",
   columns = DEFAULT_COLUMNS,
   backToTop = true,
   preset = "osmisLight",

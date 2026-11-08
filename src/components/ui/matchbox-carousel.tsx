@@ -64,7 +64,7 @@ const useIso = typeof window === "undefined" ? React.useEffect : React.useLayout
 export function MatchboxCarousel({
   items,
   view = "angle",
-  table = "#E8E2D5",
+  table = "transparent",
   ink = "#1C2820",
   autoplay = false,
   interval = 5,
@@ -269,11 +269,11 @@ export function MatchboxCarousel({
         width: "100%",
         aspectRatio: box.w < 640 ? "3 / 4.6" : "16 / 9.2",
         minHeight: box.w < 640 ? 640 : 760,
-        overflow: "hidden",
+        overflow: "visible",
         background: table,
-        borderRadius: 24,
-        border: "1px solid rgba(22, 56, 40, 0.16)",
-        boxShadow: "0 20px 60px rgba(20, 32, 24, 0.10)",
+        borderRadius: 0,
+        border: "none",
+        boxShadow: "none",
         touchAction: "pan-y",
         userSelect: "none",
         fontFamily: "inherit",
@@ -281,16 +281,6 @@ export function MatchboxCarousel({
       }}
     >
       <style>{css(scope)}</style>
-      <div
-        aria-hidden="true"
-        style={{
-          position: "absolute",
-          inset: 0,
-          pointerEvents: "none",
-          background:
-            "radial-gradient(90% 70% at 50% 42%, rgba(255,255,255,.32), transparent 70%), radial-gradient(140% 100% at 50% 50%, transparent 55%, rgba(60,40,20,.14))",
-        }}
-      />
       <div style={{ position: "absolute", inset: 0, perspective: g.persp, perspectiveOrigin: "50% 20%" }}>
         <div
           style={{

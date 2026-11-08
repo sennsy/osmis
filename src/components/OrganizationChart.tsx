@@ -152,6 +152,17 @@ export default function OrganizationChart() {
           </div>
           <h2 className="display-font">{t.currentPeriod}</h2>
           <h3 className="mono-font">{t.theCurrentGeneration}</h3>
+          <p
+            style={{
+              marginTop: '0.85rem',
+              fontSize: '1.05rem',
+              lineHeight: 1.6,
+              opacity: 0.78,
+              maxWidth: '640px',
+            }}
+          >
+            {t.orgSubtitle}
+          </p>
         </div>
 
         <CoffeePourMenu

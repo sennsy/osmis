@@ -740,13 +740,13 @@ export function DoodleCrewFooter({
                   {/* Legs */}
                   <g stroke={colors.ink} strokeWidth="3.2" strokeLinecap="round" fill="none">
                     <path
-                      d={`M -14 0 Q -18 18 ${-15 + Math.sin(pointer.x * 6 + idx) * 4} 32`}
+                      d={`M -14 0 Q -18 18 ${(-15 + Math.sin(pointer.x * 6 + idx) * 4).toFixed(3)} 32`}
                     />
                     <path
-                      d={`M 14 0 Q 18 18 ${15 + Math.cos(pointer.x * 6 + idx) * 4} 32`}
+                      d={`M 14 0 Q 18 18 ${(15 + Math.cos(pointer.x * 6 + idx) * 4).toFixed(3)} 32`}
                     />
-                    <ellipse cx={-16 + Math.sin(pointer.x * 6 + idx) * 4} cy={35} rx="7" ry="4" fill={colors.ink} />
-                    <ellipse cx={16 + Math.cos(pointer.x * 6 + idx) * 4} cy={35} rx="7" ry="4" fill={colors.ink} />
+                    <ellipse cx={Number((-16 + Math.sin(pointer.x * 6 + idx) * 4).toFixed(3))} cy={35} rx="7" ry="4" fill={colors.ink} />
+                    <ellipse cx={Number((16 + Math.cos(pointer.x * 6 + idx) * 4).toFixed(3))} cy={35} rx="7" ry="4" fill={colors.ink} />
                   </g>
 
                   <g

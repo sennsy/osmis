@@ -109,38 +109,26 @@ export function CoffeePourMenu({
           width: 100%;
           align-items: center;
           gap: 1.5rem;
-          border-radius: 32px;
-          background: linear-gradient(135deg, #e3efe7 0%, #f5efd6 55%, #e8f2eb 100%);
-          padding: 1.35rem;
+          border-radius: 0;
+          background: transparent;
+          padding: 0.5rem 0;
           color: #173826;
-          box-shadow:
-            0 24px 60px -24px rgba(23, 56, 38, 0.25),
-            inset 0 1px 0 rgba(255, 255, 255, 0.85);
-          border: 1.5px solid rgba(214, 159, 48, 0.38);
-          overflow: hidden;
+          box-shadow: none;
+          border: none;
+          overflow: visible;
         }
         [data-theme='dark'] .cpm-root {
-          background: linear-gradient(135deg, #0d2419 0%, #173322 55%, #1f2d16 100%);
+          background: transparent;
           color: #ecfdf5;
-          border-color: rgba(214, 159, 48, 0.42);
-          box-shadow:
-            0 24px 60px -20px rgba(0, 0, 0, 0.65),
-            inset 0 1px 0 rgba(255, 255, 255, 0.08);
+          border: none;
+          box-shadow: none;
         }
         @media (min-width: 768px) {
           .cpm-root {
             grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
             gap: 2.5rem;
-            padding: 2.5rem;
+            padding: 1rem 0;
           }
-        }
-        .cpm-bg-glow {
-          position: absolute;
-          inset: 0;
-          pointer-events: none;
-          background:
-            radial-gradient(circle at 15% 20%, rgba(46, 89, 66, 0.12) 0%, transparent 45%),
-            radial-gradient(circle at 85% 80%, rgba(214, 159, 48, 0.18) 0%, transparent 50%);
         }
         .cpm-menu-list {
           position: relative;
@@ -585,8 +573,6 @@ export function CoffeePourMenu({
           border: 0;
         }
       `}</style>
-
-      <div className="cpm-bg-glow" />
 
       {/* Left Menu: Pengurus Inti List */}
       <div
