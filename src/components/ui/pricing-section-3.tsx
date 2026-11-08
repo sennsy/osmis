@@ -4,7 +4,6 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { TimelineContent } from "@/components/ui/timeline-animation";
 import { VerticalCutReveal } from "@/components/ui/vertical-cut-reveal";
 import { cn } from "@/lib/utils";
-import NumberFlow from "@number-flow/react";
 import { CheckCheck } from "lucide-react";
 import React, { useRef } from "react";
 import { useLanguage } from "@/components/LanguageProvider";
@@ -469,36 +468,6 @@ export default function PricingSection4() {
               )}
             >
               <CardContent className="ps3-card-content pt-0">
-                <div className="space-y-2 pb-3">
-                  {plan.popular && (
-                    <div className="ps3-popular-pill-row pt-4">
-                      <span className="ps3-popular-pill bg-neutral-600 text-white px-3 py-1 rounded-full text-xs font-medium">
-                        {activeCopy.popularBadge}
-                      </span>
-                    </div>
-                  )}
-
-                  <div className="ps3-metric-row flex items-baseline">
-                    <span className="ps3-metric-num text-4xl font-semibold">
-                      {plan.metricPrefix}
-                      <NumberFlow
-                        value={plan.metric}
-                        className="text-4xl font-semibold"
-                      />
-                    </span>
-                    <span
-                      className={cn(
-                        "ps3-metric-unit",
-                        plan.popular
-                          ? "text-neutral-200 ml-1"
-                          : "text-gray-600 ml-1",
-                      )}
-                    >
-                      / {plan.metricUnit}
-                    </span>
-                  </div>
-                </div>
-
                 <div className="flex justify-between">
                   <h3 className="ps3-plan-title text-3xl font-semibold mb-2">
                     {plan.name}
