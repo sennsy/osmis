@@ -69,17 +69,16 @@ export const easeInOutQuint = (t: number): number => {
 }
 
 /**
- * `object-fit: cover` expressed as a UV scale about the centre. Both factors
- * are <= 1: the sampled window shrinks, so the image crops rather than
- * stretching, whichever way the box is out of proportion.
+ * `object-fit: contain` expressed as a UV scale about the centre so the full
+ * image is always visible without cropping.
  */
 export const coverScale = (
   canvasAspect: number,
   imgAspect: number,
 ): [number, number] =>
   canvasAspect > imgAspect
-    ? [1, imgAspect / canvasAspect]
-    : [canvasAspect / imgAspect, 1]
+    ? [canvasAspect / imgAspect, 1]
+    : [1, imgAspect / canvasAspect]
 // #endregion
 
 const VERT = `
@@ -164,28 +163,56 @@ vec2 coverUV(vec2 uv, float imgAspect) {
   return mirror((uv - 0.5) * scale + 0.5);
 }
 
+vec2 containUV(vec2 uv, float imgAspect) {
+  float canvasAspect = u_resolution.x / u_resolution.y;
+  vec2 scale = (canvasAspect > imgAspect)
+    ? vec2(canvasAspect / imgAspect, 1.0)
+    : vec2(1.0, imgAspect / canvasAspect);
+  return (uv - 0.5) * scale + 0.5;
+}
+
+vec4 sampleUncropped(sampler2D tex, vec2 uv, float imgAspect) {
+  float canvasAspect = u_resolution.x / u_resolution.y;
+  vec2 scale = (canvasAspect > imgAspect)
+    ? vec2(canvasAspect / imgAspect, 1.0)
+    : vec2(1.0, imgAspect / canvasAspect);
+  vec2 cUV = (uv - 0.5) * scale + 0.5;
+
+  // Anti-aliased 1.5px edge at the boundary of the uncropped image (no extension required)
+  vec2 feather = (scale / max(u_resolution, vec2(1.0))) * 1.5;
+  vec2 insideXY = smoothstep(vec2(0.0), feather, cUV) *
+                  (1.0 - smoothstep(vec2(1.0) - feather, vec2(1.0), cUV));
+  float mask = insideXY.x * insideXY.y;
+
+  vec4 fg = texture2D(tex, clamp(cUV, 0.0, 1.0));
+  // Subtle dark ambient backdrop outside the photo bounds so nothing is ever cropped
+  vec2 bgUV = coverUV(uv, imgAspect);
+  vec3 bgSample = texture2D(tex, bgUV).rgb * 0.12 + vec3(0.02, 0.03, 0.025);
+  vec4 bg = vec4(bgSample, 1.0);
+
+  return mix(bg, fg, mask);
+}
+
 void main() {
   float adjusted = u_progress * (1.0 + 2.0 * u_edge) - u_edge;
 
   float noise = fbm(v_uv * u_scale + vec2(0.0, u_progress * u_direction)) * 0.5 + 0.5;
+  vec4 incomingPreview = sampleUncropped(u_to, v_uv, u_toAspect);
   noise = smoothstep(
     0.0,
     2.0,
-    length(texture2D(u_to, coverUV(v_uv, u_toAspect)).rgb) + noise
+    length(incomingPreview.rgb) + noise
   );
 
   float mixFactor = 1.0 - smoothstep(adjusted - u_edge, adjusted + u_edge, noise);
 
-  vec2 fromUV = coverUV(
-    v_uv + vec2(0.0, noise * u_progress * u_drift * u_direction),
-    u_fromAspect
-  );
-  vec2 toUV = coverUV(
-    v_uv + vec2(0.0, noise * (1.0 - u_progress) * -0.5 * u_drift * u_direction),
-    u_toAspect
-  );
+  vec2 fromCoord = v_uv + vec2(0.0, noise * u_progress * u_drift * u_direction);
+  vec2 toCoord = v_uv + vec2(0.0, noise * (1.0 - u_progress) * -0.5 * u_drift * u_direction);
 
-  gl_FragColor = mix(texture2D(u_from, fromUV), texture2D(u_to, toUV), mixFactor);
+  vec4 fromColor = sampleUncropped(u_from, fromCoord, u_fromAspect);
+  vec4 toColor = sampleUncropped(u_to, toCoord, u_toAspect);
+
+  gl_FragColor = mix(fromColor, toColor, mixFactor);
 }
 `
 
@@ -313,12 +340,19 @@ export function MorphGallery({
     if (!canvas || items.length === 0) return
 
     const gl =
-      canvas.getContext("webgl", { alpha: false, antialias: false }) ??
+      canvas.getContext("webgl", {
+        alpha: false,
+        antialias: true,
+        powerPreference: "high-performance",
+      }) ??
       (canvas.getContext("experimental-webgl") as WebGLRenderingContext | null)
     if (!gl) {
       setFailed(true)
       return
     }
+
+    // Enable standard derivatives if available for smooth edge anti-aliasing, or fallback cleanly
+    gl.getExtension("OES_standard_derivatives")
 
     let program: WebGLProgram | null = null
     let buffer: WebGLBuffer | null = null
@@ -342,7 +376,7 @@ export function MorphGallery({
     canvas.addEventListener("webglcontextrestored", onRestored)
 
     const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2)
+      const dpr = Math.min(window.devicePixelRatio || 1, 3)
       const w = Math.round(canvas.clientWidth * dpr)
       const h = Math.round(canvas.clientHeight * dpr)
       if (w === 0 || h === 0 || (canvas.width === w && canvas.height === h)) return
@@ -360,6 +394,11 @@ export function MorphGallery({
     const inFlight: boolean[] = items.map(() => false)
     let running = false
     let refused = 0
+    const maxTexSize = (gl.getParameter(gl.MAX_TEXTURE_SIZE) as number) || 4096
+    const anisoExt =
+      gl.getExtension("EXT_texture_filter_anisotropic") ||
+      gl.getExtension("MOZ_EXT_texture_filter_anisotropic") ||
+      gl.getExtension("WEBKIT_EXT_texture_filter_anisotropic")
 
     const ensureTexture = (i: number): Promise<void> => {
       if (disposed || i < 0 || i >= items.length) return Promise.resolve()
@@ -369,15 +408,41 @@ export function MorphGallery({
       return loadImage(item.src).then(
         (img) => {
           if (disposed) return
+          let uploadSource: TexImageSource = img
+          const nw = img.naturalWidth || img.width
+          const nh = img.naturalHeight || img.height
+          // Only scale if the original image exceeds hardware MAX_TEXTURE_SIZE
+          if (nw > maxTexSize || nh > maxTexSize) {
+            const ratio = Math.min(maxTexSize / nw, maxTexSize / nh)
+            const offscreen = document.createElement("canvas")
+            offscreen.width = Math.round(nw * ratio)
+            offscreen.height = Math.round(nh * ratio)
+            const ctx2d = offscreen.getContext("2d")
+            if (ctx2d) {
+              ctx2d.imageSmoothingEnabled = true
+              ctx2d.imageSmoothingQuality = "high"
+              ctx2d.drawImage(img, 0, 0, offscreen.width, offscreen.height)
+              uploadSource = offscreen
+            }
+          }
+
           const tex = gl.createTexture()
           gl.bindTexture(gl.TEXTURE_2D, tex)
-          gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img)
+          gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, uploadSource)
           gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE)
           gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE)
           gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR)
           gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR)
+          if (anisoExt) {
+            const maxAniso = gl.getParameter(anisoExt.MAX_TEXTURE_MAX_ANISOTROPY_EXT) || 4
+            gl.texParameterf(
+              gl.TEXTURE_2D,
+              anisoExt.TEXTURE_MAX_ANISOTROPY_EXT,
+              Math.min(maxAniso, 8),
+            )
+          }
           textures[i] = tex
-          aspects[i] = img.naturalWidth / Math.max(img.naturalHeight, 1)
+          aspects[i] = nw / Math.max(nh, 1)
           if (!running) {
             running = true
             resize()

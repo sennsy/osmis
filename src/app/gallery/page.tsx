@@ -7,7 +7,7 @@ import { useOsmisData } from '../../lib/storage';
 import { ArrowLeft } from 'lucide-react';
 import Lightbox from '../../components/Lightbox';
 import { toArabicNumerals } from '../../utils/arabicNumerals';
-import { getImageUrl } from '../../utils/driveImages';
+import { getImageUrl, getHighResImageUrl } from '../../utils/driveImages';
 import {
   PerspectiveTunnelHero,
   type TunnelImageItem,
@@ -338,8 +338,8 @@ export default function FullGalleryPage() {
                   <GalleryImage
                     key={`${activeCategory}-${driveId}`}
                     id={`${activeCategory}-${driveId}`}
-                    src={getImageUrl(driveId)}
-                    downloadUrl={getImageUrl(driveId)}
+                    src={getImageUrl(driveId, 's1600')}
+                    downloadUrl={getHighResImageUrl(driveId)}
                     badge={numLabel}
                     alt={`OSMIS Gallery ${idx + 1}`}
                     onImageClick={() => openLightbox(idx)}

@@ -3,7 +3,7 @@
 import React, { useEffect, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Download } from 'lucide-react';
-import { getImageUrl } from '../utils/driveImages';
+import { getImageUrl, getHighResImageUrl } from '../utils/driveImages';
 import MorphGallery, { type MorphItem } from './ui/morph-gallery';
 
 interface LightboxProps {
@@ -42,10 +42,11 @@ export default function Lightbox({
 
   const morphItems: MorphItem[] = useMemo(() => {
     return ids.map((id, idx) => {
-      const fullUrl = getImageUrl(id);
+      const highResUrl = getHighResImageUrl(id);
+      const thumbUrl = getImageUrl(id, 's400');
       return {
-        src: fullUrl,
-        thumb: fullUrl,
+        src: highResUrl,
+        thumb: thumbUrl,
         alt: `Galeri OSMIS ${idx + 1}`,
       };
     });
@@ -57,7 +58,7 @@ export default function Lightbox({
     const id = ids[idx];
     if (!id) return;
 
-    const fullUrl = getImageUrl(id);
+    const fullUrl = getHighResImageUrl(id);
     const proxyUrl = `/api/image-proxy?url=${encodeURIComponent(fullUrl)}`;
 
     try {
