@@ -11,6 +11,7 @@ import styles from './page.module.css';
 import Gallery from '../components/Gallery';
 import { Camera, Sparkles, Gamepad2, Languages, Film } from 'lucide-react';
 import { DotTiles, type DotTileData } from '../components/ui/dot-tiles';
+import PricingSection4 from '../components/ui/pricing-section-3';
 
 export default function Home() {
   const { t } = useLanguage();
@@ -120,41 +121,8 @@ export default function Home() {
       <Hero />
       
       {/* Vision & Mission Section */}
-      <section id="introduction" className={styles.introSection}>
-        <div className={styles.introContainer}>
-          <h2 className="display-font">{t.osmisName}</h2>
-          <h3 className="mono-font" style={{ letterSpacing: '0.1em' }}>{t.orgNameLong.toUpperCase()}</h3>
-          <p className="editorial-divider"></p>
-
-          <div className={styles.visiMisiGrid}>
-            {/* VISI */}
-            <div className={styles.visiCard}>
-              <div className={styles.vmLabel}>
-                <span className={`${styles.vmNumber} mono-font`}>١</span>
-                <h4 className={`${styles.vmTitle} mono-font`}>{t.visiLabel}</h4>
-              </div>
-              <p className={`${styles.vmText} display-font`}>"{t.visiText}"</p>
-            </div>
-
-            {/* MISI */}
-            <div className={styles.misiCard}>
-              <div className={styles.vmLabel}>
-                <span className={`${styles.vmNumber} mono-font`}>٢</span>
-                <h4 className={`${styles.vmTitle} mono-font`}>{t.misiLabel}</h4>
-              </div>
-              <ol className={styles.misiList}>
-                {t.misiItems.map((item: string, i: number) => (
-                  <li key={i} className={styles.misiItem}>
-                    <span className={`${styles.misiNum} mono-font`}>
-                      {String(i + 1).padStart(2, '0')}
-                    </span>
-                    <p>{item}</p>
-                  </li>
-                ))}
-              </ol>
-            </div>
-          </div>
-        </div>
+      <section id="introduction">
+        <PricingSection4 />
       </section>
 
       <HistoryTimeline />
