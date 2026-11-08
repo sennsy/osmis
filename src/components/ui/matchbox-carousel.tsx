@@ -381,32 +381,32 @@ type G = ReturnType<typeof layout>;
 
 /** Box size and spacing from the container — scaled up so the open tray is large and easy to read on desktop. */
 function layout(W: number, H: number, view: string) {
-  const tilt = view === "flat" ? 0 : view === "low" ? 48 : 14;
+  const tilt = view === "flat" ? 0 : view === "low" ? 48 : 12;
   const up = W / H < 0.88;
   const fore = Math.cos((tilt * Math.PI) / 180);
   let bw: number, bd: number;
   if (up) {
-    bd = Math.max(120, Math.min((H * 0.78) / (1.92 * fore), (W * 0.88) / 0.74));
+    bd = Math.max(120, Math.min((H * 0.78) / (1.94 * fore), (W * 0.88) / 0.74));
     bw = bd * 0.74;
   } else {
-    bw = Math.max(160, Math.min(W * 0.46, (H * 0.82) / 0.78, (W * 0.94) / 1.92));
+    bw = Math.max(160, Math.min(W * 0.46, (H * 0.82) / 0.78, (W * 0.94) / 1.94));
     bd = bw * 0.78;
   }
   const m = Math.max(bw, bd);
-  const slide = m * 0.95;
+  const slide = m * 0.96;
   return {
     up,
     bw,
     bd,
     m,
-    t: m * 0.16,
+    t: m * 0.15,
     slide,
     P: bw * 1.14,
     x0: up ? W / 2 : W / 2 - slide / 2,
     y0: up ? -slide / 2 : 0,
     cy: H * (up ? 0.43 : 0.44),
     tilt,
-    persp: Math.max(W, H) * 2.4,
+    persp: Math.max(W, H) * 2.5,
     e: Math.max(1.5, m * 0.012),
   };
 }
@@ -584,6 +584,13 @@ function Tray({
   const th = g.t * 0.62;
   const paper = "#F2EDE5";
   const inner = "#E3DACB";
+
+  // Safe visible inset so the sleeve mouth on the left/top and 3D walls on the right/bottom never crop content
+  const safeLeft = g.up ? e * 2 : Math.max(e * 2, g.bw - e - g.slide + e * 3.2);
+  const safeRight = g.up ? e * 2 : Math.max(e * 3, th * 0.35);
+  const safeTop = g.up ? Math.max(e * 2, g.bd - e - g.slide + e * 3.2) : e * 2;
+  const safeBottom = g.up ? Math.max(e * 3, th * 0.35) : e * 2.5;
+
   return (
     <div
       className="mbx-tray"
@@ -613,12 +620,14 @@ function Tray({
             onWheel={(ev) => ev.stopPropagation()}
             style={{
               position: "absolute",
-              inset: e * 0.6,
-              width: `calc(100% - ${e * 1.2}px)`,
-              height: `calc(100% - ${e * 1.2}px)`,
+              left: safeLeft,
+              right: safeRight,
+              top: safeTop,
+              bottom: safeBottom,
               boxSizing: "border-box",
               background: "#FAF6EE",
               color: "#1E1B18",
+              borderRadius: 6,
               overflowY: "auto",
               overflowX: "hidden",
             }}
@@ -636,10 +645,14 @@ function Tray({
               referrerPolicy="no-referrer"
               style={{
                 position: "absolute",
-                inset: e * 0.6,
-                width: `calc(100% - ${e * 1.2}px)`,
-                height: `calc(100% - ${e * 1.2}px)`,
+                left: safeLeft,
+                right: safeRight,
+                top: safeTop,
+                bottom: safeBottom,
+                width: `calc(100% - ${safeLeft + safeRight}px)`,
+                height: `calc(100% - ${safeTop + safeBottom}px)`,
                 objectFit: "cover",
+                borderRadius: 6,
               }}
             />
             <div

@@ -58,25 +58,26 @@ export default function HistoryTimeline() {
             style={{
               display: 'flex',
               flexDirection: 'column',
+              width: '100%',
               minHeight: '100%',
-              padding: periodIs2627 ? '14px 18px 18px' : '18px 22px',
+              padding: '16px 20px 20px 22px',
               boxSizing: 'border-box',
               gap: '14px',
               background: '#FAF6EE',
             }}
           >
-            {/* Khusus 2026-2027: tampilkan foto di atas di dalam tray */}
+            {/* Khusus 2026-2027: tampilkan foto utuh tanpa terpotong (tanpa crop) di atas di dalam tray */}
             {periodIs2627 && (
               <div
                 style={{
                   position: 'relative',
                   width: '100%',
-                  height: 'clamp(180px, 26vh, 260px)',
                   borderRadius: '10px',
                   overflow: 'hidden',
                   border: '1.5px solid rgba(22, 56, 40, 0.22)',
                   flexShrink: 0,
                   background: '#163828',
+                  boxSizing: 'border-box',
                 }}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -86,10 +87,11 @@ export default function HistoryTimeline() {
                   draggable={false}
                   style={{
                     width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
-                    objectPosition: 'center 38%',
+                    height: 'auto',
+                    maxHeight: '320px',
+                    objectFit: 'contain',
                     display: 'block',
+                    margin: '0 auto',
                   }}
                 />
                 <div
@@ -101,9 +103,9 @@ export default function HistoryTimeline() {
                     borderRadius: '6px',
                     background: 'rgba(22, 56, 40, 0.9)',
                     color: '#FAF6EE',
-                    fontSize: 'clamp(11px, 0.95vw, 13px)',
+                    fontSize: 'clamp(10.5px, 0.9vw, 12.5px)',
                     fontWeight: 700,
-                    letterSpacing: '0.1em',
+                    letterSpacing: '0.08em',
                     textTransform: 'uppercase',
                   }}
                 >
@@ -112,47 +114,55 @@ export default function HistoryTimeline() {
               </div>
             )}
 
-            {/* Header Susunan Struktur */}
+            {/* Header Susunan Struktur — tidak terpotong di kiri maupun kanan */}
             <div
               style={{
                 display: 'flex',
-                alignItems: 'baseline',
-                justifyContent: 'space-between',
-                flexWrap: 'wrap',
-                gap: '8px',
+                flexDirection: 'column',
+                gap: '4px',
+                width: '100%',
+                boxSizing: 'border-box',
                 borderBottom: '2px solid rgba(22, 56, 40, 0.22)',
-                paddingBottom: '8px',
+                paddingBottom: '10px',
               }}
             >
               <div
                 style={{
-                  fontSize: 'clamp(14.5px, 1.3vw, 19px)',
+                  fontSize: 'clamp(13.5px, 1.18vw, 17px)',
                   fontWeight: 800,
-                  letterSpacing: '0.08em',
+                  letterSpacing: '0.05em',
                   textTransform: 'uppercase',
                   color: '#163828',
+                  lineHeight: 1.3,
+                  wordBreak: 'break-word',
+                  overflowWrap: 'anywhere',
                 }}
               >
                 SUSUNAN STRUKTUR PENGURUS {yearLabel}
               </div>
               <div
                 style={{
-                  fontSize: 'clamp(13px, 1.1vw, 16px)',
+                  fontSize: 'clamp(12.5px, 1.05vw, 15.5px)',
                   fontWeight: 700,
                   color: '#8c5a18',
+                  lineHeight: 1.35,
+                  wordBreak: 'break-word',
+                  overflowWrap: 'anywhere',
                 }}
               >
                 {language === 'ar' ? 'الرئيس' : language === 'en' ? 'President' : 'Ketua'}: {leaderName}
               </div>
             </div>
 
-            {/* Grid Susunan Pengurus dengan ukuran font besar & jelas untuk desktop */}
+            {/* Grid Susunan Pengurus yang proporsional & tidak terpotong */}
             {periodStructure && periodStructure.length > 0 ? (
               <div
                 style={{
                   display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fit, minmax(230px, 1fr))',
-                  gap: '10px 14px',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(185px, 1fr))',
+                  gap: '10px 12px',
+                  width: '100%',
+                  boxSizing: 'border-box',
                 }}
               >
                 {periodStructure.map((row, idx) => (
@@ -162,29 +172,36 @@ export default function HistoryTimeline() {
                       display: 'flex',
                       flexDirection: 'column',
                       gap: '4px',
-                      padding: '10px 14px',
+                      padding: '10px 12px',
                       borderRadius: '8px',
                       background: 'rgba(22, 56, 40, 0.055)',
                       borderLeft: '3.5px solid #163828',
+                      boxSizing: 'border-box',
+                      minWidth: 0,
                     }}
                   >
                     <span
                       style={{
-                        fontSize: 'clamp(12px, 1.02vw, 15px)',
+                        fontSize: 'clamp(11.5px, 0.96vw, 14px)',
                         fontWeight: 800,
-                        letterSpacing: '0.07em',
+                        letterSpacing: '0.06em',
                         color: '#8c5a18',
                         textTransform: 'uppercase',
+                        lineHeight: 1.3,
+                        wordBreak: 'break-word',
+                        overflowWrap: 'anywhere',
                       }}
                     >
                       {language === 'ar' && row.roleAr ? row.roleAr : row.role}
                     </span>
                     <span
                       style={{
-                        fontSize: 'clamp(14px, 1.2vw, 17.5px)',
-                        lineHeight: 1.48,
+                        fontSize: 'clamp(13px, 1.1vw, 16px)',
+                        lineHeight: 1.45,
                         color: '#141e17',
                         fontWeight: 600,
+                        wordBreak: 'break-word',
+                        overflowWrap: 'anywhere',
                       }}
                     >
                       {row.members.join(' · ')}
@@ -193,7 +210,7 @@ export default function HistoryTimeline() {
                 ))}
               </div>
             ) : (
-              <div style={{ fontSize: 'clamp(14px, 1.2vw, 17px)', opacity: 0.7 }}>{t.comingSoon}</div>
+              <div style={{ fontSize: 'clamp(13px, 1.1vw, 16px)', opacity: 0.7 }}>{t.comingSoon}</div>
             )}
           </div>
         ),
