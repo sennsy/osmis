@@ -9,7 +9,9 @@ import { useLanguage } from '../components/LanguageProvider';
 import styles from './page.module.css';
 
 import Gallery from '../components/Gallery';
-import { Camera, Sparkles, Gamepad2, Languages, Clock, Film } from 'lucide-react';
+import { Camera, Sparkles, Gamepad2, Languages, Film } from 'lucide-react';
+import { TiltStackScroll, type TiltStackCard } from '../components/ui/tilt-stack-scroll';
+import { getImageUrl } from '../utils/driveImages';
 
 export default function Home() {
   const { t } = useLanguage();
@@ -19,6 +21,80 @@ export default function Home() {
     // Cache bust: 2026-09-19 14:55
     console.log("OSMIS V2 Loaded");
   }, []);
+
+  const featureCards: TiltStackCard[] = [
+    {
+      kicker: 'RECAP VIDEO · DOKUMENTASI',
+      badge: '🔥 HOT',
+      title: t.recapTitle,
+      description: t.recapDesc,
+      image: getImageUrl('1-lv0dmzaG7-7oidrvrIJsd3ECkoDPGGq'),
+      alt: t.recapTitle,
+      icon: <Film size={24} strokeWidth={1.75} />,
+      tags: ['Kilas Balik Kegiatan', 'Video Dokumenter', 'Momen Terbaik OSMIS'],
+      price: '01',
+      priceNote: 'FITUR UTAMA',
+      cta: `[ ${t.watchRecap} ]`,
+      href: '/recap',
+      accent: '#e74c3c',
+    },
+    {
+      kicker: 'PHOTOBOOTH · TWIBBON STUDIO',
+      title: t.smisFrameTitle,
+      description: t.smisFrameDesc,
+      image: getImageUrl('10DrHWHIuYaneZ9MsQgglUu0T1YaDd3Ey'),
+      alt: t.smisFrameTitle,
+      icon: <Camera size={24} strokeWidth={1.75} />,
+      tags: ['Filter & Frame Eksklusif', 'Kamera Instan', 'Unduh Langsung'],
+      price: '02',
+      priceNote: 'KREATIF',
+      cta: `[ ${t.tryFrame} ]`,
+      href: '/smisframe',
+      accent: '#D4AF37',
+    },
+    {
+      kicker: 'PERSONALITY · KARAKTER SANTRI',
+      title: t.mbtiTitle,
+      description: t.mbtiDesc,
+      image: getImageUrl('11aCvpkui-1HAEiH38UHW475QZPj9RQkq'),
+      alt: t.mbtiTitle,
+      icon: <Sparkles size={24} strokeWidth={1.75} />,
+      tags: ['16 Tipe Kepribadian', 'Cocokologi Divisi OSMIS', 'Analisis Karakter'],
+      price: '03',
+      priceNote: 'PSIKOTES',
+      cta: '[ Buka Tes ]',
+      href: '/mbti',
+      accent: '#a855f7',
+    },
+    {
+      kicker: 'ARCADE · HIBURAN INTERAKTIF',
+      title: 'OSMIS Games',
+      description: 'Kumpulan Mini Games Seru karya santri — mulai dari platformer 2D, endless runner klasik, hingga tantangan mengetik cepat.',
+      image: getImageUrl('1-0FQsXGBb465MqYA3hAahWFgYvgV5B6Y'),
+      alt: 'OSMIS Games',
+      icon: <Gamepad2 size={24} strokeWidth={1.75} />,
+      tags: ['Wong Tersakiti Bross', 'GMWST Endless Runner', 'Happy Ngetik Sayy'],
+      price: '04',
+      priceNote: 'MINI GAMES',
+      cta: '[ Pilih Game ]',
+      onClick: () => setIsGameModalOpen(true),
+      accent: '#3b82f6',
+    },
+    {
+      kicker: 'EDUKASI · TRILINGUAL',
+      title: 'Linguista',
+      description: 'Belajar Kosakata Arab, Inggris & Indo ala Duolingo untuk menunjang program kebahasaan santri sehari-hari.',
+      image: getImageUrl('13ncpAoQYIItolDco7oucyksaLkK98w5b'),
+      alt: 'Linguista',
+      icon: <Languages size={24} strokeWidth={1.75} />,
+      tags: ['Bahasa Arab', 'Bahasa Inggris', 'Kuis Kosakata Interaktif'],
+      price: '05',
+      priceNote: 'BAHASA',
+      cta: '[ Belajar ]',
+      href: '/learn',
+      accent: '#10b981',
+    },
+  ];
 
   return (
     <div className={styles.page}>
@@ -80,101 +156,14 @@ export default function Home() {
 
       <Gallery />
 
-      {/* Features Section */}
-      <section id="features" className={styles.featuresSection}>
-        <div className={styles.featuresHeader}>
-          <h2 className="display-font">{t.featuresTitle}</h2>
-          <p className="mono-font">{t.featuresSubtitle}</p>
-        </div>
-
-        <div className={styles.featuresGrid}>
-          {/* Card 6: OSMIS Rewind (HOT) */}
-          <div className={styles.featureCard} style={{ position: 'relative' }}>
-            <div style={{ position: 'absolute', top: '-12px', right: '-12px', background: '#e74c3c', color: 'white', padding: '4px 12px', borderRadius: '20px', fontWeight: 'bold', fontSize: '0.8rem', boxShadow: '0 4px 10px rgba(231, 76, 60, 0.4)', zIndex: 10, display: 'flex', alignItems: 'center', gap: '4px' }}>🔥 HOT</div>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              <div className={styles.featureIcon}>
-                <Film size={40} strokeWidth={1.5} />
-              </div>
-              <h3 className={`display-font ${styles.featureName}`}>{t.recapTitle}</h3>
-              <p className={styles.featureDesc}>{t.recapDesc}</p>
-            </div>
-            <button 
-              className={styles.featureBtn}
-              onClick={() => window.location.href = '/recap'}
-            >
-              [ {t.watchRecap} ]
-            </button>
-          </div>
-
-          {/* Card 1: SMISFrame */}
-          <div className={styles.featureCard}>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              <div className={styles.featureIcon}>
-                <Camera size={40} strokeWidth={1.5} />
-              </div>
-              <h3 className="display-font styles.featureName">{t.smisFrameTitle}</h3>
-              <p className={styles.featureDesc}>{t.smisFrameDesc}</p>
-            </div>
-            <button 
-              className={styles.featureBtn}
-              onClick={() => window.location.href = '/smisframe'}
-            >
-              [ {t.tryFrame} ]
-            </button>
-          </div>
-
-          {/* Card 2: MBTI Test */}
-          <div className={styles.featureCard}>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              <div className={styles.featureIcon}>
-                <Sparkles size={40} strokeWidth={1.5} />
-              </div>
-              <h3 className="display-font styles.featureName">{t.mbtiTitle}</h3>
-              <p className={styles.featureDesc}>{t.mbtiDesc}</p>
-            </div>
-            <button 
-              className={styles.featureBtn}
-              onClick={() => window.location.href = '/mbti'}
-            >
-              [ Buka Tes ]
-            </button>
-          </div>
-
-          {/* Card 3: Games Arcade */}
-          <div className={styles.featureCard}>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              <div className={styles.featureIcon}>
-                <Gamepad2 size={40} strokeWidth={1.5} />
-              </div>
-              <h3 className="display-font styles.featureName">OSMIS Games</h3>
-              <p className={styles.featureDesc}>Kumpulan Mini Games Seru</p>
-            </div>
-            <button 
-              className={styles.featureBtn}
-              onClick={() => setIsGameModalOpen(true)}
-            >
-              [ Pilih Game ]
-            </button>
-          </div>
-
-          {/* Card 5: Belajar Bahasa */}
-          <div className={styles.featureCard}>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              <div className={styles.featureIcon}>
-                <Languages size={40} strokeWidth={1.5} />
-              </div>
-              <h3 className="display-font styles.featureName">Linguista</h3>
-              <p className={styles.featureDesc}>Belajar Kosakata Arab, Inggris & Indo ala Duolingo</p>
-            </div>
-            <button 
-              className={styles.featureBtn}
-              onClick={() => window.location.href = '/learn'}
-            >
-              [ Belajar ]
-            </button>
-          </div>
-
-        </div>
+      {/* Features Section — TiltStackScroll */}
+      <section id="features">
+        <TiltStackScroll
+          eyebrow={t.featuresSubtitle}
+          heading={t.featuresTitle}
+          cards={featureCards}
+          stepVh={95}
+        />
       </section>
 
       {/* Game Selection Modal */}
