@@ -49,17 +49,34 @@
   padding-top: 1.5rem;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .section {
-    padding: 5rem 0;
+    padding: 3.5rem 0;
   }
   .container {
     padding: 0 1rem;
   }
+  .header {
+    margin-bottom: 2rem;
+  }
+  .header h2 {
+    font-size: clamp(1.75rem, 6.5vw, 2.3rem);
+  }
   .foldersGrid {
     grid-template-columns: 1fr;
-    gap: 3rem;
-    padding: 1.5rem 0 1rem;
+    gap: 2.25rem;
+    padding: 1rem 0 0.75rem;
+  }
+  .loadMoreContainer {
+    margin-top: 2.5rem;
+  }
+  .loadMoreBtn {
+    width: 100%;
+    max-width: 340px;
+    justify-content: center;
+    min-height: 46px;
+    padding: 0.85rem 1.25rem;
+    font-size: 0.8rem;
   }
 }
 

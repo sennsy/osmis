@@ -50,33 +50,6 @@
   display: none; /* Hidden on desktop */
 }
 
-@media (max-width: 768px) {
-  .filterTabs {
-    justify-content: center;
-    flex-wrap: wrap; /* Wrap instead of horizontal scroll */
-    gap: 0.5rem;
-    margin-top: 1.5rem;
-  }
-  
-  .tabBtn {
-    padding: 0.5rem 1rem;
-    font-size: 0.75rem;
-    white-space: nowrap;
-    border-radius: 20px; /* Chip style */
-  }
-
-  .moreBtn {
-    display: inline-block;
-    border-style: dashed;
-    background: transparent;
-  }
-
-  /* When collapsed on mobile, hide buttons from 5th child onwards (except moreBtn) */
-  .filterTabs.collapsed .tabBtn:nth-child(n+5):not(.moreBtn) {
-    display: none;
-  }
-}
-
 .tabBtn {
   background-color: transparent;
   border: 1px solid var(--border-color);
@@ -154,40 +127,72 @@
 
 .image {
   width: 100%;
-  height: auto; /* Allow varied heights like Pinterest */
+  height: auto;
   min-height: 250px;
   object-fit: cover;
   display: block;
   border-radius: 4px;
   filter: grayscale(80%) contrast(1.1);
   transition: filter 0.4s ease;
-  background-color: rgba(0, 0, 0, 0.05); /* Placeholder color */
+  background-color: rgba(0, 0, 0, 0.05);
 }
 
 .masonryItem:hover .image {
   filter: grayscale(0%) contrast(1);
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .page {
-    padding: 0 0 4rem;
+    padding: 0 0 3.5rem;
+  }
+  .container {
+    padding: 2.25rem 1rem 0;
+  }
+  .header {
+    margin-bottom: 2rem;
   }
   .header h1 {
-    font-size: 2.2rem;
+    font-size: clamp(1.75rem, 6.5vw, 2.25rem);
+    line-height: 1.2;
   }
   .backBtn {
     position: relative;
     top: auto;
     transform: none;
     justify-content: center;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.15rem;
+    min-height: 40px;
+  }
+  .filterTabs {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    margin-top: 1.25rem;
+  }
+  .tabBtn {
+    min-height: 38px;
+    padding: 0.45rem 0.9rem;
+    font-size: 0.72rem;
+    white-space: nowrap;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .moreBtn {
+    display: inline-flex;
+    border-style: dashed;
+    background: transparent;
+  }
+  .filterTabs.collapsed .tabBtn:nth-child(n+5):not(.moreBtn) {
+    display: none;
   }
   .masonryGridWrapper {
-    gap: 0.5rem;
+    gap: 0.75rem;
     padding: 0;
   }
   .masonryCol {
-    gap: 0.5rem;
+    gap: 0.75rem;
   }
   .image {
     min-height: 120px;

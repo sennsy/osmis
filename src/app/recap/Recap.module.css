@@ -231,6 +231,50 @@
 }
 
 @media (max-width: 767px) {
+  .container {
+    padding: 5.5rem 1rem 3rem;
+  }
+  .backBtn {
+    top: 1.25rem;
+    left: 1rem;
+    min-height: 40px;
+    font-size: 0.85rem;
+  }
+  .header {
+    margin-bottom: 2rem;
+  }
+  .title {
+    font-size: clamp(1.85rem, 7vw, 2.4rem);
+    margin-bottom: 0.6rem;
+  }
+  .subtitle {
+    font-size: 0.92rem;
+    line-height: 1.5;
+  }
+  .categoryContainer {
+    gap: 0.5rem;
+    margin-bottom: 1.25rem;
+    padding: 0;
+  }
+  .categoryChip {
+    min-height: 38px;
+    padding: 0.45rem 1rem;
+    font-size: 0.82rem;
+  }
+  .swiperContainer {
+    padding-top: 24px;
+    padding-bottom: 32px;
+  }
+  .videoTitle {
+    font-size: 1rem;
+    padding: 2.5rem 1rem 1rem 4rem;
+  }
+  .closeBtn {
+    top: 1.25rem;
+    right: 1.25rem;
+    width: 44px;
+    height: 44px;
+  }
   .container :global(.swiper-button-next),
   .container :global(.swiper-button-prev) {
     display: none !important;

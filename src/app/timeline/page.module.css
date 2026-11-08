@@ -168,3 +168,36 @@
   border: 1px solid var(--accent-primary);
   box-shadow: 0 0 40px rgba(27, 77, 62, 0.1);
 }
+
+@media (max-width: 767px) {
+  .timelineContainer {
+    padding: 5.5rem 1rem 3rem;
+  }
+  .header {
+    margin-bottom: 4rem;
+    padding-top: 1rem;
+  }
+  .title {
+    font-size: clamp(2rem, 8vw, 2.75rem);
+  }
+  .periodsWrapper {
+    gap: 4.5rem;
+    padding-bottom: 4rem;
+  }
+  .contentBox {
+    padding: 2rem 1.25rem 1.5rem;
+  }
+  .yearTag {
+    top: -1.25rem;
+    left: 1.25rem;
+    font-size: 1.1rem;
+    padding: 0.35rem 0.75rem;
+  }
+  .periodSummary {
+    font-size: 1.35rem;
+    margin-bottom: 1.25rem;
+  }
+  .programsGrid ul {
+    grid-template-columns: 1fr;
+  }
+}

@@ -637,6 +637,49 @@ export function PerspectiveTunnelHero({
           background: linear-gradient(to bottom, transparent, var(--bg-color, #f8f6f0));
           z-index: 20;
         }
+        @media (max-width: 767px) {
+          .pth-anchor-wrap {
+            padding: 0 1rem;
+          }
+          .pth-anchor-eyebrow {
+            font-size: 0.65rem;
+            letter-spacing: 0.2em;
+            margin-bottom: 0.65rem;
+          }
+          .pth-anchor-title {
+            font-size: clamp(2rem, 8.5vw, 2.85rem);
+            line-height: 1.02;
+          }
+          .pth-anchor-subtitle {
+            font-size: 0.84rem;
+            line-height: 1.5;
+            margin-top: 0.85rem;
+          }
+          .pth-scroll-prompt {
+            bottom: 4.5rem;
+            font-size: 0.62rem;
+            letter-spacing: 0.18em;
+          }
+          .pth-hud-bar {
+            bottom: 0.9rem;
+            left: 0.85rem;
+            right: 0.85rem;
+            gap: 0.5rem;
+          }
+          .pth-progress-pill {
+            padding: 0.4rem 0.7rem;
+            font-size: 0.62rem;
+            gap: 0.45rem;
+          }
+          .pth-progress-track {
+            width: 46px;
+          }
+          .pth-skip-pill {
+            min-height: 36px;
+            padding: 0.4rem 0.75rem;
+            font-size: 0.62rem;
+          }
+        }
       `}</style>
 
       {/* Immersive Background Grid & Glow */}

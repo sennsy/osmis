@@ -572,6 +572,99 @@ export function CoffeePourMenu({
           white-space: nowrap;
           border: 0;
         }
+        @media (max-width: 767px) {
+          .cpm-root {
+            gap: 1.15rem;
+            padding: 0.25rem 0;
+          }
+          .cpm-menu-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.45rem;
+          }
+          .cpm-menu-btn {
+            padding: 0.75rem 0.9rem;
+            border-radius: 16px;
+            min-height: 64px;
+          }
+          .cpm-active-pill {
+            border-radius: 16px;
+          }
+          .cpm-btn-inner {
+            gap: 0.75rem;
+          }
+          .cpm-avatar-wrap {
+            width: 44px;
+            height: 44px;
+          }
+          .cpm-badge-line {
+            font-size: 0.62rem;
+            letter-spacing: 0.1em;
+          }
+          .cpm-item-name {
+            font-size: 1.05rem;
+            line-height: 1.2;
+          }
+          .cpm-item-sub {
+            font-size: 0.7rem;
+          }
+          .cpm-stage-wrap {
+            aspect-ratio: 4 / 5;
+            border-radius: 20px;
+          }
+          .cpm-portrait-card,
+          .cpm-portrait-inner {
+            border-radius: 20px;
+          }
+          .cpm-stage-card {
+            margin: 10px 10px 0;
+            padding: 0.55rem 0.75rem;
+            border-radius: 14px;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+          }
+          .cpm-stage-person {
+            flex: 1 1 140px;
+            min-width: 0;
+          }
+          .cpm-stage-logo {
+            width: 28px;
+            height: 28px;
+          }
+          .cpm-stage-role {
+            font-size: 0.58rem;
+          }
+          .cpm-stage-name {
+            font-size: 0.8rem;
+          }
+          .cpm-stage-actions {
+            width: 100%;
+            justify-content: stretch;
+          }
+          .cpm-action-btn {
+            width: 100%;
+            justify-content: center;
+            min-height: 38px;
+            padding: 0.45rem 0.75rem;
+            font-size: 0.65rem;
+          }
+          .cpm-portrait-overlay {
+            padding: 1.15rem 1rem 1rem;
+          }
+          .cpm-portrait-title {
+            font-size: 1.2rem;
+            padding-right: 2.75rem;
+          }
+          .cpm-portrait-role {
+            font-size: 0.68rem;
+          }
+          .cpm-zoom-pill {
+            bottom: 1rem;
+            right: 1rem;
+            width: 40px;
+            height: 40px;
+          }
+        }
       `}</style>
 
       {/* Left Menu: Pengurus Inti List */}

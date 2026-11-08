@@ -80,7 +80,7 @@ export function GalleryGrid({
   return (
     <div
       className={cn(
-        "seg-masonry-grid columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-4",
+        "seg-masonry-grid columns-2 md:columns-3 lg:columns-4 gap-3 sm:gap-4",
         className
       )}
     >
@@ -291,8 +291,8 @@ function GalleryModal() {
 
 const SHARED_GALLERY_CSS = `
 .seg-masonry-grid {
-  column-count: 1;
-  column-gap: 1.15rem;
+  column-count: 2;
+  column-gap: 0.75rem;
   width: 100%;
 }
 @media (min-width: 640px) {
@@ -352,6 +352,41 @@ const SHARED_GALLERY_CSS = `
   object-fit: cover;
   display: block;
   border-radius: 13px;
+}
+
+@media (max-width: 767px) {
+  .seg-card {
+    margin-bottom: 0.75rem;
+    border-radius: 12px;
+  }
+  .seg-badge {
+    top: 8px;
+    left: 8px;
+    padding: 3px 7px;
+    font-size: 0.62rem;
+    border-radius: 6px;
+  }
+  .seg-thumb-img {
+    min-height: 115px;
+    aspect-ratio: 4 / 5;
+    border-radius: 11px;
+  }
+  .seg-modal-stage {
+    padding: 16px;
+  }
+  .seg-modal-actions {
+    top: 16px;
+    right: 16px;
+    gap: 10px;
+  }
+  .seg-drag-hint {
+    bottom: 16px;
+    font-size: 0.68rem;
+    padding: 5px 12px;
+    max-width: calc(100vw - 32px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
 
 .seg-hover-overlay {

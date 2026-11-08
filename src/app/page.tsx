@@ -11,7 +11,6 @@ import styles from './page.module.css';
 import Gallery from '../components/Gallery';
 import { Camera, Sparkles, Gamepad2, Languages, Film } from 'lucide-react';
 import { DotTiles, type DotTileData } from '../components/ui/dot-tiles';
-import PricingSection4 from '../components/ui/pricing-section-3';
 
 export default function Home() {
   const { t } = useLanguage();
@@ -23,7 +22,7 @@ export default function Home() {
     console.log("OSMIS V2 Loaded");
 
     const updateCols = () => {
-      if (window.innerWidth < 600) setTileColumns(1);
+      if (window.innerWidth < 360) setTileColumns(1);
       else if (window.innerWidth < 960) setTileColumns(2);
       else setTileColumns(3);
     };
@@ -121,8 +120,41 @@ export default function Home() {
       <Hero />
       
       {/* Vision & Mission Section */}
-      <section id="introduction">
-        <PricingSection4 />
+      <section id="introduction" className={styles.introSection}>
+        <div className={styles.introContainer}>
+          <h2 className="display-font">{t.osmisName}</h2>
+          <h3 className="mono-font" style={{ letterSpacing: '0.1em' }}>{t.orgNameLong.toUpperCase()}</h3>
+          <p className="editorial-divider"></p>
+
+          <div className={styles.visiMisiGrid}>
+            {/* VISI */}
+            <div className={styles.visiCard}>
+              <div className={styles.vmLabel}>
+                <span className={`${styles.vmNumber} mono-font`}>١</span>
+                <h4 className={`${styles.vmTitle} mono-font`}>{t.visiLabel}</h4>
+              </div>
+              <p className={`${styles.vmText} display-font`}>"{t.visiText}"</p>
+            </div>
+
+            {/* MISI */}
+            <div className={styles.misiCard}>
+              <div className={styles.vmLabel}>
+                <span className={`${styles.vmNumber} mono-font`}>٢</span>
+                <h4 className={`${styles.vmTitle} mono-font`}>{t.misiLabel}</h4>
+              </div>
+              <ol className={styles.misiList}>
+                {t.misiItems.map((item: string, i: number) => (
+                  <li key={i} className={styles.misiItem}>
+                    <span className={`${styles.misiNum} mono-font`}>
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
+                    <p>{item}</p>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </div>
+        </div>
       </section>
 
       <HistoryTimeline />
@@ -156,6 +188,7 @@ export default function Home() {
       {/* Game Selection Modal */}
       {isGameModalOpen && (
         <div 
+          className={styles.gameModalOverlay}
           style={{
             position: 'fixed',
             top: 0,
@@ -173,6 +206,7 @@ export default function Home() {
           onClick={() => setIsGameModalOpen(false)}
         >
           <div 
+            className={styles.gameModalCard}
             style={{
               background: 'var(--card-bg)',
               border: '1px solid var(--border-color)',
@@ -191,7 +225,7 @@ export default function Home() {
               <h2 className="display-font" style={{ fontSize: '1.5rem' }}>OSMIS Games</h2>
               <button 
                 onClick={() => setIsGameModalOpen(false)}
-                style={{ background: 'none', border: 'none', color: 'var(--text-color)', cursor: 'pointer', opacity: 0.7 }}
+                style={{ background: 'none', border: 'none', color: 'var(--text-color)', cursor: 'pointer', opacity: 0.7, minHeight: '44px', minWidth: '44px' }}
               >
                 Tutup ✕
               </button>
@@ -199,6 +233,7 @@ export default function Home() {
             
             {/* Game 1: Wong Tersakiti Bross */}
             <div 
+              className={styles.gameModalItem}
               style={{
                 display: 'flex',
                 alignItems: 'center',
@@ -214,18 +249,19 @@ export default function Home() {
               onMouseOver={e => e.currentTarget.style.borderColor = 'var(--text-color)'}
               onMouseOut={e => e.currentTarget.style.borderColor = 'var(--border-color)'}
             >
-              <div style={{ padding: '1rem', background: 'rgba(59,130,246,0.1)', color: '#3b82f6', borderRadius: '0.75rem' }}>
+              <div style={{ padding: '1rem', background: 'rgba(59,130,246,0.1)', color: '#3b82f6', borderRadius: '0.75rem', flexShrink: 0 }}>
                 <Gamepad2 size={28} />
               </div>
-              <div style={{ flex: 1 }}>
+              <div style={{ flex: 1, minWidth: 0 }}>
                 <h4 className="display-font" style={{ fontSize: '1.1rem', marginBottom: '0.25rem' }}>Wong Tersakiti Bross</h4>
                 <p style={{ fontSize: '0.85rem', opacity: 0.7 }}>2D Side-scrolling Retro Platformer</p>
               </div>
-              <span style={{ fontSize: '0.85rem', color: '#3b82f6', fontWeight: 600 }}>Mainkan ↗</span>
+              <span style={{ fontSize: '0.85rem', color: '#3b82f6', fontWeight: 600, flexShrink: 0 }}>Mainkan ↗</span>
             </div>
 
             {/* Game 2: GMWST (Dino) */}
             <div 
+              className={styles.gameModalItem}
               style={{
                 display: 'flex',
                 alignItems: 'center',
@@ -241,18 +277,19 @@ export default function Home() {
               onMouseOver={e => e.currentTarget.style.borderColor = 'var(--text-color)'}
               onMouseOut={e => e.currentTarget.style.borderColor = 'var(--border-color)'}
             >
-              <div style={{ padding: '1rem', background: 'rgba(255,255,255,0.05)', borderRadius: '0.75rem' }}>
+              <div style={{ padding: '1rem', background: 'rgba(255,255,255,0.05)', borderRadius: '0.75rem', flexShrink: 0 }}>
                 <Gamepad2 size={28} />
               </div>
-              <div style={{ flex: 1 }}>
+              <div style={{ flex: 1, minWidth: 0 }}>
                 <h4 className="display-font" style={{ fontSize: '1.1rem', marginBottom: '0.25rem' }}>GMWST (gemme wong sing tulus)</h4>
                 <p style={{ fontSize: '0.85rem', opacity: 0.7 }}>Endless Runner Klasik Santri</p>
               </div>
-              <span style={{ fontSize: '0.85rem', opacity: 0.6 }}>Mainkan ↗</span>
+              <span style={{ fontSize: '0.85rem', opacity: 0.6, flexShrink: 0 }}>Mainkan ↗</span>
             </div>
 
             {/* Game 3: Happy Ngetik Sayy (Moved to bottom, mobile restricted) */}
             <div 
+              className={styles.gameModalItem}
               style={{
                 display: 'flex',
                 alignItems: 'center',
@@ -275,14 +312,14 @@ export default function Home() {
               onMouseOver={e => e.currentTarget.style.borderColor = 'var(--text-color)'}
               onMouseOut={e => e.currentTarget.style.borderColor = 'var(--border-color)'}
             >
-              <div style={{ padding: '1rem', background: 'rgba(16,185,129,0.1)', color: '#10b981', borderRadius: '0.75rem' }}>
+              <div style={{ padding: '1rem', background: 'rgba(16,185,129,0.1)', color: '#10b981', borderRadius: '0.75rem', flexShrink: 0 }}>
                 <Gamepad2 size={28} />
               </div>
-              <div style={{ flex: 1 }}>
+              <div style={{ flex: 1, minWidth: 0 }}>
                 <h4 className="display-font" style={{ fontSize: '1.1rem', marginBottom: '0.25rem' }}>Happy Ngetik Sayy (HTS)</h4>
                 <p style={{ fontSize: '0.85rem', opacity: 0.7 }}>Game 2D Edukatif Mengetik Cepat</p>
               </div>
-              <span style={{ fontSize: '0.85rem', color: '#10b981', fontWeight: 600 }}>Mainkan ↗</span>
+              <span style={{ fontSize: '0.85rem', color: '#10b981', fontWeight: 600, flexShrink: 0 }}>Mainkan ↗</span>
             </div>
           </div>
         </div>
@@ -290,3 +327,4 @@ export default function Home() {
     </div>
   );
 }
+

@@ -320,10 +320,46 @@
   padding-right: 0.5rem;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .programList {
     grid-template-columns: 1fr;
-    gap: 1.5rem;
+    gap: 1.15rem;
+  }
+  .modalOverlay {
+    padding: 0.75rem;
+  }
+  .modalContent {
+    padding: 1.5rem 1.15rem;
+    border-radius: 18px;
+    max-height: 88dvh;
+  }
+  .closeBtn {
+    top: 1rem;
+    right: 1rem;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .modalTitle {
+    font-size: 1.35rem;
+    margin-bottom: 1rem;
+    padding-right: 2.25rem;
+  }
+  .modalTabs {
+    gap: 0.5rem;
+    margin-bottom: 1.15rem;
+  }
+  .tabBtn {
+    min-height: 42px;
+    padding: 0.5rem 0.85rem;
+    font-size: 0.8rem;
+  }
+  .viewProgramsBtn {
+    min-height: 44px;
+    font-size: 0.78rem;
+    padding: 0.75rem 1rem;
   }
 }
 

@@ -184,27 +184,71 @@
   display: none;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .section {
-    padding: 3rem 0; /* Compact padding */
+    padding: 3.5rem 0;
+  }
+  .container {
+    padding: 0 1rem;
   }
   .header {
-    margin-bottom: 3rem;
+    margin-bottom: 2.25rem;
+  }
+  .headerTop {
+    margin-bottom: 1.25rem;
+  }
+  .line {
+    width: 48px;
   }
   .header h2 {
-    font-size: 2.5rem; /* Safe mobile size */
+    font-size: clamp(1.85rem, 7vw, 2.5rem);
+    margin-bottom: 0.5rem;
+  }
+  .header h3 {
+    font-size: 0.95rem;
+    letter-spacing: 0.14em;
+  }
+  .orgHeader {
+    margin-bottom: 2rem;
+  }
+  .orgHeader h4 {
+    font-size: 1.35rem;
+    line-height: 1.3;
   }
   .chartWrapper {
-    padding: 2.5rem 1rem;
+    padding: 1.5rem 0.95rem;
+    border-radius: 18px;
     overflow-x: hidden;
   }
   .leaderInfo {
-    padding: 1.5rem; /* Smaller padding */
+    padding: 1.25rem;
   }
   .leaderNumber {
-    font-size: 4rem; /* Scale down watermark number */
-    top: -2rem;
+    font-size: 3rem;
+    top: -1.5rem;
     left: 0;
+  }
+  .modalOverlay {
+    padding: 0.85rem;
+  }
+  .modalContent {
+    padding: 1.5rem 1.15rem;
+    border-radius: 18px;
+    max-height: 88dvh;
+  }
+  .closeBtn {
+    top: 1rem;
+    right: 1rem;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .modalTitle {
+    font-size: 1.35rem;
+    margin-bottom: 1.15rem;
+    padding-right: 2.25rem;
   }
 }
 

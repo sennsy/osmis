@@ -166,6 +166,18 @@ export default function Navbar() {
         <div className={styles.mobileToggle}>
           <button
             type="button"
+            onClick={() => {
+              const current = theme === 'system' ? resolvedTheme : theme;
+              setTheme(current === 'dark' ? 'light' : 'dark');
+            }}
+            className={styles.iconBtn}
+            aria-label="Toggle Theme"
+            title="Ubah Tema Terang / Gelap"
+          >
+            {mounted && (currentTheme === 'dark' ? <Moon size={18} /> : <Sun size={18} />)}
+          </button>
+          <button
+            type="button"
             onClick={handleMatraTrigger}
             className={styles.matraTriggerBtn}
             aria-label="Matra AI — AI Assistant"
@@ -180,7 +192,13 @@ export default function Navbar() {
               draggable={false}
             />
           </button>
-          <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className={styles.iconBtn} aria-label="Menu">
+          <button
+            type="button"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className={styles.iconBtn}
+            aria-label={mobileMenuOpen ? "Tutup Menu" : "Buka Menu"}
+            aria-expanded={mobileMenuOpen}
+          >
             {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>

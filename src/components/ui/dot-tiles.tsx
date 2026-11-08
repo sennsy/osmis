@@ -447,6 +447,11 @@ const CSS = `
 .lsdt-lab{font-size:${u(9.4)};line-height:1.1;font-weight:500;letter-spacing:-0.01em;white-space:nowrap;color:color-mix(in srgb,var(--dt-ink) 64%,transparent)}
 .lsdt-lab-cta{font-size:${u(9.4)};line-height:1.1;font-weight:600;letter-spacing:0.01em;white-space:nowrap;color:color-mix(in srgb,var(--dt-ink) 92%,transparent)}
 .lsdt-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+@media (max-width:767px){
+  .lsdt-title{font-size:max(13px, calc(var(--fit,1) * ${(21.5 / TW).toFixed(5)} * 100cqw))}
+  .lsdt-sub{font-size:max(10px, ${u(9.6)});line-height:1.28}
+  .lsdt-lab,.lsdt-lab-cta{font-size:max(9.5px, ${u(9.4)})}
+}
 @media (hover:hover){.lsdt-tile[data-hover]:hover{transform:translateY(-2.4%) scale(1.015);
   box-shadow:0 2px 4px rgba(0,0,0,.18),0 18px 34px -10px rgba(0,0,0,.5),0 40px 64px -24px rgba(0,0,0,.4)}}
 @media (prefers-reduced-motion:reduce){.lsdt-tile{transition:none}}

@@ -138,3 +138,25 @@
   width: 100%;
   accent-color: var(--text-color);
 }
+
+@media (max-width: 767px) {
+  .page {
+    padding: 6rem 1rem 3rem;
+  }
+  .header {
+    margin-bottom: 1rem;
+  }
+  .backBtn {
+    margin-bottom: 1.25rem;
+    min-height: 40px;
+  }
+  .controls {
+    gap: 1.35rem;
+  }
+  .campaignBtn,
+  .uploadBtn,
+  .downloadBtn {
+    min-height: 46px;
+    border-radius: 10px;
+  }
+}

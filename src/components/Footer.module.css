@@ -164,10 +164,85 @@
   transform: scaleX(1);
 }
 
-@media (max-width: 768px) {
+.topSlotCard {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: 1.5rem 2rem;
+  border-radius: 20px;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+}
+
+.topSlotBrand {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.socialList {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.socialIconBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.85;
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 10px;
+  transition: opacity 0.2s ease, background-color 0.2s ease;
+}
+
+.socialIconBtn:hover {
+  opacity: 1;
+}
+
+@media (max-width: 767px) {
+  .topSlotCard {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1.15rem;
+    padding: 1.25rem 1rem;
+    border-radius: 16px;
+  }
+  .topSlotBrand {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.6rem;
+  }
   .quoteBox {
     max-width: 100%;
-    min-height: 100px;
-    margin: 1.5rem 0;
+    min-height: 76px;
+    margin: 0.25rem 0;
+    width: 100%;
+  }
+  .quoteText {
+    font-size: 0.78rem;
+    line-height: 1.55;
+  }
+  .socialList {
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+  }
+  .socialIconBtn {
+    width: 42px;
+    height: 42px;
+    background: rgba(128, 128, 128, 0.08);
+    border: 1px solid var(--border-color);
   }
 }

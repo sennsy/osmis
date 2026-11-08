@@ -594,9 +594,85 @@
   margin-bottom: 0.5rem;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
+  .mbtiContainer {
+    padding: 6rem 1rem 3rem;
+  }
+  .backLink {
+    margin-bottom: 1.5rem;
+    min-height: 40px;
+  }
+  .header {
+    margin-bottom: 2rem;
+  }
+  .title {
+    font-size: clamp(2rem, 8vw, 2.75rem);
+    margin-bottom: 0.75rem;
+  }
+  .subtitle {
+    font-size: 0.95rem;
+  }
+  .tabs {
+    border-radius: 18px;
+    padding: 0.4rem;
+    margin-bottom: 1.75rem;
+  }
+  .tabBtn {
+    padding: 0.55rem 0.9rem;
+    font-size: 0.82rem;
+    min-height: 38px;
+  }
+  .glassCard {
+    padding: 1.5rem 1.15rem;
+    border-radius: 18px;
+  }
+  .heroTitle {
+    font-size: clamp(1.65rem, 6.5vw, 2.2rem);
+  }
+  .heroDesc {
+    font-size: 0.95rem;
+    margin-bottom: 1.75rem;
+  }
+  .primaryBtn,
+  .secondaryBtn {
+    width: 100%;
+    justify-content: center;
+    min-height: 46px;
+    padding: 0.85rem 1.25rem;
+  }
+  .compatTitle {
+    font-size: 1.75rem;
+  }
+  .compatResultCard {
+    padding: 1.25rem;
+    border-radius: 18px;
+  }
+  .questionText {
+    font-size: 1.2rem;
+    min-height: 72px;
+    margin-bottom: 1.5rem;
+  }
+  .optionBtn {
+    font-size: 0.95rem;
+    padding: 0.85rem 1.1rem;
+    min-height: 46px;
+  }
+  .mbtiType {
+    font-size: 2.75rem;
+  }
   .resultGrid {
     grid-template-columns: 1fr;
+    gap: 1.15rem;
+  }
+  .typesGrid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 0.85rem;
+  }
+  .typeCard {
+    padding: 1.1rem 0.85rem;
+  }
+  .typeCard h3 {
+    font-size: 1.5rem;
   }
 }
 
