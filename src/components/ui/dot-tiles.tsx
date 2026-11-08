@@ -212,17 +212,17 @@ export const DOT_TILES_SAMPLE: DotTileData[] = [
  * ---------------------------------------------------------------------------------------------- */
 
 const TW = 206
-const TH = 204
-const GAP = 4 // between tiles
-const PAD = 19.5 // left and right text inset
-const TRACK_X0 = 19.5
+const TH = 214
+const GAP = 6 // between tiles
+const PAD = 18.5 // left and right text inset
+const TRACK_X0 = 18.5
 const TRACK_X1 = 187.5
-const VIS_Y = 164.2 // centre line of the bottom visuals
-const PITCH = 7.35 // dot pitch
-const DOT_R = 3.08 // dot radius
-const VAL_X = 22.5 // centre of the first dot column
-const VAL_Y = 89.1 // centre of the first dot row
-const VAL_MAX_W = 140 // widest value before the matrix scales down
+const VIS_Y = 171 // centre line of the bottom visuals
+const PITCH = 7.1 // dot pitch
+const DOT_R = 2.98 // dot radius
+const VAL_X = 22 // centre of the first dot column
+const VAL_Y = 97.5 // centre of the first dot row (gives room for 2-line subtitle above)
+const VAL_MAX_W = 136 // widest value before the matrix scales down
 
 const u = (n: number) => `calc(${+(n / TW).toFixed(5)} * 100cqw)`
 
@@ -264,16 +264,29 @@ function layoutText(s: string): { cols: number; on: Set<number> } {
 }
 
 /* ------------------------------------------------------------------------------------------------
- * Value parsing: numbers and h:mm times can count and drift.
+ * Value parsing: numbers and h:mm times can count and drift while preserving leading zero padding.
  * ---------------------------------------------------------------------------------------------- */
 
-type Parsed = { kind: "num"; n: number; dec: number; text: string } | { kind: "time"; n: number; text: string } | { kind: "text"; text: string }
+type Parsed =
+  | { kind: "num"; n: number; dec: number; padZeroLen: number; text: string }
+  | { kind: "time"; n: number; text: string }
+  | { kind: "text"; text: string }
 
 function parseValue(v: string | number): Parsed {
   const text = String(v).trim()
   const t = /^(\d+):(\d{2})$/.exec(text)
   if (t) return { kind: "time", n: +t[1] * 60 + +t[2], text }
-  if (/^-?\d+(\.\d+)?$/.test(text)) return { kind: "num", n: +text, dec: (text.split(".")[1] ?? "").length, text }
+  if (/^-?\d+(\.\d+)?$/.test(text)) {
+    const intPart = text.split(".")[0] ?? ""
+    const hasLeadingZero = intPart.length > 1 && intPart.startsWith("0")
+    return {
+      kind: "num",
+      n: +text,
+      dec: (text.split(".")[1] ?? "").length,
+      padZeroLen: hasLeadingZero ? text.length : 0,
+      text,
+    }
+  }
   return { kind: "text", text }
 }
 
@@ -282,7 +295,10 @@ function formatValue(p: Parsed, n: number): string {
     const m = Math.max(0, Math.round(n))
     return `${Math.floor(m / 60)}:${String(m % 60).padStart(2, "0")}`
   }
-  if (p.kind === "num") return n.toFixed(p.dec)
+  if (p.kind === "num") {
+    const raw = n.toFixed(p.dec)
+    return p.padZeroLen > 0 ? raw.padStart(p.padZeroLen, "0") : raw
+  }
   return p.text
 }
 
@@ -387,7 +403,7 @@ function IconSlot({ icon, cy: cy0 }: { icon: DotTileIconName | React.ReactNode; 
       className="lsdt-icon-slot"
       style={{
         position: "absolute",
-        left: u(176.5 + (named ? ICON_DX[icon as DotTileIconName] ?? 0 : 0) - size / 2),
+        left: u(174.5 + (named ? ICON_DX[icon as DotTileIconName] ?? 0 : 0) - size / 2),
         top: u(cy - size / 2),
         width: u(size),
         height: u(size),
@@ -409,25 +425,27 @@ function IconSlot({ icon, cy: cy0 }: { icon: DotTileIconName | React.ReactNode; 
 const FONT = `"SF Pro Text", "SF Pro", -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif`
 
 const CSS = `
-.lsdt-grid{display:grid;width:100%;container-type:inline-size}
-.lsdt-tile{position:relative;container-type:inline-size;aspect-ratio:${TW}/${TH};border-radius:14.6%/14.75%;isolation:isolate;
-  font-family:${FONT};color:var(--dt-ink);-webkit-font-smoothing:antialiased;
+.lsdt-grid{display:grid;width:100%;container-type:inline-size;text-align:left}
+.lsdt-tile{position:relative;container-type:inline-size;aspect-ratio:${TW}/${TH};border-radius:14.6%/14.2%;isolation:isolate;
+  font-family:${FONT};color:var(--dt-ink);text-align:left;-webkit-font-smoothing:antialiased;
   box-shadow:0 0 4px rgba(0,0,0,.3),0 1px 2px rgba(0,0,0,.18),0 10px 24px -8px rgba(0,0,0,.42),0 26px 48px -20px rgba(0,0,0,.34);
   transition:transform .45s cubic-bezier(.2,.9,.25,1),box-shadow .45s cubic-bezier(.2,.9,.25,1);will-change:transform}
 .lsdt-tile[data-clickable="true"]{cursor:pointer}
 .lsdt-icon-slot > svg{width:100% !important;height:100% !important;display:block}
 .lsdt-glass{position:absolute;inset:0;border-radius:inherit;overflow:hidden;
-  background:color-mix(in srgb,var(--dt-tile) 84%,transparent);
+  background:color-mix(in srgb,var(--dt-tile) 88%,transparent);
   -webkit-backdrop-filter:blur(14px) saturate(1.25);backdrop-filter:blur(14px) saturate(1.25)}
 .lsdt-glass::before{content:"";position:absolute;left:7%;right:7%;top:-2.5%;bottom:5%;border-radius:12%;background:var(--dt-tile);filter:blur(${u(10)})}
-.lsdt-glass::after{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:inset 0 0 0 0.5px color-mix(in srgb,var(--dt-ink) 12%,transparent)}
-.lsdt-face{position:absolute;inset:0;pointer-events:none}
-.lsdt-badge{position:absolute;right:${u(15)};top:${u(15)};padding:${u(3)} ${u(7.5)};border-radius:999px;background:linear-gradient(135deg,#e74c3c,#c0392b);color:#fff;font-size:${u(7.8)};font-weight:700;letter-spacing:0.06em;box-shadow:0 4px 12px rgba(231,76,60,.45);z-index:3}
-.lsdt-title{position:absolute;left:${u(PAD - 1.4)};top:${u(19.5)};font-size:calc(var(--fit,1) * ${u(26.5)});line-height:1;font-weight:500;letter-spacing:-0.028em;white-space:nowrap;margin:0}
-.lsdt-sub{position:absolute;left:${u(PAD - 0.9)};top:${u(51.5)};right:${u(PAD - 0.9)};font-size:${u(11.4)};line-height:1.15;font-weight:400;letter-spacing:-0.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:color-mix(in srgb,var(--dt-ink) 62%,transparent)}
-.lsdt-unit{position:absolute;left:${u(146.5)};width:${u(60)};text-align:center;font-size:${u(9.1)};line-height:1;font-weight:500;letter-spacing:0.02em;white-space:nowrap;color:color-mix(in srgb,var(--dt-ink) 82%,transparent)}
-.lsdt-unit[data-wide]{font-size:${u(13.2)};font-weight:400;color:var(--dt-ink)}
-.lsdt-lab{position:absolute;top:${u(172.8)};font-size:${u(11.8)};line-height:1;font-weight:500;letter-spacing:-0.02em;white-space:nowrap;color:color-mix(in srgb,var(--dt-ink) 64%,transparent)}
+.lsdt-glass::after{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:inset 0 0 0 0.5px color-mix(in srgb,var(--dt-ink) 14%,transparent)}
+.lsdt-face{position:absolute;inset:0;pointer-events:none;text-align:left;overflow:hidden;border-radius:inherit}
+.lsdt-badge{position:absolute;right:${u(14)};top:${u(15.5)};padding:${u(2.6)} ${u(6.5)};border-radius:999px;background:linear-gradient(135deg,#e74c3c,#c0392b);color:#fff;font-size:${u(7.2)};font-weight:700;letter-spacing:0.05em;line-height:1.1;box-shadow:0 4px 12px rgba(231,76,60,.45);z-index:3}
+.lsdt-title{position:absolute;left:${u(PAD)};right:${u(PAD)};top:${u(17.5)};font-size:calc(var(--fit,1) * ${(21.5 / TW).toFixed(5)} * 100cqw);line-height:1.15;font-weight:600;letter-spacing:-0.024em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin:0;text-align:left}
+.lsdt-sub{position:absolute;left:${u(PAD)};right:${u(PAD)};top:${u(46.5)};font-size:${u(9.6)};line-height:1.32;font-weight:400;letter-spacing:-0.005em;white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-align:left;color:color-mix(in srgb,var(--dt-ink) 68%,transparent)}
+.lsdt-unit{position:absolute;left:${u(144.5)};width:${u(60)};text-align:center;font-size:${u(8.6)};line-height:1;font-weight:600;letter-spacing:0.04em;white-space:nowrap;color:color-mix(in srgb,var(--dt-ink) 84%,transparent)}
+.lsdt-unit[data-wide]{font-size:${u(12.6)};font-weight:500;color:var(--dt-ink)}
+.lsdt-lab-row{position:absolute;left:${u(PAD)};right:${u(PAD)};top:${u(182)};display:flex;align-items:center;justify-content:space-between;gap:${u(6)}}
+.lsdt-lab{font-size:${u(9.4)};line-height:1.1;font-weight:500;letter-spacing:-0.01em;white-space:nowrap;color:color-mix(in srgb,var(--dt-ink) 64%,transparent)}
+.lsdt-lab-cta{font-size:${u(9.4)};line-height:1.1;font-weight:600;letter-spacing:0.01em;white-space:nowrap;color:color-mix(in srgb,var(--dt-ink) 92%,transparent)}
 .lsdt-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 @media (hover:hover){.lsdt-tile[data-hover]:hover{transform:translateY(-2.4%) scale(1.015);
   box-shadow:0 2px 4px rgba(0,0,0,.18),0 18px 34px -10px rgba(0,0,0,.5),0 40px 64px -24px rgba(0,0,0,.4)}}
@@ -450,7 +468,7 @@ type VisualRefs = {
 }
 
 const TRACK_W = TRACK_X1 - TRACK_X0
-const STEP_BASE = 168.2
+const STEP_BASE = 175
 const STEP_MAX = 12
 const RISE_SHAPE = [
   [0, 0.108, 1 / 6],
@@ -505,11 +523,13 @@ function Visual({ v, refs, gid }: { v: DotTileVisual; refs: React.MutableRefObje
       lineSlots.push(i)
     }
   }
+  const initialMarkerX = v.type === "slider" ? TRACK_X0 + clamp01(v.value) * TRACK_W : TRACK_X0
+  const initialStepPath = v.type === "steps" || v.type === "rise" ? stepPath(stepSegments(v), 1) : ""
   return (
     <svg
       aria-hidden
-      viewBox={`0 140 ${TW} 36`}
-      style={{ position: "absolute", left: 0, top: u(140), width: "100%", height: u(36), overflow: "visible", display: "block" }}
+      viewBox={`0 147 ${TW} 36`}
+      style={{ position: "absolute", left: 0, top: u(147), width: "100%", height: u(36), overflow: "visible", display: "block" }}
     >
       <defs>
         <linearGradient id={gid} x1="0" y1="0" x2="0" y2="1">
@@ -529,36 +549,42 @@ function Visual({ v, refs, gid }: { v: DotTileVisual; refs: React.MutableRefObje
           width={1.1}
           height={19}
           fill={`url(#${gid})`}
-          opacity={0}
+          opacity={0.15}
         />
       ))}
       {v.type === "slider" &&
-        Array.from({ length: tickCount }, (_, i) => (
-          <rect
-            key={i}
-            ref={(el) => {
-              r.ticks[i] = el
-            }}
-            x={TRACK_X0 + (i * TRACK_W) / (tickCount - 1) - 0.62}
-            y={VIS_Y - 4.5}
-            width={1.24}
-            height={9}
-            fill="currentColor"
-            opacity={0}
-          />
-        ))}
+        Array.from({ length: tickCount }, (_, i) => {
+          const x = TRACK_X0 + (i * TRACK_W) / (tickCount - 1)
+          const d = Math.abs(x - initialMarkerX) - 4.5
+          const mode = v.mode ?? "glow"
+          const initOp = d < 1.4 ? 0 : mode === "fill" ? (x < initialMarkerX ? 0.94 : 0.24) : Math.max(0.24, 0.84 - 0.021 * d)
+          return (
+            <rect
+              key={i}
+              ref={(el) => {
+                r.ticks[i] = el
+              }}
+              x={x - 0.62}
+              y={VIS_Y - 4.5}
+              width={1.24}
+              height={9}
+              fill="currentColor"
+              opacity={initOp.toFixed(3)}
+            />
+          )
+        })}
       {v.type === "slider" && (
         <rect
           ref={(el) => {
             r.marker = el
           }}
-          x={TRACK_X0 - 4.5}
+          x={(initialMarkerX - 4.5).toFixed(2)}
           y={VIS_Y - 6.8}
           width={9}
           height={13.6}
           rx={0.6}
           fill="currentColor"
-          opacity={0}
+          opacity={1}
         />
       )}
       {(v.type === "steps" || v.type === "rise") && (
@@ -567,7 +593,7 @@ function Visual({ v, refs, gid }: { v: DotTileVisual; refs: React.MutableRefObje
             r.path = el
           }}
           fill="currentColor"
-          d=""
+          d={initialStepPath}
         />
       )}
       {v.type === "dots" &&
@@ -580,7 +606,7 @@ function Visual({ v, refs, gid }: { v: DotTileVisual; refs: React.MutableRefObje
               }}
               cx={slotX(i, slots)}
               cy={VIS_Y}
-              r={0}
+              r={(1 + 2.75 * clamp01(d)).toFixed(3)}
               fill="currentColor"
             />
           ),
@@ -594,7 +620,7 @@ function Visual({ v, refs, gid }: { v: DotTileVisual; refs: React.MutableRefObje
             }}
             x={TRACK_X0 + clamp01(b[0]) * TRACK_W}
             y={VIS_Y - 4.5}
-            width={0}
+            width={Math.max(0, (clamp01(b[1]) - clamp01(b[0])) * TRACK_W).toFixed(2)}
             height={9}
             fill="currentColor"
           />
@@ -727,6 +753,10 @@ export function DotTile(props: DotTileProps) {
   }, [parsed, jitter])
   const scale = Math.min(1, VAL_MAX_W / (cols * PITCH))
 
+  const initialOn = React.useMemo(() => layoutText(parsed.text).on, [parsed.text])
+  const maxCharsAtFullSize = badge ? 11.5 : 14.5
+  const initialFit = Number(Math.max(0.58, Math.min(badge ? 0.88 : 1, maxCharsAtFullSize / Math.max(1, title.length))).toFixed(3))
+
   const dotRefs = React.useRef<(SVGCircleElement | null)[]>([])
   const visRefs = React.useRef<VisualRefs>({ ticks: [], marker: null, path: null, dots: [], blocks: [], lines: [] })
   const tileRef = React.useRef<HTMLDivElement>(null)
@@ -736,7 +766,7 @@ export function DotTile(props: DotTileProps) {
   const live = React.useRef({ parsed, visual, jitter, cols })
   live.current = { parsed, visual, jitter, cols }
 
-  // Fit long titles to one line.
+  // Fit long titles to one line, reserving right space if badge is present so they never overlap.
   useIsoLayoutEffect(() => {
     const el = titleRef.current
     const tile = tileRef.current
@@ -744,10 +774,22 @@ export function DotTile(props: DotTileProps) {
     let alive = true
     const fit = () => {
       if (!alive) return
+      if (tile.clientWidth <= 0) {
+        el.style.setProperty("--fit", String(initialFit))
+        return
+      }
+      el.style.right = "auto"
       el.style.setProperty("--fit", "1")
-      const avail = tile.clientWidth * ((TW - PAD * 2 + 6) / TW)
+      const badgeReserve = badge ? 46 : 0
+      const avail = tile.clientWidth * ((TW - PAD * 2 - badgeReserve) / TW)
       const w = el.scrollWidth
-      if (w > avail && w > 0) el.style.setProperty("--fit", String(Math.max(0.6, avail / w)))
+      el.style.right = badge ? u(PAD + 46) : u(PAD)
+      if (w > avail && w > 0) {
+        const computed = Math.max(0.55, Math.min(initialFit, (avail / w) * 0.96))
+        el.style.setProperty("--fit", String(computed))
+      } else {
+        el.style.setProperty("--fit", String(initialFit))
+      }
     }
     fit()
     const ro = typeof ResizeObserver !== "undefined" ? new ResizeObserver(fit) : null
@@ -757,7 +799,7 @@ export function DotTile(props: DotTileProps) {
       alive = false
       ro?.disconnect()
     }
-  }, [title])
+  }, [title, badge, initialFit])
 
   // The engine: one rAF loop per tile, writing attributes directly.
   useIsoLayoutEffect(() => {
@@ -826,6 +868,7 @@ export function DotTile(props: DotTileProps) {
       const blank = " ".repeat(p.text.length)
       if (cycleOn) return blank
       if (p.kind === "text") return p.text
+      if (p.kind === "num" && p.padZeroLen > 0 && j <= 0) return p.text
       if (phase < COUNT_MS) {
         const steps = Math.max(6, Math.round(COUNT_MS / 105))
         const q = Math.floor((phase / COUNT_MS) * steps) / steps
@@ -848,17 +891,18 @@ export function DotTile(props: DotTileProps) {
 
     const vis = () => live.current.visual
 
-    if (reduced) {
-      const applyStatic = () => {
-        retarget(live.current.parsed.text, 0, true)
-        const els = dotRefs.current
-        for (let i = 0; i < N; i++) {
-          cur[i] = to[i]
-          els[i]?.setAttribute("r", (cur[i] * R).toFixed(4))
-        }
-        const v = vis()
-        if (v) updateVisual(v, visRefs.current, 1, v.type === "slider" ? clamp01(v.value) : 0)
+    const applyStatic = () => {
+      retarget(live.current.parsed.text, 0, true)
+      const els = dotRefs.current
+      for (let i = 0; i < N; i++) {
+        cur[i] = to[i]
+        els[i]?.setAttribute("r", (cur[i] * R).toFixed(4))
       }
+      const v = vis()
+      if (v) updateVisual(v, visRefs.current, 1, v.type === "slider" ? clamp01(v.value) : 0)
+    }
+
+    if (reduced) {
       applyStatic()
       const node = tileRef.current as any
       if (node) node.__lsdtKick = applyStatic
@@ -867,7 +911,14 @@ export function DotTile(props: DotTileProps) {
       }
     }
 
-    for (let i = 0; i < N; i++) dotRefs.current[i]?.setAttribute("r", "0")
+    // Initialize in settled state first so offscreen tiles are never blank
+    applyStatic()
+    shown = ""
+    for (let i = 0; i < N; i++) {
+      cur[i] = 0
+      from[i] = 0
+      to[i] = 0
+    }
     const start = performance.now() + delay
     lastNow = performance.now()
 
@@ -876,19 +927,18 @@ export function DotTile(props: DotTileProps) {
       const now = typeof nowArg === "number" ? nowArg : performance.now()
       const dt = Math.min(100, Math.max(0, now - lastNow))
       lastNow = now
-      const t = now - start
+      const t = Math.max(0, now - start)
       let phase = t
       let out = false
-      let draw = 0
-      if (t >= 0 && replay) {
+      let draw = 1
+      if (replay) {
         phase = t % replay
         out = phase > replay - OUT_MS
       }
-      if (t < 0) draw = 0
-      else if (out) draw = 1 - easeInOutCubic(clamp01((phase - (replay - OUT_MS)) / (OUT_MS * 0.85)))
-      else draw = clamp01(phase / DRAW_MS)
+      if (out) draw = 1 - easeInOutCubic(clamp01((phase - (replay - OUT_MS)) / (OUT_MS * 0.85)))
+      else draw = clamp01(Math.max(0.2, phase / DRAW_MS))
 
-      const s = t < 0 ? " ".repeat(live.current.parsed.text.length) : targetString(phase, out)
+      const s = targetString(phase, out)
       if (s !== shown) retarget(s, now, false)
       const busy = writeDots(now)
 
@@ -896,9 +946,9 @@ export function DotTile(props: DotTileProps) {
       if (v) {
         let target = 0
         if (v.type === "slider") {
-          const intro = out ? 0 : easeInOutCubic(clamp01((phase - 120) / 1150))
-          target = t < 0 ? 0 : clamp01(v.value) * (out ? draw : intro)
-          const introRunning = !out && phase < 1300
+          const intro = out ? 0 : easeInOutCubic(clamp01((phase - 60) / 950))
+          target = clamp01(v.value) * (out ? draw : Math.max(0.25, intro))
+          const introRunning = !out && phase < 1100
           if (introRunning || out) markerX = target
           else markerX += (target - markerX) * (1 - Math.exp(-dt / 110))
           if (Math.abs(target - markerX) < 0.0005) markerX = target
@@ -989,7 +1039,14 @@ export function DotTile(props: DotTileProps) {
       <div className="lsdt-glass" />
       <div className="lsdt-face">
         {badge && <span className="lsdt-badge">{badge}</span>}
-        <h3 ref={titleRef} className="lsdt-title">
+        <h3
+          ref={titleRef}
+          className="lsdt-title"
+          style={{
+            ["--fit" as any]: initialFit,
+            right: badge ? u(PAD + 46) : u(PAD),
+          }}
+        >
           {title}
         </h3>
         {subtitle && <div className="lsdt-sub">{subtitle}</div>}
@@ -1008,23 +1065,29 @@ export function DotTile(props: DotTileProps) {
             color: "var(--dt-ink)",
           }}
         >
-          {Array.from({ length: cols * 7 }, (_, i) => (
-            <circle
-              key={i}
-              ref={(el) => {
-                dotRefs.current[i] = el
-              }}
-              cx={(i % cols) + 0.5}
-              cy={Math.floor(i / cols) + 0.5}
-              fill="currentColor"
-            />
-          ))}
+          {Array.from({ length: cols * 7 }, (_, i) => {
+            const r = Math.floor(i / cols)
+            const c = i % cols
+            const isLit = initialOn.has(r * 64 + c)
+            return (
+              <circle
+                key={i}
+                ref={(el) => {
+                  dotRefs.current[i] = el
+                }}
+                cx={c + 0.5}
+                cy={r + 0.5}
+                r={isLit ? (DOT_R / PITCH).toFixed(4) : 0}
+                fill="currentColor"
+              />
+            )
+          })}
         </svg>
-        {icon != null && <IconSlot icon={icon} cy={96.8} />}
+        {icon != null && <IconSlot icon={icon} cy={104.5} />}
         {unitIcon != null ? (
-          <IconSlot icon={unitIcon} cy={124} />
+          <IconSlot icon={unitIcon} cy={130} />
         ) : unit ? (
-          <span className="lsdt-unit" aria-hidden data-wide={wideUnit ? "" : undefined} style={{ top: u(wideUnit ? 115.6 : 118.4) }}>
+          <span className="lsdt-unit" aria-hidden data-wide={wideUnit ? "" : undefined} style={{ top: u(wideUnit ? 122 : 124.5) }}>
             {unit}
           </span>
         ) : null}
@@ -1034,14 +1097,10 @@ export function DotTile(props: DotTileProps) {
               <Visual v={visual} refs={visRefs} gid={`${uid}g`} />
             </div>
             {visual.labels && (
-              <>
-                <span className="lsdt-lab" aria-hidden style={{ left: u(PAD - 1.0) }}>
-                  {visual.labels[0]}
-                </span>
-                <span className="lsdt-lab" aria-hidden style={{ right: u(PAD - 1.0) }}>
-                  {visual.labels[1]}
-                </span>
-              </>
+              <div className="lsdt-lab-row" aria-hidden>
+                <span className="lsdt-lab">{visual.labels[0]}</span>
+                <span className="lsdt-lab-cta">{visual.labels[1]}</span>
+              </div>
             )}
           </>
         )}

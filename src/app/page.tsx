@@ -53,7 +53,7 @@ export default function Home() {
         type: 'slider',
         value: 0.78,
         mode: 'glow',
-        labels: ['Kilas Balik', `[ ${t.watchRecap} ↗ ]`],
+        labels: ['Kilas Balik', '[ Tonton Rekap ↗ ]'],
       },
     },
     {
@@ -72,7 +72,7 @@ export default function Home() {
           0.35, 0.45, 0.6, 0.85, 1, 1, 0.75, 0.55, 0.8, 0.95, 1, 0.7, 0.5,
           0.65, 0.9, 0.95, 0.8, 0.6, 0.45, 0.7, 0.85, 0.6, 0.4,
         ],
-        labels: ['Photobooth', `[ ${t.tryFrame} ↗ ]`],
+        labels: ['Photobooth', '[ Coba Frame ↗ ]'],
       },
     },
     {
@@ -92,11 +92,10 @@ export default function Home() {
     {
       id: 'games',
       title: 'OSMIS Games',
-      subtitle: 'Kumpulan Mini Games Seru',
+      subtitle: 'Kumpulan Mini Games Seru & Interaktif Santri',
       value: '04',
       icon: <Gamepad2 size="100%" strokeWidth={2} />,
       unit: 'ARCADE',
-      jitter: 1,
       onClick: () => setIsGameModalOpen(true),
       visual: {
         type: 'blocks',

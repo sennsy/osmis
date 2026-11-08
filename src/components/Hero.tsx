@@ -1,7 +1,8 @@
 "use client";
 
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useLanguage } from './LanguageProvider';
+import { useTheme } from 'next-themes';
 import { organization } from '../data/organization';
 import { toArabicNumerals } from '../utils/arabicNumerals';
 import { HalftoneWordmarkFooter } from './ui/halftone-wordmark-footer';
@@ -16,6 +17,48 @@ interface DivisionItem {
 
 export default function Hero() {
   const { t, language } = useLanguage();
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  const [showAnimation, setShowAnimation] = useState(false);
+  const heroRef = useRef<HTMLElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted && resolvedTheme === 'dark';
+
+  useEffect(() => {
+    if (isDark) {
+      setShowAnimation(false);
+      return;
+    }
+
+    let timer: ReturnType<typeof setTimeout>;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setShowAnimation(true);
+          if (videoRef.current) {
+            videoRef.current.currentTime = 0;
+            videoRef.current.play().catch(() => {});
+          }
+          clearTimeout(timer);
+          timer = setTimeout(() => {
+            setShowAnimation(false);
+          }, 5000);
+        }
+      },
+      { threshold: 0.3 }
+    );
+
+    if (heroRef.current) observer.observe(heroRef.current);
+    return () => {
+      observer.disconnect();
+      clearTimeout(timer);
+    };
+  }, [isDark]);
 
   const scrollToSection = (sectionId: string) => {
     const target = document.getElementById(sectionId);
@@ -29,7 +72,33 @@ export default function Hero() {
   const divisions = organization.divisions as DivisionItem[];
 
   return (
-    <section id="hero" className={styles.hero}>
+    <section id="hero" ref={heroRef} className={styles.hero}>
+      {/* Background Watermark Layer (Original behavior: 5s video intro -> static logo watermark) */}
+      {!isDark && (
+        <video
+          ref={videoRef}
+          src="/video_utama.webm"
+          autoPlay
+          muted
+          playsInline
+          preload="auto"
+          aria-hidden="true"
+          className={styles.videoWatermark}
+          style={{ opacity: showAnimation ? 0.16 : 0 }}
+          onContextMenu={(e) => e.preventDefault()}
+          onError={() => setShowAnimation(false)}
+        />
+      )}
+      <img
+        src="/logo_utama.png"
+        alt="Watermark OSMIS"
+        aria-hidden="true"
+        className={styles.watermark}
+        draggable={false}
+        onContextMenu={(e) => e.preventDefault()}
+        style={{ opacity: isDark ? 0.08 : showAnimation ? 0 : 0.12 }}
+      />
+
       {/* Monumental Arch / Dome Gateway Portal */}
       <div className={styles.archWrapper}>
         <div className={styles.archDome} aria-hidden="true">
@@ -80,16 +149,6 @@ export default function Hero() {
               className={styles.archStrokeInner}
             />
           </svg>
-
-          {/* Watermark Logo Ma'had layered behind the OSMIS wordmark */}
-          <img
-            src="/logo_utama.png"
-            alt=""
-            aria-hidden="true"
-            className={styles.watermark}
-            draggable={false}
-            onContextMenu={(e) => e.preventDefault()}
-          />
         </div>
 
         {/* Centered Hero Identity Zone inside the Arch */}

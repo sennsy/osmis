@@ -16,6 +16,7 @@
 /* ───────────────────── ARCH / DOME GATEWAY PORTAL ───────────────────── */
 .archWrapper {
   position: relative;
+  z-index: 2;
   width: 100%;
   max-width: 660px;
   min-height: clamp(390px, 56vh, 540px);
@@ -78,22 +79,31 @@
   opacity: 0.45;
 }
 
-/* Watermark Logo Ma'had inside the Arch */
+/* Background Watermark Layer (Video Intro -> Static Logo) */
+.videoWatermark,
 .watermark {
   position: absolute;
-  top: 46%;
+  top: 43%;
   left: 50%;
   transform: translate(-50%, -50%);
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+  transition: opacity 0.85s ease-in-out;
+}
+
+.videoWatermark {
+  width: clamp(270px, 46vw, 460px);
+  height: auto;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+  filter: brightness(1.04) contrast(1.06);
+}
+
+.watermark {
   width: clamp(240px, 42vw, 410px);
   height: auto;
   object-fit: contain;
-  opacity: 0.11;
-  pointer-events: none;
-  user-select: none;
-}
-
-[data-theme='dark'] .watermark {
-  opacity: 0.09;
 }
 
 /* ───────────────────── CENTERED IDENTITY ZONE ───────────────────── */
