@@ -135,7 +135,7 @@ export default function FullGalleryPage() {
 
   return (
     <div className={styles.page}>
-      {/* Floating Back to Home Button */}
+      {/* Floating Back to Home Icon-Only Liquid Glass Button */}
       <div
         style={{
           position: 'fixed',
@@ -150,25 +150,28 @@ export default function FullGalleryPage() {
               ? window.history.back()
               : (window.location.href = '/')
           }
+          aria-label={t.backToHome || 'Kembali'}
+          title={t.backToHome || 'Kembali'}
           style={{
+            width: '46px',
+            height: '46px',
             display: 'inline-flex',
             alignItems: 'center',
-            gap: '8px',
-            background: 'var(--card-bg)',
-            backdropFilter: 'blur(14px)',
-            WebkitBackdropFilter: 'blur(14px)',
-            border: '1px solid var(--border-color)',
+            justifyContent: 'center',
+            background:
+              'linear-gradient(135deg, rgba(255, 255, 255, 0.28) 0%, rgba(255, 255, 255, 0.10) 55%, rgba(255, 255, 255, 0.18) 100%)',
+            backdropFilter: 'blur(22px) saturate(190%)',
+            WebkitBackdropFilter: 'blur(22px) saturate(190%)',
+            border: '1px solid rgba(255, 255, 255, 0.38)',
             color: 'var(--text-color)',
-            padding: '9px 16px',
-            borderRadius: '999px',
+            borderRadius: '9999px',
             cursor: 'pointer',
-            fontSize: '0.78rem',
-            fontWeight: 700,
-            boxShadow: '0 8px 24px rgba(0,0,0,0.12)',
+            boxShadow:
+              '0 10px 30px rgba(0, 0, 0, 0.18), inset 0 1.5px 1px rgba(255, 255, 255, 0.55), inset 0 -1px 1px rgba(255, 255, 255, 0.15)',
+            transition: 'transform 0.2s ease, box-shadow 0.2s ease',
           }}
         >
-          <ArrowLeft size={15} />
-          <span className="mono-font">{t.backToHome}</span>
+          <ArrowLeft size={20} strokeWidth={2.2} />
         </button>
       </div>
 
@@ -323,7 +326,7 @@ export default function FullGalleryPage() {
             </div>
           </header>
 
-          {/* Shared-Element Gallery */}
+          {/* Gallery Grid — clicking any image opens Fullscreen MorphGallery */}
           <Gallery>
             <GalleryGrid>
               {visibleIds.map((driveId, idx) => {
@@ -339,6 +342,7 @@ export default function FullGalleryPage() {
                     downloadUrl={getImageUrl(driveId)}
                     badge={numLabel}
                     alt={`OSMIS Gallery ${idx + 1}`}
+                    onImageClick={() => openLightbox(idx)}
                   />
                 );
               })}

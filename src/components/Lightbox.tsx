@@ -2,11 +2,9 @@
 
 import React, { useEffect, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Download, MousePointerClick } from 'lucide-react';
-import { useLanguage } from './LanguageProvider';
-import { toArabicNumerals } from '../utils/arabicNumerals';
+import { X, Download } from 'lucide-react';
 import { getImageUrl } from '../utils/driveImages';
-import PortalCarousel, { type PortalCarouselImage } from './ui/portal-carousel';
+import MorphGallery, { type MorphItem } from './ui/morph-gallery';
 
 interface LightboxProps {
   ids: string[];
@@ -23,7 +21,6 @@ export default function Lightbox({
   onClose,
   onNavigate,
 }: LightboxProps) {
-  const { language } = useLanguage();
   const activeIndexRef = useRef<number>(currentIndex);
   activeIndexRef.current = currentIndex;
 
@@ -43,60 +40,53 @@ export default function Lightbox({
     };
   }, [isOpen, onClose]);
 
-  const portalImages: PortalCarouselImage[] = useMemo(() => {
-    return ids.map((id, idx) => ({
-      src: getImageUrl(id),
-      alt: `Galeri OSMIS ${idx + 1}`,
-      title:
-        language === 'ar'
-          ? `صورة المعرض #${toArabicNumerals((idx + 1).toString().padStart(2, '0'))}`
-          : language === 'en'
-            ? `Gallery Archive #${(idx + 1).toString().padStart(2, '0')}`
-            : `Dokumentasi OSMIS #${(idx + 1).toString().padStart(2, '0')}`,
-    }));
-  }, [ids, language]);
+  const morphItems: MorphItem[] = useMemo(() => {
+    return ids.map((id, idx) => {
+      const fullUrl = getImageUrl(id);
+      return {
+        src: fullUrl,
+        thumb: fullUrl,
+        alt: `Galeri OSMIS ${idx + 1}`,
+      };
+    });
+  }, [ids]);
 
-  const handleDownload = (e: React.MouseEvent) => {
+  const handleDownload = async (e: React.MouseEvent) => {
     e.stopPropagation();
     const idx = activeIndexRef.current;
     const id = ids[idx];
     if (!id) return;
 
-    let downloadUrl = id;
-    if (!id.startsWith('http') && !id.startsWith('/')) {
-      downloadUrl = `https://drive.google.com/uc?export=download&id=${id}`;
+    const fullUrl = getImageUrl(id);
+    const proxyUrl = `/api/image-proxy?url=${encodeURIComponent(fullUrl)}`;
+
+    try {
+      const response = await fetch(proxyUrl);
+      if (!response.ok) throw new Error('Proxy download failed');
+      const blob = await response.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = `osmis-gallery-${idx + 1}.jpg`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(blobUrl);
+    } catch {
+      let downloadUrl = id;
+      if (!id.startsWith('http') && !id.startsWith('/')) {
+        downloadUrl = `https://drive.google.com/uc?export=download&id=${id}`;
+      }
+      const link = document.createElement('a');
+      link.href = downloadUrl;
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
+      link.download = `osmis-gallery-${idx + 1}.jpg`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     }
-
-    const link = document.createElement('a');
-    link.href = downloadUrl;
-    link.target = '_blank';
-    link.rel = 'noopener noreferrer';
-    link.download = `osmis-gallery-${idx + 1}.jpg`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
   };
-
-  const cursorLabel =
-    language === 'ar'
-      ? 'انقر للصورة التالية'
-      : language === 'en'
-        ? 'CLICK FOR NEXT PHOTO'
-        : 'KLIK LAYAR → FOTO BERIKUTNYA';
-
-  const guideTitle =
-    language === 'ar'
-      ? 'دليل التصفح:'
-      : language === 'en'
-        ? 'How to Navigate:'
-        : 'Cara Ganti Foto:';
-
-  const guideText =
-    language === 'ar'
-      ? 'انقر في أي مكان على الشاشة أو على مربع المعاينة للانتقال إلى الصورة التالية (بدون أزرار جانبية).'
-      : language === 'en'
-        ? 'Click anywhere on the screen or the floating preview box to expand the next photo.'
-        : 'Klik di mana saja pada layar atau kotak foto kecil untuk membuka foto berikutnya.';
 
   return (
     <AnimatePresence>
@@ -105,156 +95,122 @@ export default function Lightbox({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
+          transition={{ duration: 0.28 }}
           style={{
             position: 'fixed',
             inset: 0,
             zIndex: 10050,
-            background: '#000000',
+            background: '#060908',
             width: '100vw',
             height: '100vh',
           }}
         >
-          <PortalCarousel
-            images={portalImages}
-            initialIndex={currentIndex}
+          <style>{LIQUID_GLASS_ACTIONS_CSS}</style>
+
+          {/* Fullscreen MorphGallery */}
+          <MorphGallery
+            items={morphItems}
+            index={currentIndex}
             onIndexChange={(idx) => {
               activeIndexRef.current = idx;
               onNavigate(idx);
             }}
-            label={cursorLabel}
-            thumbWidth={200}
-            followSpeed={0.14}
-            duration={1.1}
-          >
-            {/* Top Bar: Beginner Guide on Left + Download & Keluar Buttons on Right */}
-            <div
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                padding: 'clamp(14px, 2.5vw, 28px)',
-                display: 'flex',
-                alignItems: 'flex-start',
-                justifyContent: 'space-between',
-                gap: '14px',
-                flexWrap: 'wrap',
-                background:
-                  'linear-gradient(to bottom, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.38) 68%, transparent 100%)',
-                pointerEvents: 'none',
-              }}
+            height="100vh"
+            duration={1350}
+            noiseScale={3.5}
+            edge={0.15}
+            drift={0.5}
+            loop={true}
+            arrows={true}
+            thumbnails={true}
+          />
+
+          {/* Top-Right Icon-Only Liquid Glass Buttons: Download & Close (X) */}
+          <div className="lg-lightbox-actions">
+            <button
+              type="button"
+              className="lg-icon-btn"
+              onClick={handleDownload}
+              aria-label="Unduh Foto"
+              title="Unduh Foto"
             >
-              {/* Beginner-friendly Navigation Notice */}
-              <div
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '10px',
-                  maxWidth: 'min(520px, calc(100vw - 32px))',
-                  background: 'rgba(6, 20, 14, 0.85)',
-                  backdropFilter: 'blur(12px)',
-                  WebkitBackdropFilter: 'blur(12px)',
-                  border: '1px solid rgba(52, 211, 153, 0.45)',
-                  padding: '10px 16px',
-                  borderRadius: '14px',
-                  color: '#ecfdf5',
-                  fontSize: '0.8rem',
-                  lineHeight: 1.4,
-                  boxShadow: '0 10px 28px rgba(0,0,0,0.5)',
-                }}
-              >
-                <MousePointerClick
-                  size={19}
-                  style={{ color: '#34d399', flexShrink: 0 }}
-                />
-                <span>
-                  <strong style={{ color: '#fde68a', marginRight: '5px' }}>
-                    {guideTitle}
-                  </strong>
-                  {guideText}
-                </span>
-              </div>
+              <Download size={20} strokeWidth={2.1} />
+            </button>
 
-              {/* Action Buttons: Download & Keluar (Close) */}
-              <div
-                data-portal-ignore="true"
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '10px',
-                  pointerEvents: 'auto',
-                  marginLeft: 'auto',
-                }}
-              >
-                <button
-                  type="button"
-                  data-portal-ignore="true"
-                  onClick={handleDownload}
-                  aria-label="Download"
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                    padding: '10px 18px',
-                    borderRadius: '999px',
-                    background: 'rgba(16, 185, 129, 0.94)',
-                    color: '#022c22',
-                    border: '1px solid rgba(167, 243, 208, 0.6)',
-                    fontWeight: 800,
-                    fontSize: '0.82rem',
-                    letterSpacing: '0.04em',
-                    cursor: 'pointer',
-                    boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
-                  }}
-                >
-                  <Download size={17} />
-                  <span>
-                    {language === 'ar'
-                      ? 'تحميل'
-                      : language === 'en'
-                        ? 'Download'
-                        : 'Unduh Foto'}
-                  </span>
-                </button>
-
-                <button
-                  type="button"
-                  data-portal-ignore="true"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onClose();
-                  }}
-                  aria-label="Keluar"
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                    padding: '10px 18px',
-                    borderRadius: '999px',
-                    background: 'rgba(239, 68, 68, 0.92)',
-                    color: '#ffffff',
-                    border: '1px solid rgba(252, 165, 165, 0.5)',
-                    fontWeight: 800,
-                    fontSize: '0.82rem',
-                    letterSpacing: '0.04em',
-                    cursor: 'pointer',
-                    boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
-                  }}
-                >
-                  <X size={17} />
-                  <span>
-                    {language === 'ar'
-                      ? 'خروج'
-                      : language === 'en'
-                        ? 'Exit'
-                        : 'Keluar'}
-                  </span>
-                </button>
-              </div>
-            </div>
-          </PortalCarousel>
+            <button
+              type="button"
+              className="lg-icon-btn"
+              onClick={(e) => {
+                e.stopPropagation();
+                onClose();
+              }}
+              aria-label="Tutup"
+              title="Tutup (Esc)"
+            >
+              <X size={21} strokeWidth={2.2} />
+            </button>
+          </div>
         </motion.div>
       )}
     </AnimatePresence>
   );
 }
+
+const LIQUID_GLASS_ACTIONS_CSS = `
+.lg-lightbox-actions {
+  position: fixed;
+  top: clamp(18px, 2.5vw, 28px);
+  right: clamp(18px, 2.5vw, 28px);
+  z-index: 10070;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.lg-icon-btn {
+  width: 46px;
+  height: 46px;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #ffffff;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.24) 0%,
+    rgba(255, 255, 255, 0.08) 55%,
+    rgba(255, 255, 255, 0.16) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.34);
+  backdrop-filter: blur(22px) saturate(190%);
+  -webkit-backdrop-filter: blur(22px) saturate(190%);
+  box-shadow:
+    0 10px 32px rgba(0, 0, 0, 0.38),
+    inset 0 1.5px 1px rgba(255, 255, 255, 0.45),
+    inset 0 -1px 1px rgba(255, 255, 255, 0.12);
+  transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1),
+              background 0.22s ease,
+              border-color 0.22s ease,
+              box-shadow 0.22s ease;
+}
+
+.lg-icon-btn:hover {
+  transform: scale(1.07) translateY(-1px);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.34) 0%,
+    rgba(255, 255, 255, 0.14) 55%,
+    rgba(255, 255, 255, 0.24) 100%
+  );
+  border-color: rgba(255, 255, 255, 0.55);
+  box-shadow:
+    0 14px 36px rgba(0, 0, 0, 0.46),
+    inset 0 1.5px 1.5px rgba(255, 255, 255, 0.6),
+    inset 0 -1px 1px rgba(255, 255, 255, 0.2);
+}
+
+.lg-icon-btn:active {
+  transform: scale(0.95);
+}
+`;

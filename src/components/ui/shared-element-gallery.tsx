@@ -244,20 +244,19 @@ function GalleryModal() {
             />
           </motion.div>
 
-          {/* Top Action Bar (Download + Close) */}
+          {/* Top Action Bar (Icon-Only Liquid Glass Download + Close) */}
           <div className="seg-modal-actions">
             <motion.button
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ delay: 0.08, duration: 0.2 }}
-              className="seg-download-btn"
+              className="seg-liquid-icon-btn"
               onClick={handleDownload}
               aria-label="Unduh Foto"
               title="Unduh Foto"
             >
-              <Download size={16} />
-              <span>Unduh Foto</span>
+              <Download size={20} strokeWidth={2.1} />
             </motion.button>
 
             <motion.button
@@ -265,12 +264,12 @@ function GalleryModal() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ delay: 0.1, duration: 0.2 }}
-              className="seg-close-btn"
+              className="seg-liquid-icon-btn"
               onClick={() => setSelectedImage(null)}
               aria-label="Close gallery"
               title="Tutup (Esc)"
             >
-              <X size={20} />
+              <X size={21} strokeWidth={2.2} />
             </motion.button>
           </div>
 
@@ -413,49 +412,47 @@ const SHARED_GALLERY_CSS = `
   z-index: 50;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
 }
 
-.seg-download-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 16px;
-  border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  background: rgba(16, 185, 129, 0.88);
-  color: #ffffff;
-  font-size: 0.82rem;
-  font-weight: 600;
-  cursor: pointer;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-  transition: background 0.2s ease, transform 0.2s ease;
-}
-.seg-download-btn:hover {
-  background: rgba(5, 150, 105, 0.96);
-  transform: translateY(-1px);
-}
-
-.seg-close-btn {
-  width: 42px;
-  height: 42px;
-  border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  background: rgba(255, 255, 255, 0.12);
+.seg-liquid-icon-btn {
+  width: 46px;
+  height: 46px;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.34);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.24) 0%,
+    rgba(255, 255, 255, 0.08) 55%,
+    rgba(255, 255, 255, 0.16) 100%
+  );
   color: #ffffff;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  transition: background 0.2s ease, transform 0.2s ease;
+  backdrop-filter: blur(22px) saturate(190%);
+  -webkit-backdrop-filter: blur(22px) saturate(190%);
+  box-shadow:
+    0 10px 32px rgba(0, 0, 0, 0.38),
+    inset 0 1.5px 1px rgba(255, 255, 255, 0.45),
+    inset 0 -1px 1px rgba(255, 255, 255, 0.12);
+  transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1),
+              background 0.22s ease,
+              border-color 0.22s ease;
 }
-.seg-close-btn:hover {
-  background: rgba(239, 68, 68, 0.85);
-  transform: scale(1.04);
+.seg-liquid-icon-btn:hover {
+  transform: scale(1.07) translateY(-1px);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.34) 0%,
+    rgba(255, 255, 255, 0.14) 55%,
+    rgba(255, 255, 255, 0.24) 100%
+  );
+  border-color: rgba(255, 255, 255, 0.55);
+}
+.seg-liquid-icon-btn:active {
+  transform: scale(0.95);
 }
 
 .seg-drag-hint {
