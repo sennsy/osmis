@@ -5,8 +5,11 @@ import { usePathname } from 'next/navigation';
 import { useOsmisData } from '../lib/storage';
 import styles from './MatraChat.module.css';
 import MatrixEasterEgg from './MatrixEasterEgg';
-import MorphOrb from './ui/ai-thiking-orb-and-input';
+import MorphOrb, { ThinkingOrb } from './ui/ai-thiking-orb-and-input';
 import { GlowCard } from './ui/spotlight-card';
+import { PromptInputBox } from './ui/ai-prompt-box';
+import { motion, AnimatePresence } from 'framer-motion';
+import { X, MessageSquare } from 'lucide-react';
 
 interface Message {
   role: 'user' | 'assistant' | 'system';
@@ -17,6 +20,8 @@ export default function MatraChat() {
   const pathname = usePathname();
   const { data: activeOsmisData } = useOsmisData();
   const [isOpen, setIsOpen] = useState(false);
+  const [showPromptBox, setShowPromptBox] = useState(false);
+  const [isPromptLoading, setIsPromptLoading] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     { role: 'assistant', content: 'Halo! Saya Matra AI. Ada yang bisa saya bantu terkait OSMIS?' }
   ]);
@@ -35,15 +40,32 @@ export default function MatraChat() {
     }
   }, [messages, isOpen]);
 
+  // Navbar trigger listener: Opens the centered prompt box, or closes the active chat drawer
   useEffect(() => {
     const handleNavbarTrigger = () => {
-      setIsOpen((prev) => !prev);
+      if (isOpen) {
+        setIsOpen(false);
+        setShowPromptBox(false);
+      } else {
+        setShowPromptBox((prev) => !prev);
+      }
     };
     window.addEventListener('osmis:toggle-matra-ai', handleNavbarTrigger);
     return () => {
       window.removeEventListener('osmis:toggle-matra-ai', handleNavbarTrigger);
     };
-  }, []);
+  }, [isOpen]);
+
+  // Close prompt box with Escape key
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && showPromptBox) {
+        setShowPromptBox(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [showPromptBox]);
 
   if (pathname?.startsWith('/backroom')) return null;
 
@@ -51,6 +73,7 @@ export default function MatraChat() {
   const checkAskaaCode = (rawText: string): boolean => {
     if (rawText.trim().toLowerCase() === 'askaa') {
       setIsOpen(false);
+      setShowPromptBox(false);
       setShowMatrix(true);
       return true;
     }
@@ -90,32 +113,130 @@ export default function MatraChat() {
     }
   };
 
+  // When a query is sent from the centered PromptInputBox:
+  // Smoothly exit prompt box -> Open left panel -> Stream response
+  const handlePromptSend = async (message: string, _files?: File[]) => {
+    const trimmed = message.trim();
+    if (!trimmed) return;
+
+    if (checkAskaaCode(trimmed)) return;
+
+    // Animate exit to the left, then open the left chat drawer
+    setShowPromptBox(false);
+    setTimeout(() => {
+      setIsOpen(true);
+    }, 160);
+
+    setIsPromptLoading(true);
+    try {
+      await askMatraBackend(trimmed);
+    } finally {
+      setIsPromptLoading(false);
+    }
+  };
+
   return (
     <>
       {showMatrix && <MatrixEasterEgg onClose={() => setShowMatrix(false)} />}
-      
-      {/* Spotlight Glow Icon Button */}
-      <div className={styles.floatingBtnWrap}>
-        <GlowCard
-          customSize
-          glowColor="green"
-          className={styles.floatingGlowCard}
-          onClick={toggleChat}
-          title="Tanya Matra AI"
-          style={{
-            '--radius': '20',
-            '--border': '2.5',
-            '--size': '140',
-            '--bg-spot-opacity': '0.32',
-          } as React.CSSProperties}
-        >
-          <div className={styles.floatingBtnContent}>
-            <img src="/matra_logo.jpg" alt="Matra AI" className={styles.logo} />
-          </div>
-        </GlowCard>
-      </div>
 
-      {/* Spotlight Glow Chat Popup Panel */}
+      {/* Centered AI Prompt Box Modal (triggered first on Matra logo click) */}
+      <AnimatePresence>
+        {showPromptBox && (
+          <motion.div
+            key="prompt-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.22 }}
+            className={styles.promptModalOverlay}
+            onClick={(e) => {
+              if (e.target === e.currentTarget) {
+                setShowPromptBox(false);
+              }
+            }}
+          >
+            <motion.div
+              key="prompt-card"
+              initial={{ opacity: 0, scale: 0.9, y: 24 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.86, x: -160, transition: { duration: 0.28, ease: [0.16, 1, 0.3, 1] } }}
+              transition={{ type: "spring", damping: 25, stiffness: 320 }}
+              className={styles.promptModalCard}
+            >
+              {/* Header Above Prompt Box */}
+              <div className={styles.promptModalHeader}>
+                <div className={styles.promptModalBrand}>
+                  <div className={styles.promptModalLogoWrap}>
+                    <img
+                      src="/matra_logo.jpg"
+                      alt="Matra AI"
+                      className={styles.promptModalLogo}
+                    />
+                    <span className={styles.promptModalStatusDot} />
+                  </div>
+                  <div className={styles.promptModalTitleRow}>
+                    <span className={styles.promptModalTitle}>Matra AI</span>
+                    <span className={styles.promptModalBadge}>
+                      Assistant
+                    </span>
+                  </div>
+                </div>
+
+                <div className={styles.promptModalActions}>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowPromptBox(false);
+                      setIsOpen(true);
+                    }}
+                    className={styles.promptHistoryBtn}
+                    title="Buka panel chat penuh"
+                  >
+                    <MessageSquare size={14} color="#00ff88" />
+                    <span>Buka Riwayat Chat</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setShowPromptBox(false)}
+                    className={styles.promptCloseBtn}
+                    aria-label="Tutup"
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
+              </div>
+
+              {/* The PromptInputBox Component */}
+              <PromptInputBox
+                placeholder="Tanyakan apapun seputar OSMIS, divisi, program, atau ma'had..."
+                isLoading={isPromptLoading}
+                onSend={handlePromptSend}
+              />
+
+              {/* Quick suggestion chips */}
+              <div className={styles.promptSuggestions}>
+                <span className={styles.promptSuggestionLabel}>Coba tanya:</span>
+                {[
+                  "Siapa ketua OSMIS saat ini?",
+                  "Program kerja divisi keamanan?",
+                  "Sejarah berdirinya OSMIS",
+                ].map((chip, idx) => (
+                  <button
+                    key={idx}
+                    type="button"
+                    onClick={() => handlePromptSend(chip)}
+                    className={styles.promptChip}
+                  >
+                    {chip}
+                  </button>
+                ))}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Spotlight Glow Chat Popup Panel (Slides in from the left) */}
       <div className={`${styles.chatPanelWrap} ${isOpen ? styles.open : ''}`}>
         <GlowCard
           customSize
@@ -173,6 +294,15 @@ export default function MatraChat() {
                     </div>
                   </div>
                 ))}
+                {isPromptLoading && (
+                  <div className={`${styles.message} ${styles.assistant}`} style={{ width: '100%', maxWidth: '100%' }}>
+                    <div className={styles.messageRole}>Matra AI</div>
+                    <ThinkingOrb
+                      size={150}
+                      labels={["Memikirkan...", "Mencari Data OSMIS...", "Menganalisis Konteks...", "Menyusun Jawaban..."]}
+                    />
+                  </div>
+                )}
                 <div ref={messagesEndRef} />
               </div>
 
@@ -196,5 +326,3 @@ export default function MatraChat() {
     </>
   );
 }
-
-

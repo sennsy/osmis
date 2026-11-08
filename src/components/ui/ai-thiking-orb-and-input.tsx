@@ -1503,3 +1503,6 @@ export default function MorphOrb(props: MorphOrbProps) {
     </div>
   );
 }
+
+
+export { default as ThinkingOrb } from "./thinking-orb";

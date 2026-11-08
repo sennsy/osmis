@@ -306,29 +306,45 @@
 
 /* ============ FEATURES SECTION ============ */
 .featuresSection {
-  padding: 6rem 2rem;
-  background-color: var(--card-bg);
-  border-top: 1px solid var(--border-color);
-  border-bottom: 1px solid var(--border-color);
+  padding: 8rem 0;
+  position: relative;
+  background-color: transparent;
   text-align: center;
+}
+
+.featuresContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  position: relative;
 }
 
 .featuresHeader {
   margin-bottom: 4rem;
+  text-align: center;
 }
 
 .featuresHeader h2 {
-  font-size: 2.5rem;
-  color: var(--text-color);
-  margin-bottom: 1rem;
+  font-size: clamp(2.25rem, 5vw, 3.2rem);
+  color: var(--osmis-green);
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
 }
 
 .featuresHeader p {
   font-family: var(--font-mono);
-  font-size: 0.9rem;
-  letter-spacing: 0.1em;
+  font-size: 0.85rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
   opacity: 0.7;
   max-width: 600px;
+  margin: 0 auto;
+}
+
+.featuresGridWrapper {
+  position: relative;
+  width: 100%;
+  max-width: 1040px;
   margin: 0 auto;
 }
 

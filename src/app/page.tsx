@@ -12,14 +12,6 @@ import Gallery from '../components/Gallery';
 import { Camera, Sparkles, Gamepad2, Languages, Film } from 'lucide-react';
 import { DotTiles, type DotTileData } from '../components/ui/dot-tiles';
 
-const FEATURE_BLOOMS = [
-  "radial-gradient(32% 28% at 58% 16%, rgba(24, 92, 65, 0.55), rgba(24, 92, 65, 0) 72%)",
-  "radial-gradient(28% 26% at 20% 35%, rgba(212, 175, 55, 0.48), rgba(212, 175, 55, 0) 72%)",
-  "radial-gradient(34% 32% at 84% 48%, rgba(48, 150, 120, 0.45), rgba(48, 150, 120, 0) 72%)",
-  "radial-gradient(40% 30% at 50% 65%, rgba(196, 164, 58, 0.42), rgba(196, 164, 58, 0) 74%)",
-  "radial-gradient(28% 24% at 32% 86%, rgba(231, 76, 60, 0.35), rgba(231, 76, 60, 0) 72%)",
-].join(",");
-
 export default function Home() {
   const { t } = useLanguage();
   const [isGameModalOpen, setIsGameModalOpen] = useState(false);
@@ -173,45 +165,23 @@ export default function Home() {
 
       <Gallery />
 
-      {/* Features Section — DotTiles (No Images) */}
-      <section
-        id="features"
-        className={styles.featuresSection}
-        style={{ position: 'relative', overflow: 'hidden' }}
-      >
-        <div
-          aria-hidden="true"
-          style={{
-            position: 'absolute',
-            inset: '-10%',
-            filter: 'blur(48px) saturate(1.15)',
-            background: FEATURE_BLOOMS,
-            pointerEvents: 'none',
-            zIndex: 0,
-          }}
-        />
+      {/* Features Section — DotTiles */} 
+      <section id="features" className={styles.featuresSection}>
+        <div className={styles.featuresContainer}>
+          <div className={styles.featuresHeader}>
+            <h2 className="display-font">{t.featuresTitle}</h2>
+            <p className="mono-font">{t.featuresSubtitle}</p>
+          </div>
 
-        <div className={styles.featuresHeader} style={{ position: 'relative', zIndex: 1 }}>
-          <h2 className="display-font">{t.featuresTitle}</h2>
-          <p className="mono-font">{t.featuresSubtitle}</p>
-        </div>
-
-        <div
-          style={{
-            position: 'relative',
-            zIndex: 1,
-            width: '100%',
-            maxWidth: '980px',
-            margin: '0 auto',
-          }}
-        >
-          <DotTiles
-            tiles={featureTiles}
-            columns={tileColumns}
-            tileColor="#0b1f16"
-            dotColor="#f7f4eb"
-            stagger={95}
-          />
+          <div className={styles.featuresGridWrapper}>
+            <DotTiles
+              tiles={featureTiles}
+              columns={tileColumns}
+              tileColor="#0b1f16"
+              dotColor="#f7f4eb"
+              stagger={95}
+            />
+          </div>
         </div>
       </section>
 
