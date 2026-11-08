@@ -3,1146 +3,819 @@ import * as React from "react";
 
 /**
  * MatchboxCarousel: each item is a matchbox lying on a table, its title printed on
- * the sleeve. The open box's tray slides out to show the picture or text inside.
- * Moving on closes the tray, the boxes shuffle along, and the next tray opens.
+ * the sleeve. The open box's tray slides out to show the picture inside. Moving on
+ * closes the tray, the boxes shuffle along, and the next tray opens.
  *
  * Wide containers lay the boxes sideways and the tray slides right; narrow ones
  * stand them up so the tray slides towards you and the picture stays large.
  * Buttons, arrow keys, swipe and clicking a neighbouring box all move it. Autoplay
  * waits while hovered, focused, off screen or in a hidden tab. Reduced motion:
- * no sliding, the content simply changes. Pure CSS 3D: no canvas, no libraries.
+ * no sliding, the picture simply changes. Pure CSS 3D: no canvas, no WebGL.
  */
-
-export interface MatchboxItem {
-  /** Optional image URL inside the tray (used for 2026-2027). */
+export type MatchboxItem = {
+  /** Picture inside the tray. */
   src?: string;
-  /** Title printed on the sleeve and announced to screen readers. */
-  title: string;
-  /** Optional short line under the title on the sleeve. */
-  detail?: string;
-  /** Accessible description of the image; falls back to `title`. */
-  alt?: string;
-  /** Optional sleeve paper colour (CSS colour). Cycles a warm palette by default. */
-  color?: string;
-  /** Optional sleeve ink colour (CSS colour). */
-  ink?: string;
-  /** Optional custom content inside the tray when no image is shown (e.g. text structure). */
+  /** Optional rich content inside the tray (e.g. structure text or photo + structure). */
   content?: React.ReactNode;
-}
+  alt?: string;
+  /** Printed large on the sleeve. */
+  title: string;
+  /** Small line under the title, such as a year or discipline. */
+  detail?: string;
+  /** Where the open picture links to. */
+  href?: string;
+  /** Sleeve colour. Text on it turns dark or light to stay readable. */
+  tint?: string;
+};
 
-export interface MatchboxCarouselProps {
+export type MatchboxCarouselProps = Omit<React.HTMLAttributes<HTMLDivElement>, "children"> & {
   items: MatchboxItem[];
-  /** Starting index when uncontrolled. @default 0 */
+  /** Camera angle over the table. */
+  view?: "flat" | "angle" | "low";
+  /** Table colour behind the boxes. */
+  table?: string;
+  /** Colour of the counter and buttons. */
+  ink?: string;
+  autoplay?: boolean;
+  /** Seconds between moves when autoplaying. */
+  interval?: number;
   defaultIndex?: number;
-  /** Controlled active index. */
-  index?: number;
-  /** Called whenever the active item changes. */
   onIndexChange?: (index: number) => void;
-  /** Autoplay interval in ms; `0` or `false` disables autoplay. @default 0 */
-  autoplay?: number | false;
-  /** Accessible label for the carousel region. @default "Matchbox carousel" */
-  ariaLabel?: string;
-  className?: string;
-  style?: React.CSSProperties;
-}
+  showControls?: boolean;
+  /** Accessible name for the carousel. */
+  label?: string;
+};
 
-const PALETTE: Array<{ paper: string; ink: string; accent: string; stamp: string }> = [
-  { paper: "#18392b", ink: "#f6f2e8", accent: "#d4af37", stamp: "ARSIP • MASA BAKTI" },
-  { paper: "#f4efe2", ink: "#18392b", accent: "#b8893a", stamp: "ARSIP • MASA BAKTI" },
-];
+const TINTS = ["#163828", "#C8553D", "#2F4B7C", "#D49B35", "#5A7D5A", "#1F1D1B", "#3E8A95"];
+const CLOSE = 380;
+const SHIFT = 560;
+const OPEN = 620;
+const EASE = "cubic-bezier(.32,.08,.18,1)";
 
-const CLOSE_MS = 380;
-const MOVE_MS = 460;
-
-type Phase = "open" | "closing" | "moving";
-
-function mod(n: number, m: number) {
-  return ((n % m) + m) % m;
-}
-
-function signedOffset(i: number, active: number, total: number) {
-  const raw = i - active;
-  if (total <= 2) return raw;
-  const half = total / 2;
-  if (raw > half) return raw - total;
-  if (raw < -half) return raw + total;
-  return raw;
-}
+const clamp = (v: number, a: number, b: number) => Math.min(b, Math.max(a, v));
+const mod = (n: number, m: number) => ((n % m) + m) % m;
+/** Signed place of item i relative to the open box. */
+const offset = (i: number, at: number, N: number, half: number) => {
+  const k = mod(i - at, N);
+  return k > N - 1 - half ? k - N : k;
+};
+const useIso = typeof window === "undefined" ? React.useEffect : React.useLayoutEffect;
 
 export function MatchboxCarousel({
   items,
+  view = "angle",
+  table = "#E8E2D5",
+  ink = "#1C2820",
+  autoplay = false,
+  interval = 5,
   defaultIndex = 0,
-  index: controlledIndex,
   onIndexChange,
-  autoplay = 0,
-  ariaLabel = "Perjalanan OSMIS Matchbox Carousel",
+  showControls = true,
+  label = "Projects",
   className,
   style,
+  onKeyDown,
+  ...rest
 }: MatchboxCarouselProps) {
-  const total = items.length;
-  const isControlled = controlledIndex !== undefined;
-  const [uncontrolled, setUncontrolled] = React.useState(() =>
-    total > 0 ? mod(defaultIndex, total) : 0
-  );
-  const target = isControlled ? mod(controlledIndex!, Math.max(1, total)) : uncontrolled;
+  const N = items.length;
+  const root = React.useRef<HTMLDivElement>(null);
+  const scope = "mbx" + React.useId().replace(/[^a-zA-Z0-9]/g, "");
+  const [box, setBox] = React.useState({ w: 1360, h: 820 });
+  const [calm, setCalm] = React.useState(false);
+  const [index, setIndex] = React.useState(() => mod(defaultIndex, Math.max(1, N)));
+  const [seq, setSeq] = React.useState(0);
+  // What the table shows lags the index: the tray closes, the row moves, then the new tray opens.
+  const [pos, setPos] = React.useState({ shown: index, from: index });
+  const [open, setOpen] = React.useState(true);
+  const [moving, setMoving] = React.useState(false);
+  const [held, setHeld] = React.useState(false);
+  const [seen, setSeen] = React.useState(false);
+  const [hidden, setHidden] = React.useState(false);
+  const busyUntil = React.useRef(0);
+  const indexRef = React.useRef(index);
+  const timers = React.useRef<ReturnType<typeof setTimeout>[]>([]);
+  React.useEffect(() => () => timers.current.forEach(clearTimeout), []);
 
-  const [visual, setVisual] = React.useState(target);
-  const [phase, setPhase] = React.useState<Phase>("open");
-  const [reducedMotion, setReducedMotion] = React.useState(false);
-  const [narrow, setNarrow] = React.useState(false);
-  const [hovered, setHovered] = React.useState(false);
-  const [focused, setFocused] = React.useState(false);
-  const [inView, setInView] = React.useState(true);
-  const [docVisible, setDocVisible] = React.useState(true);
-
-  const rootRef = React.useRef<HTMLDivElement | null>(null);
-  const timersRef = React.useRef<number[]>([]);
-  const dragRef = React.useRef<{ id: number; x: number; y: number; moved: boolean } | null>(null);
-
-  const clearTimers = React.useCallback(() => {
-    timersRef.current.forEach((t) => window.clearTimeout(t));
-    timersRef.current = [];
-  }, []);
-
-  React.useEffect(() => clearTimers, [clearTimers]);
-
-  React.useEffect(() => {
-    if (typeof window === "undefined" || !window.matchMedia) return;
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const sync = () => setReducedMotion(mq.matches);
-    sync();
-    mq.addEventListener?.("change", sync);
-    return () => mq.removeEventListener?.("change", sync);
-  }, []);
-
-  React.useEffect(() => {
-    const el = rootRef.current;
-    if (!el || typeof ResizeObserver === "undefined") return;
-    const ro = new ResizeObserver((entries) => {
-      const w = entries[0]?.contentRect.width ?? el.clientWidth;
-      setNarrow(w < 680);
-    });
+  useIso(() => {
+    const el = root.current;
+    if (!el) return;
+    const read = () => {
+      const w = el.offsetWidth;
+      const h = el.offsetHeight;
+      if (w > 0 && h > 0) setBox((b) => (b.w === w && b.h === h ? b : { w, h }));
+    };
+    read();
+    if (typeof ResizeObserver === "undefined") return;
+    const ro = new ResizeObserver(read);
     ro.observe(el);
     return () => ro.disconnect();
   }, []);
 
   React.useEffect(() => {
-    const el = rootRef.current;
-    if (!el || typeof IntersectionObserver === "undefined") return;
-    const io = new IntersectionObserver(
-      (entries) => setInView(entries[0]?.isIntersecting ?? true),
-      { threshold: 0.2 }
-    );
-    io.observe(el);
-    return () => io.disconnect();
+    const q = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const read = () => setCalm(q.matches);
+    read();
+    q.addEventListener("change", read);
+    return () => q.removeEventListener("change", read);
   }, []);
 
-  React.useEffect(() => {
-    if (typeof document === "undefined") return;
-    const onVis = () => setDocVisible(document.visibilityState === "visible");
-    onVis();
-    document.addEventListener("visibilitychange", onVis);
-    return () => document.removeEventListener("visibilitychange", onVis);
-  }, []);
-
-  const goTo = React.useCallback(
-    (nextRaw: number) => {
-      if (total <= 1) return;
-      const next = mod(nextRaw, total);
-      if (!isControlled) setUncontrolled(next);
-      onIndexChange?.(next);
+  const go = React.useCallback(
+    (dir: number, to?: number) => {
+      if (N < 2) return;
+      const busy = calm ? 300 : CLOSE + SHIFT + OPEN * 0.6;
+      // A press during a move waits for it instead of cutting it short.
+      const wait = Math.max(0, busyUntil.current - Date.now());
+      const run = () => {
+        const n = mod(to ?? indexRef.current + dir, N);
+        if (n === indexRef.current) return;
+        busyUntil.current = Date.now() + busy;
+        indexRef.current = n;
+        setIndex(n);
+        setSeq((s) => s + 1);
+        onIndexChange?.(n);
+        const land = () => setPos((p) => ({ shown: n, from: p.shown }));
+        if (calm) return land();
+        setOpen(false);
+        timers.current.push(
+          setTimeout(() => {
+            setMoving(true);
+            land();
+          }, CLOSE),
+          setTimeout(() => {
+            setMoving(false);
+            setOpen(true);
+          }, CLOSE + SHIFT)
+        );
+      };
+      if (wait > 0 && wait < busy) setTimeout(run, wait);
+      else run();
     },
-    [total, isControlled, onIndexChange]
+    [N, calm, onIndexChange]
   );
-
-  // Two-step choreography: close the open tray, shuffle boxes, slide the new tray out.
-  React.useEffect(() => {
-    if (total === 0) return;
-    if (target === visual && phase === "open") return;
-
-    clearTimers();
-
-    if (reducedMotion) {
-      setVisual(target);
-      setPhase("open");
-      return;
-    }
-
-    if (phase === "open") {
-      setPhase("closing");
-      const t1 = window.setTimeout(() => {
-        setVisual(target);
-        setPhase("moving");
-        const t2 = window.setTimeout(() => {
-          setPhase("open");
-        }, MOVE_MS);
-        timersRef.current.push(t2);
-      }, CLOSE_MS);
-      timersRef.current.push(t1);
-    } else {
-      setVisual(target);
-      setPhase("moving");
-      const t = window.setTimeout(() => setPhase("open"), MOVE_MS);
-      timersRef.current.push(t);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [target, reducedMotion, total]);
-
-  const busy = phase !== "open";
+  const next = React.useCallback(() => go(1), [go]);
+  const prev = React.useCallback(() => go(-1), [go]);
 
   React.useEffect(() => {
-    if (!autoplay || autoplay <= 0 || total <= 1) return;
-    if (hovered || focused || !inView || !docVisible || busy) return;
-    const id = window.setTimeout(() => {
-      goTo(target + 1);
-    }, autoplay);
-    return () => window.clearTimeout(id);
-  }, [autoplay, total, hovered, focused, inView, docVisible, busy, target, goTo]);
+    if (!autoplay) return;
+    const el = root.current;
+    let io: IntersectionObserver | undefined;
+    if (el && typeof IntersectionObserver !== "undefined") {
+      io = new IntersectionObserver(([e]) => setSeen(e.isIntersecting && e.intersectionRatio > 0.35), {
+        threshold: [0, 0.35, 0.6],
+      });
+      io.observe(el);
+    } else setSeen(true);
+    const vis = () => setHidden(document.visibilityState === "hidden");
+    vis();
+    document.addEventListener("visibilitychange", vis);
+    return () => {
+      io?.disconnect();
+      document.removeEventListener("visibilitychange", vis);
+    };
+  }, [autoplay]);
 
-  const onKeyDown = (e: React.KeyboardEvent) => {
-    if (total <= 1) return;
-    if (e.key === "ArrowRight" || e.key === "ArrowDown") {
-      e.preventDefault();
-      goTo(target + 1);
-    } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
-      e.preventDefault();
-      goTo(target - 1);
-    } else if (e.key === "Home") {
-      e.preventDefault();
-      goTo(0);
-    } else if (e.key === "End") {
-      e.preventDefault();
-      goTo(total - 1);
-    }
-  };
+  React.useEffect(() => {
+    if (!autoplay || held || !seen || hidden || N < 2) return;
+    const t = setTimeout(next, clamp(interval, 1.5, 20) * 1000);
+    return () => clearTimeout(t);
+  }, [autoplay, interval, held, seen, hidden, seq, N, next]);
 
-  const onPointerDown = (e: React.PointerEvent) => {
-    if (e.pointerType === "mouse" && e.button !== 0) return;
-    const targetEl = e.target as HTMLElement | null;
-    if (targetEl?.closest(".mbx-tray-scroll")) return;
-    dragRef.current = { id: e.pointerId, x: e.clientX, y: e.clientY, moved: false };
-  };
+  const g = layout(box.w, box.h, view);
+  const drag = useDrag({ onNext: next, onPrev: prev, reach: g.P, enabled: N > 1 });
+  const half = Math.floor((N - 1) / 2);
+  const current = items[index];
 
-  const onPointerMove = (e: React.PointerEvent) => {
-    const d = dragRef.current;
-    if (!d || d.id !== e.pointerId) return;
-    if (Math.hypot(e.clientX - d.x, e.clientY - d.y) > 8) d.moved = true;
-  };
-
-  const onPointerUp = (e: React.PointerEvent) => {
-    const d = dragRef.current;
-    dragRef.current = null;
-    if (!d || d.id !== e.pointerId) return;
-    const dx = e.clientX - d.x;
-    const dy = e.clientY - d.y;
-    const primary = narrow ? dx : dy;
-    const secondary = narrow ? dy : dx;
-    const delta = Math.abs(primary) >= Math.abs(secondary) ? primary : secondary;
-    if (Math.abs(delta) > 42) {
-      goTo(target + (delta < 0 ? 1 : -1));
-    }
-  };
-
-  const scope = React.useId().replace(/:/g, "");
-
-  if (total === 0) return null;
-
-  const activeItem = items[visual] ?? items[0];
+  const boxes = items.map((it, i) => {
+    const k = offset(i, pos.shown, N, half);
+    // Boxes wrapping round from one end to the other jump instead of sliding across.
+    const jump = Math.abs(offset(i, pos.from, N, half) - k) > 1;
+    const active = k === 0;
+    const amount = open ? 1 : 0;
+    // Sideways boxes push their right-hand neighbours along to make room for the tray.
+    const x = g.x0 + k * g.P + (!g.up && k > 0 ? g.slide * amount : 0) + drag.offset;
+    const far = Math.abs(k) > 2;
+    const tint = it.tint || TINTS[i % TINTS.length];
+    const out = active ? g.slide * amount : 0;
+    const speed = active && !open ? CLOSE : OPEN;
+    return (
+      <div
+        key={i}
+        role="group"
+        aria-roledescription="slide"
+        aria-label={`${i + 1} of ${N}: ${it.title}`}
+        aria-hidden={!active}
+        onClick={() => !active && !drag.wasDrag() && go(k > 0 ? 1 : -1, i)}
+        className={active ? "mbx-box mbx-on" : "mbx-box"}
+        style={{
+          position: "absolute",
+          left: 0,
+          top: 0,
+          width: g.bw,
+          height: g.bd,
+          transformStyle: "preserve-3d",
+          transform: `translate3d(${x - g.bw / 2}px, ${g.y0 - g.bd / 2}px, 0)`,
+          transition: jump || drag.offset ? "none" : `transform ${moving ? SHIFT : OPEN}ms ${EASE}, opacity .4s`,
+          opacity: far ? 0 : 1,
+          cursor: active ? "default" : "pointer",
+          pointerEvents: far ? "none" : "auto",
+        }}
+      >
+        <div
+          style={{
+            position: "absolute",
+            left: -g.bw * 0.05,
+            top: -g.bd * 0.02,
+            width: g.bw * 1.1 + (g.up ? 0 : out),
+            height: g.bd * 1.08 + (g.up ? out : 0),
+            borderRadius: g.m * 0.04,
+            background: "rgba(48,32,18,.30)",
+            filter: `blur(${g.m * 0.035}px)`,
+            transform: `translateZ(0.5px) translate(${g.bw * 0.02}px, ${g.bd * 0.05}px)`,
+            transition: `width ${speed}ms ${EASE}, height ${speed}ms ${EASE}`,
+          }}
+        />
+        <Tray g={g} it={it} out={out} speed={speed} active={active} wasDrag={drag.wasDrag} />
+        <Sleeve g={g} it={it} n={i + 1} tint={tint} />
+      </div>
+    );
+  });
 
   return (
     <div
-      ref={rootRef}
+      ref={root}
       role="region"
       aria-roledescription="carousel"
-      aria-label={ariaLabel}
+      aria-label={label}
       tabIndex={0}
-      onKeyDown={onKeyDown}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      onFocus={() => setFocused(true)}
-      onBlur={(e) => {
-        if (!e.currentTarget.contains(e.relatedTarget as Node | null)) {
-          setFocused(false);
+      className={[scope, className].filter(Boolean).join(" ")}
+      onKeyDown={(e) => {
+        onKeyDown?.(e);
+        if (e.key === "ArrowLeft") {
+          e.preventDefault();
+          prev();
+        } else if (e.key === "ArrowRight") {
+          e.preventDefault();
+          next();
         }
       }}
-      onPointerDown={onPointerDown}
-      onPointerMove={onPointerMove}
-      onPointerUp={onPointerUp}
-      onPointerCancel={() => {
-        dragRef.current = null;
+      onPointerEnter={(e) => e.pointerType === "mouse" && setHeld(true)}
+      onPointerLeave={(e) => e.pointerType === "mouse" && setHeld(false)}
+      onFocus={() => setHeld(true)}
+      onBlur={(e) => !e.currentTarget.contains(e.relatedTarget as Node) && setHeld(false)}
+      {...drag.bind}
+      {...rest}
+      style={{
+        position: "relative",
+        width: "100%",
+        aspectRatio: box.w < 640 ? "3 / 4.6" : "16 / 9.2",
+        minHeight: box.w < 640 ? 640 : 760,
+        overflow: "hidden",
+        background: table,
+        borderRadius: 24,
+        border: "1px solid rgba(22, 56, 40, 0.16)",
+        boxShadow: "0 20px 60px rgba(20, 32, 24, 0.10)",
+        touchAction: "pan-y",
+        userSelect: "none",
+        fontFamily: "inherit",
+        ...style,
       }}
-      className={["mbx-root", `mbx-${scope}`, narrow ? "is-narrow" : "is-wide", className]
-        .filter(Boolean)
-        .join(" ")}
-      style={style}
     >
       <style>{css(scope)}</style>
-
-      <div className="mbx-sr" aria-live="polite" aria-atomic="true">
-        {`Periode ${visual + 1} dari ${total}: ${activeItem.title}`}
-      </div>
-
-      {/* Tabletop surface */}
-      <div className="mbx-stage">
-        <div className="mbx-scene">
-          {items.map((it, i) => {
-            const off = signedOffset(i, visual, total);
-            const abs = Math.abs(off);
-            const isActive = off === 0;
-            const isOpen = isActive && phase === "open";
-            // Show active box + immediate neighbours (-1 and +1) so nothing overflows top/bottom
-            const visible = abs <= 1;
-            const pal = PALETTE[i % PALETTE.length];
-            const paper = it.color ?? pal.paper;
-            const ink = it.ink ?? pal.ink;
-
-            return (
-              <div
-                key={i}
-                aria-hidden={!isActive}
-                onClick={() => {
-                  if (dragRef.current?.moved) return;
-                  if (!isActive) goTo(i);
-                }}
-                className={[
-                  "mbx-slot",
-                  isActive ? "is-active" : "is-idle",
-                  isOpen ? "is-open" : "",
-                  !visible ? "is-hidden" : "",
-                ]
-                  .filter(Boolean)
-                  .join(" ")}
-                style={
-                  {
-                    "--off": off,
-                    "--abs": abs,
-                    "--paper": paper,
-                    "--ink": ink,
-                    "--accent": pal.accent,
-                    zIndex: isOpen ? 30 : 20 - abs * 6,
-                  } as React.CSSProperties
-                }
-              >
-                <div className="mbx-box">
-                  {/* Soft contact shadow on the table */}
-                  <div className="mbx-shadow" />
-
-                  {/* Inner cardboard tray that slides out of the sleeve */}
-                  <div className="mbx-tray">
-                    <Tray it={it} />
-                  </div>
-
-                  {/* Outer printed sleeve (5 visible faces + dark mouth cavity) */}
-                  <div className="mbx-sleeve">
-                    <div className="mbx-cavity" />
-                    <div className="mbx-face mbx-top">
-                      <SleeveFace
-                        index={i}
-                        title={it.title}
-                        detail={it.detail}
-                        stamp={pal.stamp}
-                        narrow={narrow}
-                        is2627={it.title.includes("2026")}
-                      />
-                    </div>
-                    <div className="mbx-face mbx-left" />
-                    <div className="mbx-face mbx-right" />
-                    <div className="mbx-face mbx-back" />
-                  </div>
-                </div>
-              </div>
-            );
-          })}
+      <div
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          inset: 0,
+          pointerEvents: "none",
+          background:
+            "radial-gradient(90% 70% at 50% 42%, rgba(255,255,255,.32), transparent 70%), radial-gradient(140% 100% at 50% 50%, transparent 55%, rgba(60,40,20,.14))",
+        }}
+      />
+      <div style={{ position: "absolute", inset: 0, perspective: g.persp, perspectiveOrigin: "50% 20%" }}>
+        <div
+          style={{
+            position: "absolute",
+            left: 0,
+            top: g.cy,
+            width: 0,
+            height: 0,
+            transformStyle: "preserve-3d",
+            transform: `rotateX(${g.tilt}deg)`,
+          }}
+        >
+          {boxes}
         </div>
       </div>
-
-      {/* Caption & tactile controls floating cleanly in a glass pill bar */}
-      <div className="mbx-bar">
-        <div className="mbx-meta">
-          <span className="mbx-index">
-            {String(visual + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
+      {showControls && N > 1 ? (
+        <div
+          style={{
+            position: "absolute",
+            zIndex: 5,
+            left: "50%",
+            bottom: Math.max(14, box.h * 0.035),
+            transform: "translateX(-50%)",
+            display: "flex",
+            alignItems: "center",
+            gap: 12,
+            color: ink,
+            background: "rgba(250, 246, 238, 0.86)",
+            backdropFilter: "blur(8px)",
+            padding: "8px 16px",
+            borderRadius: 999,
+            border: "1px solid rgba(28, 40, 32, 0.14)",
+            boxShadow: "0 6px 20px rgba(0,0,0,0.08)",
+          }}
+        >
+          <span
+            aria-hidden="true"
+            style={{
+              fontSize: 13,
+              fontWeight: 700,
+              fontVariantNumeric: "tabular-nums",
+              letterSpacing: "0.04em",
+              marginRight: 4,
+              whiteSpace: "nowrap",
+            }}
+          >
+            {String(index + 1).padStart(2, "0")}{" "}
+            <span style={{ opacity: 0.45 }}>/ {String(N).padStart(2, "0")}</span>
           </span>
-          <span className="mbx-sep" aria-hidden="true">
-            ·
-          </span>
-          <span className="mbx-title">{activeItem.title}</span>
-          {activeItem.detail && <span className="mbx-detail">— {activeItem.detail}</span>}
-        </div>
-
-        <div className="mbx-controls">
-          <div className="mbx-dots" role="tablist" aria-label="Pilih periode OSMIS">
-            {items.map((it, i) => {
-              const current = i === target;
-              return (
-                <button
-                  key={i}
-                  type="button"
-                  role="tab"
-                  aria-selected={current}
-                  aria-label={`${i + 1}: ${it.title}`}
-                  onClick={() => goTo(i)}
-                  className={["mbx-dot", current ? "is-current" : ""].filter(Boolean).join(" ")}
-                />
-              );
-            })}
-          </div>
-
-          <div className="mbx-arrows">
-            <button
-              type="button"
-              aria-label="Periode sebelumnya"
-              disabled={total <= 1}
-              onClick={() => goTo(target - 1)}
-              className="mbx-btn"
+          {current ? (
+            <span
+              style={{
+                fontSize: 13,
+                fontWeight: 700,
+                color: "#163828",
+                paddingRight: 6,
+                borderRight: "1px solid rgba(28, 40, 32, 0.18)",
+                whiteSpace: "nowrap",
+              }}
             >
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                <path
-                  d="M10 3.5L5.5 8L10 12.5"
-                  stroke="currentColor"
-                  strokeWidth="1.6"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </button>
-            <button
-              type="button"
-              aria-label="Periode selanjutnya"
-              disabled={total <= 1}
-              onClick={() => goTo(target + 1)}
-              className="mbx-btn"
-            >
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                <path
-                  d="M6 3.5L10.5 8L6 12.5"
-                  stroke="currentColor"
-                  strokeWidth="1.6"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </button>
-          </div>
+              {current.title}
+            </span>
+          ) : null}
+          <Arrow dir={-1} onClick={prev} />
+          <Arrow dir={1} onClick={next} />
         </div>
+      ) : null}
+      <div className="mbx-sr" aria-live="polite">
+        {current ? `${current.title}, ${index + 1} of ${N}` : ""}
       </div>
     </div>
   );
 }
 
-function SleeveFace({
-  index,
-  title,
-  detail,
-  stamp,
-  narrow,
-  is2627,
+export default MatchboxCarousel;
+
+function Arrow({ dir, onClick }: { dir: -1 | 1; onClick: () => void }) {
+  return (
+    <button type="button" className="mbx-btn" aria-label={dir < 0 ? "Previous" : "Next"} onClick={onClick}>
+      <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" style={{ transform: dir < 0 ? "none" : "scaleX(-1)" }}>
+        <path d="M10 3 5 8l5 5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    </button>
+  );
+}
+
+type G = ReturnType<typeof layout>;
+
+/** Box size and spacing from the container — scaled up so the open tray is large and easy to read. */
+function layout(W: number, H: number, view: string) {
+  const tilt = view === "flat" ? 0 : view === "low" ? 48 : 24;
+  const up = W / H < 0.88;
+  const fore = Math.cos((tilt * Math.PI) / 180);
+  let bw: number, bd: number;
+  if (up) {
+    bd = Math.max(120, Math.min((H * 0.78) / (1.92 * fore), (W * 0.88) / 0.72));
+    bw = bd * 0.74;
+  } else {
+    bw = Math.max(140, Math.min(W * 0.45, (H * 0.76) / 0.72, (W * 0.92) / 1.92));
+    bd = bw * 0.72;
+  }
+  const m = Math.max(bw, bd);
+  const slide = m * 0.95;
+  return {
+    up,
+    bw,
+    bd,
+    m,
+    t: m * 0.17,
+    slide,
+    P: bw * 1.14,
+    x0: up ? W / 2 : W / 2 - slide / 2,
+    y0: up ? -slide / 2 : 0,
+    cy: H * (up ? 0.43 : 0.44),
+    tilt,
+    persp: Math.max(W, H) * 2.2,
+    e: Math.max(1.5, m * 0.012),
+  };
+}
+
+function Sleeve({ g, it, n, tint }: { g: G; it: MatchboxItem; n: number; tint: string }) {
+  const ink = readable(tint);
+  const short = Math.min(g.bw, g.bd);
+  const pad = short * 0.09;
+  const small = Math.max(10, short * 0.056);
+  const title = Math.min(g.bd * 0.22, short * 0.27, (g.bw * 1.38) / Math.max(4, it.title.length + 1));
+  const side = shade(tint, -0.18);
+  return (
+    <>
+      {g.up ? (
+        // Standing up, the end facing us is the open mouth of the sleeve.
+        <div
+          style={{
+            position: "absolute",
+            left: 0,
+            top: g.bd,
+            width: g.bw,
+            height: g.t,
+            transformOrigin: "50% 0",
+            transform: `translateZ(${g.t}px) rotateX(-90deg)`,
+            boxSizing: "border-box",
+            border: `${g.e}px solid ${side}`,
+            borderBottom: "none",
+            backfaceVisibility: "hidden",
+          }}
+        />
+      ) : (
+        // Lying sideways, the long side facing us carries the striker.
+        <div
+          style={{
+            position: "absolute",
+            left: 0,
+            top: g.bd,
+            width: g.bw,
+            height: g.t,
+            transformOrigin: "50% 0",
+            transform: `translateZ(${g.t}px) rotateX(-90deg)`,
+            background: side,
+            backfaceVisibility: "hidden",
+          }}
+        >
+          <div
+            style={{
+              position: "absolute",
+              left: g.bw * 0.03,
+              right: g.bw * 0.03,
+              top: "22%",
+              bottom: "22%",
+              borderRadius: 2,
+              background: "#5A4232",
+              backgroundImage:
+                "radial-gradient(rgba(255,255,255,.18) 0.6px, transparent 0.8px), radial-gradient(rgba(0,0,0,.35) 0.6px, transparent 0.8px)",
+              backgroundSize: "3px 3px, 4px 4px",
+              backgroundPosition: "0 0, 1px 2px",
+            }}
+          />
+        </div>
+      )}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          transform: `translateZ(${g.t}px)`,
+          background: `linear-gradient(160deg, ${shade(tint, 0.08)}, ${tint} 45%, ${shade(tint, -0.08)})`,
+          color: ink,
+          borderRadius: g.m * 0.006,
+          padding: pad,
+          boxSizing: "border-box",
+          overflow: "hidden",
+          boxShadow: `inset 0 ${Math.max(1, g.m * 0.003)}px 0 rgba(255,255,255,.18)`,
+        }}
+      >
+        <div
+          style={{
+            position: "absolute",
+            inset: pad * 0.55,
+            border: `1px solid ${ink}`,
+            opacity: 0.38,
+            borderRadius: g.m * 0.004,
+          }}
+        />
+        <div
+          style={{
+            position: "relative",
+            height: "100%",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            gap: 4,
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              fontSize: small * 0.92,
+              letterSpacing: "0.14em",
+              textTransform: "uppercase",
+              opacity: 0.85,
+            }}
+          >
+            <span>ARSIP · NO. {String(n).padStart(2, "0")}</span>
+            <span
+              style={{
+                width: short * 0.15,
+                height: short * 0.15,
+                borderRadius: "50%",
+                border: `1px solid ${ink}`,
+                display: "grid",
+                placeItems: "center",
+                fontSize: short * 0.068,
+                letterSpacing: 0,
+                opacity: 0.9,
+              }}
+            >
+              {String(n)}
+            </span>
+          </div>
+          <div
+            style={{
+              fontSize: title,
+              lineHeight: 1.05,
+              letterSpacing: "-0.02em",
+              fontWeight: 700,
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {it.title}
+          </div>
+          <div
+            style={{
+              fontSize: small,
+              letterSpacing: "0.04em",
+              fontWeight: 600,
+              opacity: 0.88,
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+            }}
+          >
+            {it.detail}
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
+
+function Tray({
+  g,
+  it,
+  out,
+  speed,
+  active,
+  wasDrag,
 }: {
-  index: number;
-  title: string;
-  detail?: string;
-  stamp: string;
-  narrow: boolean;
-  is2627?: boolean;
+  g: G;
+  it: MatchboxItem;
+  out: number;
+  speed: number;
+  active: boolean;
+  wasDrag: () => boolean;
 }) {
-  const num = String(index + 1).padStart(2, "0");
+  const e = g.e;
+  const tw = g.bw - e * 2;
+  const td = g.bd - e * 2;
+  // Low walls keep the bottom of the picture in view.
+  const th = g.t * 0.62;
+  const paper = "#F2EDE5";
+  const inner = "#E3DACB";
   return (
-    <div className="mbx-print">
-      <div className="mbx-border">
-        <div className="mbx-corner tl" />
-        <div className="mbx-corner tr" />
-        <div className="mbx-corner bl" />
-        <div className="mbx-corner br" />
-
-        <div className="mbx-row-top">
-          <span className="mbx-stamp">{stamp}</span>
-          <span className="mbx-no">№ {num}</span>
-        </div>
-
-        <div className="mbx-center">
-          <div className="mbx-emblem" aria-hidden="true">
-            <svg viewBox="0 0 48 26" width="44" height="24">
-              <ellipse
-                cx="24"
-                cy="13"
-                rx="22"
-                ry="11"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.2"
-              />
-              <ellipse
-                cx="24"
-                cy="13"
-                rx="18"
-                ry="8"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="0.7"
-                strokeDasharray="2 2"
-              />
-              <line
-                x1="14"
-                y1="13"
-                x2="31"
-                y2="13"
-                stroke="currentColor"
-                strokeWidth="1.6"
-                strokeLinecap="round"
-              />
-              <ellipse cx="33" cy="13" rx="3.2" ry="2.3" fill="var(--accent)" />
-            </svg>
+    <div
+      className="mbx-tray"
+      style={{
+        position: "absolute",
+        left: e,
+        top: e,
+        width: tw,
+        height: td,
+        transformStyle: "preserve-3d",
+        transform: g.up ? `translate3d(0, ${out}px, 0)` : `translate3d(${out}px, 0, 0)`,
+        transition: `transform ${speed}ms ${EASE}`,
+      }}
+    >
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          transform: `translateZ(${e}px)`,
+          background: inner,
+          overflow: "hidden",
+        }}
+      >
+        {it.content ? (
+          <div
+            className="mbx-tray-scroll"
+            onWheel={(ev) => ev.stopPropagation()}
+            style={{
+              position: "absolute",
+              inset: e * 0.6,
+              width: `calc(100% - ${e * 1.2}px)`,
+              height: `calc(100% - ${e * 1.2}px)`,
+              boxSizing: "border-box",
+              background: "#FAF6EE",
+              color: "#1E1B18",
+              overflowY: "auto",
+              overflowX: "hidden",
+            }}
+          >
+            {it.content}
           </div>
-          <div className="mbx-sleeve-title">{title}</div>
-          {detail && <div className="mbx-sleeve-detail">{detail}</div>}
-        </div>
-
-        <div className="mbx-row-bot">
-          <span>{is2627 ? "FOTO PENGURUS AKTIF" : "SUSUNAN PENGURUS"}</span>
-          <span className="mbx-pull" aria-hidden="true">
-            {narrow ? "▼" : "▶"}
-          </span>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function Tray({ it }: { it: MatchboxItem }) {
-  return (
-    <div className="mbx-tray-body">
-      <div className="mbx-tray-well">
-        {it.src ? (
+        ) : it.src ? (
           <>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={it.src}
               alt={it.alt ?? it.title}
               draggable={false}
-              loading="eager"
+              decoding="async"
               referrerPolicy="no-referrer"
-              className="mbx-img"
+              style={{
+                position: "absolute",
+                inset: e * 0.6,
+                width: `calc(100% - ${e * 1.2}px)`,
+                height: `calc(100% - ${e * 1.2}px)`,
+                objectFit: "cover",
+              }}
             />
-            <div className="mbx-img-gloss" />
+            <div
+              style={{
+                position: "absolute",
+                inset: 0,
+                pointerEvents: "none",
+                background:
+                  "linear-gradient(rgba(40,26,14,.28), transparent 16%), linear-gradient(90deg, rgba(40,26,14,.16), transparent 5%, transparent 95%, rgba(40,26,14,.16))",
+              }}
+            />
           </>
-        ) : (
-          <div className="mbx-tray-scroll">{it.content}</div>
-        )}
-        <div className="mbx-well- lip-t" />
-        <div className="mbx-well- lip-b" />
-        <div className="mbx-well- lip-l" />
-        <div className="mbx-well- lip-r" />
+        ) : null}
+        {active && it.href ? (
+          <a
+            className="mbx-link"
+            href={it.href}
+            aria-label={[it.title, it.detail].filter(Boolean).join(", ")}
+            onClick={(ev) => wasDrag() && ev.preventDefault()}
+            draggable={false}
+          />
+        ) : null}
       </div>
-      <div className="mbx-tray-wall wt" />
-      <div className="mbx-tray-wall wb" />
-      <div className="mbx-tray-wall wl" />
-      <div className="mbx-tray-wall wr">
-        <span className="mbx-notch" />
-      </div>
+      <div
+        style={{
+          position: "absolute",
+          left: 0,
+          top: 0,
+          width: tw,
+          height: th,
+          transformOrigin: "50% 0",
+          transform: "rotateX(-90deg)",
+          background: `linear-gradient(${shade(inner, -0.12)}, ${inner})`,
+          backfaceVisibility: "hidden",
+        }}
+      />
+      <div
+        style={{
+          position: "absolute",
+          left: tw,
+          top: 0,
+          width: th,
+          height: td,
+          transformOrigin: "0 50%",
+          transform: "rotateY(-90deg)",
+          background: `linear-gradient(90deg, ${shade(inner, -0.22)}, ${shade(inner, -0.1)})`,
+          backfaceVisibility: "hidden",
+        }}
+      />
+      <div
+        style={{
+          position: "absolute",
+          left: 0,
+          top: 0,
+          width: th,
+          height: td,
+          transformOrigin: "0 50%",
+          transform: `translateZ(${th}px) rotateY(90deg)`,
+          background: `linear-gradient(90deg, ${shade(inner, -0.1)}, ${shade(inner, -0.22)})`,
+          backfaceVisibility: "hidden",
+        }}
+      />
+      <div
+        style={{
+          position: "absolute",
+          left: 0,
+          top: td,
+          width: tw,
+          height: th,
+          transformOrigin: "50% 0",
+          transform: `translateZ(${th}px) rotateX(-90deg)`,
+          background: `linear-gradient(${paper}, ${shade(paper, -0.06)})`,
+          backfaceVisibility: "hidden",
+        }}
+      />
+      <div
+        style={{
+          position: "absolute",
+          left: 0,
+          top: td - e,
+          width: tw,
+          height: e,
+          transform: `translateZ(${th}px)`,
+          background: shade(paper, 0.4),
+        }}
+      />
     </div>
   );
 }
 
-function css(scope: string) {
-  const s = `.mbx-${scope}`;
-  return `
-${s}.mbx-root {
-  --bw: 292px;
-  --bh: 194px;
-  --bd: 28px;
-  --slide: 92%;
-  position: relative;
-  width: 100%;
-  box-sizing: border-box;
-  padding: 24px 28px 22px;
-  border-radius: 28px;
-  color: var(--text-color, #18392b);
-  /* Seamlessly blends with the site's warm ivory/cream background */
-  background:
-    radial-gradient(65% 58% at 50% 46%, rgba(24, 57, 43, 0.055) 0%, rgba(212, 175, 55, 0.04) 48%, transparent 100%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.55) 0%, rgba(244, 239, 226, 0.35) 100%);
-  border: 1px solid rgba(24, 57, 43, 0.11);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.8),
-    0 20px 50px -28px rgba(24, 57, 43, 0.12);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  font-family: inherit;
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: pan-y;
-  outline: none;
-  overflow: hidden;
-}
-${s}.mbx-root:focus-visible {
-  border-color: rgba(24, 57, 43, 0.35);
-}
-${s} .mbx-sr {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
-
-${s} .mbx-stage {
-  position: relative;
-  width: 100%;
-  height: 460px;
-  perspective: 1400px;
-  perspective-origin: 50% 44%;
-}
-${s}.is-narrow .mbx-stage {
-  --bw: 204px;
-  --bh: 274px;
-  --bd: 26px;
-  height: 540px;
-  perspective: 1200px;
+/** A drag that follows the finger; past a third of `reach`, or a flick, it moves on. */
+function useDrag(o: { onNext: () => void; onPrev: () => void; reach: number; enabled: boolean }) {
+  const [d, setD] = React.useState(0);
+  const start = React.useRef<{ x: number; y: number; t: number; id: number; locked: boolean | null } | null>(null);
+  const moved = React.useRef(false);
+  const end = (e: React.PointerEvent) => {
+    const s = start.current;
+    start.current = null;
+    if (!s || s.id !== e.pointerId) return;
+    const delta = e.clientX - s.x;
+    const v = delta / Math.max(1, Date.now() - s.t);
+    setD(0);
+    if (!s.locked) return;
+    if (delta < -o.reach / 3 || v < -0.5) o.onNext();
+    else if (delta > o.reach / 3 || v > 0.5) o.onPrev();
+  };
+  return {
+    offset: d,
+    wasDrag: () => moved.current,
+    bind: !o.enabled
+      ? {}
+      : {
+          onPointerDown: (e: React.PointerEvent) => {
+            if (e.button !== 0) return;
+            const targetEl = e.target as HTMLElement | null;
+            if (targetEl?.closest(".mbx-tray-scroll")) return;
+            start.current = { x: e.clientX, y: e.clientY, t: Date.now(), id: e.pointerId, locked: null };
+            moved.current = false;
+          },
+          onPointerMove: (e: React.PointerEvent) => {
+            const s = start.current;
+            if (!s || s.id !== e.pointerId) return;
+            const dx = e.clientX - s.x;
+            const dy = e.clientY - s.y;
+            if (s.locked === null && Math.hypot(dx, dy) > 6) {
+              // Only take over sideways drags, so the page still scrolls.
+              s.locked = Math.abs(dx) > Math.abs(dy);
+              if (s.locked) {
+                moved.current = true;
+                try {
+                  (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+                } catch {}
+              } else start.current = null;
+            }
+            if (s.locked) setD(dx);
+          },
+          onPointerUp: end,
+          onPointerCancel: end,
+        },
+  };
 }
 
-${s} .mbx-scene {
-  position: absolute;
-  inset: 0;
-  transform-style: preserve-3d;
-  transform: rotateX(24deg) rotateZ(-7deg);
-  transition: transform 520ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-${s}.is-narrow .mbx-scene {
-  transform: rotateX(20deg) rotateZ(-3deg);
+/** Near-black or near-white, whichever reads on the sleeve. */
+function readable(hex: string) {
+  const m = /^#?([0-9a-f]{6})$/i.exec(hex);
+  if (!m) return "#FBF8F3";
+  const n = parseInt(m[1], 16);
+  const l = (0.2126 * ((n >> 16) & 255) + 0.7152 * ((n >> 8) & 255) + 0.0722 * (n & 255)) / 255;
+  return l > 0.6 ? "#1E1B18" : "#FBF8F3";
 }
 
-${s} .mbx-slot {
-  position: absolute;
-  top: 47%;
-  left: 50%;
-  width: var(--bw);
-  height: var(--bh);
-  margin-left: calc(var(--bw) / -2);
-  margin-top: calc(var(--bh) / -2);
-  transform-style: preserve-3d;
-  transition:
-    transform 460ms cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 360ms ease;
-  will-change: transform, opacity;
-  /* Wide: well-spaced so neighboring boxes never collide with bottom bar or cut off titles */
-  transform:
-    translate3d(
-      calc(-142px + var(--off) * 44px),
-      calc(var(--off) * 124px),
-      calc(var(--abs) * -28px)
-    )
-    rotateZ(calc(var(--off) * -4deg))
-    scale(calc(1 - var(--abs) * 0.08));
-}
-${s}.is-narrow .mbx-slot {
-  top: 46%;
-  transform:
-    translate3d(
-      calc(var(--off) * 144px),
-      calc(-118px + var(--abs) * 18px),
-      calc(var(--abs) * -26px)
-    )
-    rotateZ(calc(var(--off) * 4deg))
-    scale(calc(1 - var(--abs) * 0.09));
+/** Lighten (positive) or darken (negative) a hex colour. */
+function shade(hex: string, k: number) {
+  const m = /^#?([0-9a-f]{6})$/i.exec(hex);
+  if (!m) return hex;
+  const n = parseInt(m[1], 16);
+  const c = [(n >> 16) & 255, (n >> 8) & 255, n & 255].map((v) =>
+    Math.round(clamp(k >= 0 ? v + (255 - v) * k : v * (1 + k), 0, 255))
+  );
+  return `rgb(${c[0]}, ${c[1]}, ${c[2]})`;
 }
 
-${s} .mbx-slot.is-idle {
-  cursor: pointer;
-  opacity: 0.86;
-}
-${s} .mbx-slot.is-idle:hover {
-  opacity: 0.96;
-  filter: brightness(1.03);
-}
-/* Hide bottom row text on background boxes so it is never half-covered by the front box */
-${s} .mbx-slot.is-idle .mbx-row-bot {
-  opacity: 0;
-}
-${s} .mbx-slot.is-hidden {
-  opacity: 0;
-  pointer-events: none;
-}
-
-${s} .mbx-box {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  transform-style: preserve-3d;
-}
-
-/* Soft drop shadow on the table beneath the box and its open tray */
-${s} .mbx-shadow {
-  position: absolute;
-  inset: 6px;
-  border-radius: 8px;
-  background: rgba(18, 34, 25, 0.24);
-  filter: blur(16px);
-  transform: translate3d(10px, 16px, -2px);
-  transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1), width 420ms cubic-bezier(0.22, 1, 0.36, 1), height 420ms cubic-bezier(0.22, 1, 0.36, 1);
-  pointer-events: none;
-}
-${s}.is-wide .mbx-slot.is-open .mbx-shadow {
-  width: calc(100% + var(--bw) * 0.88);
-}
-${s}.is-narrow .mbx-slot.is-open .mbx-shadow {
-  height: calc(100% + var(--bh) * 0.88);
-}
-
-/* ---------- Inner cardboard tray ---------- */
-${s} .mbx-tray {
-  position: absolute;
-  top: 5px;
-  left: 5px;
-  width: calc(var(--bw) - 10px);
-  height: calc(var(--bh) - 10px);
-  transform-style: preserve-3d;
-  transform: translate3d(0, 0, 2px);
-  transition: transform 380ms cubic-bezier(0.4, 0, 0.2, 1);
-  will-change: transform;
-}
-${s} .mbx-slot.is-open .mbx-tray {
-  transition: transform 520ms cubic-bezier(0.18, 1.12, 0.32, 1);
-}
-${s}.is-wide .mbx-slot.is-open .mbx-tray {
-  transform: translate3d(var(--slide), 0, 2px);
-}
-${s}.is-narrow .mbx-slot.is-open .mbx-tray {
-  transform: translate3d(0, var(--slide), 2px);
-}
-
-${s} .mbx-tray-body {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  transform-style: preserve-3d;
-  background: #d5c19d;
-  border-radius: 3px;
-}
-
-${s} .mbx-tray-well {
-  position: absolute;
-  inset: 7px;
-  background: #18261e;
-  border-radius: 2px;
-  overflow: hidden;
-  transform: translateZ(calc(var(--bd) - 7px));
-  box-shadow:
-    inset 0 2px 6px rgba(0, 0, 0, 0.45),
-    0 0 0 1px rgba(90, 62, 32, 0.28);
-}
-${s} .mbx-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center 72%;
-  display: block;
-  pointer-events: none;
-  transform: scale(1.015);
-  transition: transform 650ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-${s} .mbx-slot.is-open .mbx-img {
-  transform: scale(1);
-}
-${s} .mbx-img-gloss {
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(125deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0) 38%),
-    radial-gradient(100% 100% at 50% 50%, transparent 65%, rgba(15, 10, 5, 0.22) 100%);
-  pointer-events: none;
-}
-
-/* Custom scrollable text inside tray for non-26-27 periods */
-${s} .mbx-tray-scroll {
-  width: 100%;
-  height: 100%;
-  box-sizing: border-box;
-  padding: 10px 12px;
-  background: linear-gradient(180deg, #faf7f0 0%, #f1eadb 100%);
-  color: #18392b;
-  overflow-y: auto;
-  overflow-x: hidden;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(24, 57, 43, 0.35) transparent;
-  user-select: text;
-  -webkit-user-select: text;
-  touch-action: pan-y;
-}
-${s} .mbx-tray-scroll::-webkit-scrollbar {
-  width: 4px;
-}
-${s} .mbx-tray-scroll::-webkit-scrollbar-thumb {
-  background: rgba(24, 57, 43, 0.35);
-  border-radius: 4px;
-}
-
-/* Inner cardboard rim shadows around the well */
-${s} .mbx-well- {
-  position: absolute;
-  pointer-events: none;
-}
-${s} .lip-t { top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(to bottom, rgba(40,24,10,0.35), transparent); }
-${s} .lip-b { bottom: 0; left: 0; right: 0; height: 4px; background: linear-gradient(to top, rgba(255,235,200,0.22), transparent); }
-${s} .lip-l { top: 0; bottom: 0; left: 0; width: 4px; background: linear-gradient(to right, rgba(40,24,10,0.32), transparent); }
-${s} .lip-r { top: 0; bottom: 0; right: 0; width: 4px; background: linear-gradient(to left, rgba(40,24,10,0.25), transparent); }
-
-/* Raw kraft cardboard walls of the tray */
-${s} .mbx-tray-wall {
-  position: absolute;
-  background: linear-gradient(to bottom, #dfd0b2, #c4ae86);
-  box-shadow: inset 0 0 0 1px rgba(95, 66, 32, 0.22);
-}
-${s} .mbx-tray-wall.wt {
-  top: 0; left: 0;
-  width: 100%;
-  height: calc(var(--bd) - 4px);
-  transform-origin: top center;
-  transform: rotateX(-90deg);
-  background: linear-gradient(to bottom, #d1be9a, #b8a078);
-}
-${s} .mbx-tray-wall.wb {
-  bottom: 0; left: 0;
-  width: 100%;
-  height: calc(var(--bd) - 4px);
-  transform-origin: bottom center;
-  transform: rotateX(90deg);
-  background: linear-gradient(to top, #e7d8bb, #ccb78f);
-}
-${s} .mbx-tray-wall.wl {
-  top: 0; left: 0;
-  width: calc(var(--bd) - 4px);
-  height: 100%;
-  transform-origin: center left;
-  transform: rotateY(90deg);
-  background: #c2ab82;
-}
-${s} .mbx-tray-wall.wr {
-  top: 0; right: 0;
-  width: calc(var(--bd) - 4px);
-  height: 100%;
-  transform-origin: center right;
-  transform: rotateY(-90deg);
-  background: linear-gradient(to left, #e5d5b5, #c9b289);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-${s} .mbx-notch {
-  width: 8px;
-  height: 22px;
-  border-radius: 999px;
-  background: rgba(60, 40, 18, 0.32);
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
-}
-
-/* ---------- Outer printed sleeve ---------- */
-${s} .mbx-sleeve {
-  position: absolute;
-  inset: 0;
-  transform-style: preserve-3d;
-  pointer-events: none;
-}
-
-/* Dark mouth where the tray emerges so the sleeve reads as hollow */
-${s} .mbx-cavity {
-  position: absolute;
-  inset: 3px;
-  background: #101914;
-  border-radius: 3px;
-  transform: translateZ(1px);
-  box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.85);
-}
-
-${s} .mbx-face {
-  position: absolute;
-  backface-visibility: hidden;
-}
-
-${s} .mbx-top {
-  inset: 0;
-  border-radius: 5px;
-  background:
-    radial-gradient(120% 100% at 20% 10%, rgba(255, 255, 255, 0.12), transparent 60%),
-    linear-gradient(160deg, rgba(255, 255, 255, 0.05), rgba(0, 0, 0, 0.1)),
-    var(--paper);
-  color: var(--ink);
-  transform: translateZ(var(--bd));
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.35),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.2),
-    0 2px 6px rgba(0, 0, 0, 0.15);
-  overflow: hidden;
-}
-
-/* Side walls with the rough phosphorus striker strip */
-${s} .mbx-left {
-  top: 0; left: 0;
-  width: 100%;
-  height: var(--bd);
-  transform-origin: top center;
-  transform: rotateX(-90deg);
-  background: var(--paper);
-  filter: brightness(0.82);
-}
-${s} .mbx-right {
-  bottom: 0; left: 0;
-  width: 100%;
-  height: var(--bd);
-  transform-origin: bottom center;
-  transform: rotateX(90deg);
-  background:
-    radial-gradient(circle at 3px 3px, rgba(255, 210, 160, 0.22) 1px, transparent 1.5px) 0 0 / 6px 6px,
-    radial-gradient(circle at 1px 4px, rgba(20, 8, 4, 0.45) 1px, transparent 1.5px) 0 0 / 5px 5px,
-    linear-gradient(to right, var(--paper) 0%, var(--paper) 8%, #5e291e 8%, #471d14 92%, var(--paper) 92%);
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.35);
-}
-${s} .mbx-back {
-  top: 0; left: 0;
-  width: var(--bd);
-  height: 100%;
-  transform-origin: center left;
-  transform: rotateY(90deg);
-  background:
-    radial-gradient(circle at 3px 3px, rgba(255, 210, 160, 0.22) 1px, transparent 1.5px) 0 0 / 6px 6px,
-    linear-gradient(to bottom, var(--paper) 0%, var(--paper) 10%, #5e291e 10%, #471d14 90%, var(--paper) 90%);
-  filter: brightness(0.88);
-}
-
-/* ---------- Vintage matchbox label print ---------- */
-${s} .mbx-print {
-  position: absolute;
-  inset: 0;
-  padding: 10px;
-  box-sizing: border-box;
-  display: flex;
-}
-${s} .mbx-border {
-  position: relative;
-  flex: 1;
-  border: 1.5px solid currentColor;
-  border-radius: 2px;
-  padding: 8px 11px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  box-shadow: inset 0 0 0 2px var(--paper), inset 0 0 0 3px currentColor;
-}
-${s} .mbx-corner {
-  position: absolute;
-  width: 6px;
-  height: 6px;
-  border: 1px solid currentColor;
-  background: var(--paper);
-}
-${s} .mbx-corner.tl { top: -1px; left: -1px; }
-${s} .mbx-corner.tr { top: -1px; right: -1px; }
-${s} .mbx-corner.bl { bottom: -1px; left: -1px; }
-${s} .mbx-corner.br { bottom: -1px; right: -1px; }
-
-${s} .mbx-row-top,
-${s} .mbx-row-bot {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 9px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  font-weight: 600;
-  opacity: 0.8;
-  transition: opacity 250ms ease;
-}
-${s} .mbx-stamp {
-  padding: 1px 5px;
-  border: 1px solid currentColor;
-  border-radius: 2px;
-  font-size: 8.5px;
-}
-${s} .mbx-no {
-  font-variant-numeric: tabular-nums;
-}
-
-${s} .mbx-center {
-  text-align: center;
-  padding: 2px 4px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 3px;
-}
-${s} .mbx-emblem {
-  color: currentColor;
-  opacity: 0.85;
-  line-height: 0;
-}
-${s} .mbx-sleeve-title {
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 19px;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  line-height: 1.12;
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-${s}.is-narrow .mbx-sleeve-title {
-  font-size: 17px;
-  white-space: normal;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-}
-${s} .mbx-sleeve-detail {
-  font-size: 10px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  opacity: 0.76;
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-${s} .mbx-pull {
-  color: var(--accent);
-  font-size: 9px;
-}
-
-/* ---------- Bottom caption & controls bar (elevated pill so it never overlaps) ---------- */
-${s} .mbx-bar {
-  position: relative;
-  z-index: 45;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  flex-wrap: wrap;
-  margin-top: 8px;
-  padding: 10px 18px;
-  border-radius: 999px;
-  background: rgba(250, 247, 239, 0.92);
-  border: 1px solid rgba(24, 57, 43, 0.14);
-  box-shadow: 0 8px 24px -10px rgba(24, 57, 43, 0.16);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-}
-${s}.is-narrow .mbx-bar {
-  border-radius: 18px;
-  padding: 12px 14px;
-}
-${s} .mbx-meta {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  min-width: 0;
-  flex: 1 1 200px;
-}
-${s} .mbx-index {
-  font-variant-numeric: tabular-nums;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  color: rgba(24, 57, 43, 0.6);
-}
-${s} .mbx-sep {
-  color: rgba(24, 57, 43, 0.35);
-}
-${s} .mbx-title {
-  font-size: 14px;
-  font-weight: 700;
-  color: #18392b;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-${s} .mbx-detail {
-  font-size: 12.5px;
-  color: rgba(24, 57, 43, 0.72);
-  font-weight: 500;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-${s} .mbx-controls {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-${s} .mbx-dots {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-${s} .mbx-dot {
-  appearance: none;
-  border: 0;
-  padding: 0;
-  width: 7px;
-  height: 7px;
-  border-radius: 999px;
-  background: rgba(24, 57, 43, 0.22);
-  cursor: pointer;
-  transition: width 240ms ease, background-color 240ms ease, transform 240ms ease;
-}
-${s} .mbx-dot:hover {
-  background: rgba(24, 57, 43, 0.48);
-}
-${s} .mbx-dot.is-current {
-  width: 22px;
-  background: #18392b;
-}
-${s} .mbx-dot:focus-visible {
-  outline: 2px solid #18392b;
-  outline-offset: 2px;
-}
-
-${s} .mbx-arrows {
-  display: flex;
-  gap: 6px;
-}
-${s} .mbx-btn {
-  appearance: none;
-  width: 32px;
-  height: 32px;
-  border-radius: 999px;
-  border: 1px solid rgba(24, 57, 43, 0.2);
-  background: #ffffff;
-  color: #18392b;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: background-color 160ms ease, transform 160ms ease, border-color 160ms ease;
-}
-${s} .mbx-btn:hover:not(:disabled) {
-  background: #18392b;
-  color: #f6f2e8;
-  border-color: #18392b;
-}
-${s} .mbx-btn:active:not(:disabled) {
-  transform: scale(0.95);
-}
-${s} .mbx-btn:disabled {
-  opacity: 0.4;
-  cursor: default;
-}
-${s} .mbx-btn:focus-visible {
-  outline: 2px solid #18392b;
-  outline-offset: 2px;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  ${s} .mbx-scene,
-  ${s} .mbx-slot,
-  ${s} .mbx-tray,
-  ${s} .mbx-img,
-  ${s} .mbx-shadow {
-    transition: none !important;
-  }
-}
+const css = (s: string) => `
+.${s}{outline:none;-webkit-tap-highlight-color:transparent}
+.${s}:focus-visible{box-shadow:inset 0 0 0 2px #163828}
+.${s} .mbx-btn{all:unset;box-sizing:border-box;width:38px;height:38px;border-radius:50%;border:1px solid currentColor;display:grid;place-items:center;cursor:pointer;opacity:.82;transition:opacity .2s,transform .2s}
+.${s} .mbx-btn:hover{opacity:1;transform:scale(1.06)}
+.${s} .mbx-btn:active{transform:scale(.96)}
+.${s} .mbx-btn:focus-visible{opacity:1;box-shadow:0 0 0 2px #163828}
+.${s} .mbx-link{position:absolute;inset:0;z-index:2}
+.${s} .mbx-link:focus-visible{box-shadow:inset 0 0 0 2px #163828}
+.${s} .mbx-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.${s} img{-webkit-user-drag:none;user-select:none}
+.${s} .mbx-box:not(.mbx-on):hover .mbx-tray{transform:translate3d(6%,0,0)!important}
+.${s} .mbx-tray-scroll::-webkit-scrollbar{width:6px}
+.${s} .mbx-tray-scroll::-webkit-scrollbar-track{background:rgba(22,56,40,.06)}
+.${s} .mbx-tray-scroll::-webkit-scrollbar-thumb{background:rgba(22,56,40,.35);border-radius:4px}
+@media (prefers-reduced-motion: reduce){.${s} .mbx-box:not(.mbx-on):hover .mbx-tray{transform:none!important}.${s} *{transition-duration:0s!important}}
 `;
-}
-
-export default MatchboxCarousel;
