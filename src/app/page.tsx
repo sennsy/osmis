@@ -10,89 +10,117 @@ import styles from './page.module.css';
 
 import Gallery from '../components/Gallery';
 import { Camera, Sparkles, Gamepad2, Languages, Film } from 'lucide-react';
-import { TiltStackScroll, type TiltStackCard } from '../components/ui/tilt-stack-scroll';
-import { getImageUrl } from '../utils/driveImages';
+import { DotTiles, type DotTileData } from '../components/ui/dot-tiles';
+
+const FEATURE_BLOOMS = [
+  "radial-gradient(32% 28% at 58% 16%, rgba(24, 92, 65, 0.55), rgba(24, 92, 65, 0) 72%)",
+  "radial-gradient(28% 26% at 20% 35%, rgba(212, 175, 55, 0.48), rgba(212, 175, 55, 0) 72%)",
+  "radial-gradient(34% 32% at 84% 48%, rgba(48, 150, 120, 0.45), rgba(48, 150, 120, 0) 72%)",
+  "radial-gradient(40% 30% at 50% 65%, rgba(196, 164, 58, 0.42), rgba(196, 164, 58, 0) 74%)",
+  "radial-gradient(28% 24% at 32% 86%, rgba(231, 76, 60, 0.35), rgba(231, 76, 60, 0) 72%)",
+].join(",");
 
 export default function Home() {
   const { t } = useLanguage();
   const [isGameModalOpen, setIsGameModalOpen] = useState(false);
+  const [tileColumns, setTileColumns] = useState(3);
 
   useEffect(() => {
     // Cache bust: 2026-09-19 14:55
     console.log("OSMIS V2 Loaded");
+
+    const updateCols = () => {
+      if (window.innerWidth < 600) setTileColumns(1);
+      else if (window.innerWidth < 960) setTileColumns(2);
+      else setTileColumns(3);
+    };
+    updateCols();
+    window.addEventListener('resize', updateCols);
+    return () => window.removeEventListener('resize', updateCols);
   }, []);
 
-  const featureCards: TiltStackCard[] = [
+  const featureTiles: DotTileData[] = [
     {
-      kicker: 'RECAP VIDEO · DOKUMENTASI',
-      badge: '🔥 HOT',
+      id: 'rewind',
       title: t.recapTitle,
-      description: t.recapDesc,
-      image: getImageUrl('1-lv0dmzaG7-7oidrvrIJsd3ECkoDPGGq'),
-      alt: t.recapTitle,
-      icon: <Film size={24} strokeWidth={1.75} />,
-      tags: ['Kilas Balik Kegiatan', 'Video Dokumenter', 'Momen Terbaik OSMIS'],
-      price: '01',
-      priceNote: 'FITUR UTAMA',
-      cta: `[ ${t.watchRecap} ]`,
+      subtitle: t.recapDesc,
+      value: '01',
+      icon: <Film size="100%" strokeWidth={2} />,
+      unit: 'VIDEO',
+      badge: '🔥 HOT',
       href: '/recap',
-      accent: '#e74c3c',
+      visual: {
+        type: 'slider',
+        value: 0.78,
+        mode: 'glow',
+        labels: ['Kilas Balik', `[ ${t.watchRecap} ↗ ]`],
+      },
     },
     {
-      kicker: 'PHOTOBOOTH · TWIBBON STUDIO',
+      id: 'smisframe',
       title: t.smisFrameTitle,
-      description: t.smisFrameDesc,
-      image: getImageUrl('10DrHWHIuYaneZ9MsQgglUu0T1YaDd3Ey'),
-      alt: t.smisFrameTitle,
-      icon: <Camera size={24} strokeWidth={1.75} />,
-      tags: ['Filter & Frame Eksklusif', 'Kamera Instan', 'Unduh Langsung'],
-      price: '02',
-      priceNote: 'KREATIF',
-      cta: `[ ${t.tryFrame} ]`,
+      subtitle: t.smisFrameDesc,
+      value: '02',
+      icon: <Camera size="100%" strokeWidth={2} />,
+      unit: 'FRAME',
       href: '/smisframe',
-      accent: '#D4AF37',
+      visual: {
+        type: 'steps',
+        from: 0.08,
+        to: 0.92,
+        data: [
+          0.35, 0.45, 0.6, 0.85, 1, 1, 0.75, 0.55, 0.8, 0.95, 1, 0.7, 0.5,
+          0.65, 0.9, 0.95, 0.8, 0.6, 0.45, 0.7, 0.85, 0.6, 0.4,
+        ],
+        labels: ['Photobooth', `[ ${t.tryFrame} ↗ ]`],
+      },
     },
     {
-      kicker: 'PERSONALITY · KARAKTER SANTRI',
+      id: 'mbti',
       title: t.mbtiTitle,
-      description: t.mbtiDesc,
-      image: getImageUrl('11aCvpkui-1HAEiH38UHW475QZPj9RQkq'),
-      alt: t.mbtiTitle,
-      icon: <Sparkles size={24} strokeWidth={1.75} />,
-      tags: ['16 Tipe Kepribadian', 'Cocokologi Divisi OSMIS', 'Analisis Karakter'],
-      price: '03',
-      priceNote: 'PSIKOTES',
-      cta: '[ Buka Tes ]',
+      subtitle: t.mbtiDesc,
+      value: '03',
+      icon: <Sparkles size="100%" strokeWidth={2} />,
+      unit: '16 TIPE',
       href: '/mbti',
-      accent: '#a855f7',
+      visual: {
+        type: 'dots',
+        data: [0.25, 0.45, 0.7, 0.35, 0.85, 1, 0.6, 0.4, 0.75, 0.9, 0.5, 0.3],
+        labels: ['Kepribadian', '[ Buka Tes ↗ ]'],
+      },
     },
     {
-      kicker: 'ARCADE · HIBURAN INTERAKTIF',
+      id: 'games',
       title: 'OSMIS Games',
-      description: 'Kumpulan Mini Games Seru karya santri — mulai dari platformer 2D, endless runner klasik, hingga tantangan mengetik cepat.',
-      image: getImageUrl('1-0FQsXGBb465MqYA3hAahWFgYvgV5B6Y'),
-      alt: 'OSMIS Games',
-      icon: <Gamepad2 size={24} strokeWidth={1.75} />,
-      tags: ['Wong Tersakiti Bross', 'GMWST Endless Runner', 'Happy Ngetik Sayy'],
-      price: '04',
-      priceNote: 'MINI GAMES',
-      cta: '[ Pilih Game ]',
+      subtitle: 'Kumpulan Mini Games Seru',
+      value: '04',
+      icon: <Gamepad2 size="100%" strokeWidth={2} />,
+      unit: 'ARCADE',
+      jitter: 1,
       onClick: () => setIsGameModalOpen(true),
-      accent: '#3b82f6',
+      visual: {
+        type: 'blocks',
+        data: [
+          [0.08, 0.28],
+          [0.36, 0.62],
+          [0.7, 0.92],
+        ],
+        labels: ['3 Mini Games', '[ Pilih Game ↗ ]'],
+      },
     },
     {
-      kicker: 'EDUKASI · TRILINGUAL',
+      id: 'linguista',
       title: 'Linguista',
-      description: 'Belajar Kosakata Arab, Inggris & Indo ala Duolingo untuk menunjang program kebahasaan santri sehari-hari.',
-      image: getImageUrl('13ncpAoQYIItolDco7oucyksaLkK98w5b'),
-      alt: 'Linguista',
-      icon: <Languages size={24} strokeWidth={1.75} />,
-      tags: ['Bahasa Arab', 'Bahasa Inggris', 'Kuis Kosakata Interaktif'],
-      price: '05',
-      priceNote: 'BAHASA',
-      cta: '[ Belajar ]',
+      subtitle: 'Belajar Kosakata Arab, Inggris & Indo ala Duolingo',
+      value: '05',
+      icon: <Languages size="100%" strokeWidth={2} />,
+      unit: '3 BHS',
       href: '/learn',
-      accent: '#10b981',
+      visual: {
+        type: 'rise',
+        value: 0.82,
+        labels: ['AR · EN · ID', '[ Belajar ↗ ]'],
+      },
     },
   ];
 
@@ -156,14 +184,46 @@ export default function Home() {
 
       <Gallery />
 
-      {/* Features Section — TiltStackScroll */}
-      <section id="features">
-        <TiltStackScroll
-          eyebrow={t.featuresSubtitle}
-          heading={t.featuresTitle}
-          cards={featureCards}
-          stepVh={95}
+      {/* Features Section — DotTiles (No Images) */}
+      <section
+        id="features"
+        className={styles.featuresSection}
+        style={{ position: 'relative', overflow: 'hidden' }}
+      >
+        <div
+          aria-hidden="true"
+          style={{
+            position: 'absolute',
+            inset: '-10%',
+            filter: 'blur(48px) saturate(1.15)',
+            background: FEATURE_BLOOMS,
+            pointerEvents: 'none',
+            zIndex: 0,
+          }}
         />
+
+        <div className={styles.featuresHeader} style={{ position: 'relative', zIndex: 1 }}>
+          <h2 className="display-font">{t.featuresTitle}</h2>
+          <p className="mono-font">{t.featuresSubtitle}</p>
+        </div>
+
+        <div
+          style={{
+            position: 'relative',
+            zIndex: 1,
+            width: '100%',
+            maxWidth: '980px',
+            margin: '0 auto',
+          }}
+        >
+          <DotTiles
+            tiles={featureTiles}
+            columns={tileColumns}
+            tileColor="#0b1f16"
+            dotColor="#f7f4eb"
+            stagger={95}
+          />
+        </div>
       </section>
 
       {/* Game Selection Modal */}
