@@ -85,6 +85,12 @@ export default function Navbar() {
     setLanguage(langs[nextIndex]);
   };
 
+  const handleMatraTrigger = () => {
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('osmis:toggle-matra-ai'));
+    }
+  };
+
   if (pathname === '/gallery' || pathname?.startsWith('/backroom')) {
     return null;
   }
@@ -137,10 +143,43 @@ export default function Navbar() {
             >
               {mounted && (currentTheme === 'dark' ? <Moon size={16} /> : <Sun size={16} />)}
             </button>
+            <button
+              type="button"
+              onClick={handleMatraTrigger}
+              className={styles.matraTriggerBtn}
+              aria-label="Matra AI — AI Assistant"
+              title="Matra AI — AI Assistant"
+              data-tooltip="Matra AI — AI Assistant"
+            >
+              <img
+                src="/matra_logo.jpg"
+                alt="Matra AI"
+                width={26}
+                height={26}
+                className={styles.matraNavLogo}
+                draggable={false}
+              />
+            </button>
           </div>
         </div>
 
         <div className={styles.mobileToggle}>
+          <button
+            type="button"
+            onClick={handleMatraTrigger}
+            className={styles.matraTriggerBtn}
+            aria-label="Matra AI — AI Assistant"
+            title="Matra AI — AI Assistant"
+          >
+            <img
+              src="/matra_logo.jpg"
+              alt="Matra AI"
+              width={24}
+              height={24}
+              className={styles.matraNavLogo}
+              draggable={false}
+            />
+          </button>
           <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className={styles.iconBtn} aria-label="Menu">
             {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
@@ -181,6 +220,25 @@ export default function Navbar() {
               setTheme(current === 'dark' ? 'light' : 'dark');
             }} className={styles.iconBtn}>
               {mounted && (currentTheme === 'dark' ? <><Moon size={18} /> <span style={{ marginLeft: 6 }}>Dark</span></> : <><Sun size={18} /> <span style={{ marginLeft: 6 }}>Light</span></>)}
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setMobileMenuOpen(false);
+                handleMatraTrigger();
+              }}
+              className={styles.matraTriggerBtn}
+              aria-label="Matra AI — AI Assistant"
+              title="Matra AI — AI Assistant"
+            >
+              <img
+                src="/matra_logo.jpg"
+                alt="Matra AI"
+                width={24}
+                height={24}
+                className={styles.matraNavLogo}
+                draggable={false}
+              />
             </button>
           </div>
         </div>

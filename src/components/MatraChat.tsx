@@ -23,7 +23,7 @@ export default function MatraChat() {
   const [showMatrix, setShowMatrix] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const toggleChat = () => setIsOpen(!isOpen);
+  const toggleChat = () => setIsOpen((prev) => !prev);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -34,6 +34,16 @@ export default function MatraChat() {
       scrollToBottom();
     }
   }, [messages, isOpen]);
+
+  useEffect(() => {
+    const handleNavbarTrigger = () => {
+      setIsOpen((prev) => !prev);
+    };
+    window.addEventListener('osmis:toggle-matra-ai', handleNavbarTrigger);
+    return () => {
+      window.removeEventListener('osmis:toggle-matra-ai', handleNavbarTrigger);
+    };
+  }, []);
 
   if (pathname?.startsWith('/backroom')) return null;
 

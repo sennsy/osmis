@@ -115,6 +115,79 @@
   background: rgba(214, 159, 48, 0.1);
 }
 
+.matraTriggerBtn {
+  position: relative;
+  background: none;
+  border: none;
+  padding: 0;
+  min-width: 40px;
+  min-height: 40px;
+  border-radius: 999px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.22s ease, transform 0.22s ease;
+}
+
+.matraNavLogo {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+  opacity: 0.9;
+  border: 1px solid rgba(46, 89, 66, 0.25);
+  transition: opacity 0.22s ease, filter 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+}
+
+[data-theme='dark'] .matraNavLogo {
+  border-color: rgba(255, 255, 255, 0.22);
+  filter: contrast(1.05) brightness(0.96);
+}
+
+.matraTriggerBtn:hover .matraNavLogo {
+  opacity: 1;
+  filter: brightness(1.06);
+  border-color: var(--osmis-yellow);
+  box-shadow: 0 0 10px var(--tech-glow);
+}
+
+.matraTriggerBtn:focus-visible {
+  outline: 2px solid var(--osmis-yellow);
+  outline-offset: 2px;
+}
+
+.matraTriggerBtn[data-tooltip]::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  white-space: nowrap;
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  padding: 0.35rem 0.65rem;
+  border-radius: 8px;
+  background: var(--card-bg);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  opacity: 0;
+  transform: translateY(-4px);
+  pointer-events: none;
+  transition: opacity 0.18s ease, transform 0.18s ease;
+  z-index: 1010;
+}
+
+.matraTriggerBtn[data-tooltip]:hover::after {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 .mobileToggle {
   display: none;
 }
@@ -129,7 +202,19 @@
   }
   
   .mobileToggle {
-    display: block;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  .mobileToggle .matraNavLogo,
+  .mobileActions .matraNavLogo {
+    width: 24px;
+    height: 24px;
+  }
+
+  .matraTriggerBtn[data-tooltip]::after {
+    display: none;
   }
   
   .mobileMenu {
@@ -164,7 +249,8 @@
   
   .mobileActions {
     display: flex;
-    gap: 1.5rem;
+    align-items: center;
+    gap: 1.25rem;
     padding-top: 0.85rem;
     border-top: 1px solid var(--border-color);
   }
