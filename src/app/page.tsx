@@ -163,16 +163,6 @@ export default function Home() {
               </ol>
             </div>
           </div>
-
-          {/* MOTTO EXPLAINER */}
-          <div className={styles.mottoExplainer}>
-            {t.mottoWords.map((m: { word: string; desc: string }, i: number) => (
-              <div key={i} className={styles.mottoWordCard}>
-                <span className={`${styles.mottoWordKw} display-font`}>{m.word}</span>
-                <p className={styles.mottoWordDesc}>{m.desc}</p>
-              </div>
-            ))}
-          </div>
         </div>
       </section>
 
