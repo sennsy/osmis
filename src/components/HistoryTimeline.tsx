@@ -29,14 +29,16 @@ export default function HistoryTimeline() {
   const { data } = useOsmisData();
   const periods = data.periods;
 
+  // Pastikan hanya periode 2026–2027 (yang mengandung '2027') yang menjadi default & menampilkan foto
   const defaultIdx = useMemo(() => {
-    const idx = periods.findIndex((p: any) => p.year?.includes('2026'));
+    const idx = periods.findIndex((p: any) => p.year?.includes('2027'));
     return idx >= 0 ? idx : Math.max(0, periods.length - 1);
   }, [periods]);
 
   const matchboxItems: MatchboxItem[] = useMemo(() => {
     return periods.map((period: any, pIndex: number) => {
-      const periodIs2627 = Boolean(period.year?.includes('2026'));
+      // Hanya 2026-2027 yang menampilkan foto (2025-2026 tidak boleh menampilkan foto)
+      const periodIs2627 = Boolean(period.year?.includes('2027'));
       const yearLabel = language === 'ar' ? toArabicNumerals(period.year) : period.year;
       const leaderName = period.leader
         ? language === 'ar' && period.leaderAr
@@ -57,9 +59,9 @@ export default function HistoryTimeline() {
               display: 'flex',
               flexDirection: 'column',
               minHeight: '100%',
-              padding: periodIs2627 ? '10px 14px 14px' : '14px 16px',
+              padding: periodIs2627 ? '14px 18px 18px' : '18px 22px',
               boxSizing: 'border-box',
-              gap: '10px',
+              gap: '14px',
               background: '#FAF6EE',
             }}
           >
@@ -69,10 +71,10 @@ export default function HistoryTimeline() {
                 style={{
                   position: 'relative',
                   width: '100%',
-                  height: 'clamp(155px, 24vh, 230px)',
-                  borderRadius: '8px',
+                  height: 'clamp(180px, 26vh, 260px)',
+                  borderRadius: '10px',
                   overflow: 'hidden',
-                  border: '1px solid rgba(22, 56, 40, 0.22)',
+                  border: '1.5px solid rgba(22, 56, 40, 0.22)',
                   flexShrink: 0,
                   background: '#163828',
                 }}
@@ -93,13 +95,13 @@ export default function HistoryTimeline() {
                 <div
                   style={{
                     position: 'absolute',
-                    left: '8px',
-                    bottom: '8px',
-                    padding: '3px 8px',
-                    borderRadius: '4px',
-                    background: 'rgba(22, 56, 40, 0.88)',
+                    left: '10px',
+                    bottom: '10px',
+                    padding: '4px 10px',
+                    borderRadius: '6px',
+                    background: 'rgba(22, 56, 40, 0.9)',
                     color: '#FAF6EE',
-                    fontSize: '9.5px',
+                    fontSize: 'clamp(11px, 0.95vw, 13px)',
                     fontWeight: 700,
                     letterSpacing: '0.1em',
                     textTransform: 'uppercase',
@@ -117,16 +119,16 @@ export default function HistoryTimeline() {
                 alignItems: 'baseline',
                 justifyContent: 'space-between',
                 flexWrap: 'wrap',
-                gap: '6px',
-                borderBottom: '1.5px solid rgba(22, 56, 40, 0.22)',
-                paddingBottom: '6px',
+                gap: '8px',
+                borderBottom: '2px solid rgba(22, 56, 40, 0.22)',
+                paddingBottom: '8px',
               }}
             >
               <div
                 style={{
-                  fontSize: '11.5px',
+                  fontSize: 'clamp(14.5px, 1.3vw, 19px)',
                   fontWeight: 800,
-                  letterSpacing: '0.12em',
+                  letterSpacing: '0.08em',
                   textTransform: 'uppercase',
                   color: '#163828',
                 }}
@@ -135,7 +137,7 @@ export default function HistoryTimeline() {
               </div>
               <div
                 style={{
-                  fontSize: '10.5px',
+                  fontSize: 'clamp(13px, 1.1vw, 16px)',
                   fontWeight: 700,
                   color: '#8c5a18',
                 }}
@@ -144,13 +146,13 @@ export default function HistoryTimeline() {
               </div>
             </div>
 
-            {/* Grid Susunan Pengurus yang jelas & mudah dibaca */}
+            {/* Grid Susunan Pengurus dengan ukuran font besar & jelas untuk desktop */}
             {periodStructure && periodStructure.length > 0 ? (
               <div
                 style={{
                   display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fit, minmax(195px, 1fr))',
-                  gap: '7px 10px',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(230px, 1fr))',
+                  gap: '10px 14px',
                 }}
               >
                 {periodStructure.map((row, idx) => (
@@ -159,18 +161,18 @@ export default function HistoryTimeline() {
                     style={{
                       display: 'flex',
                       flexDirection: 'column',
-                      gap: '2px',
-                      padding: '6px 9px',
-                      borderRadius: '6px',
-                      background: 'rgba(22, 56, 40, 0.045)',
-                      borderLeft: '2.5px solid #163828',
+                      gap: '4px',
+                      padding: '10px 14px',
+                      borderRadius: '8px',
+                      background: 'rgba(22, 56, 40, 0.055)',
+                      borderLeft: '3.5px solid #163828',
                     }}
                   >
                     <span
                       style={{
-                        fontSize: '9.5px',
+                        fontSize: 'clamp(12px, 1.02vw, 15px)',
                         fontWeight: 800,
-                        letterSpacing: '0.08em',
+                        letterSpacing: '0.07em',
                         color: '#8c5a18',
                         textTransform: 'uppercase',
                       }}
@@ -179,9 +181,9 @@ export default function HistoryTimeline() {
                     </span>
                     <span
                       style={{
-                        fontSize: '11px',
-                        lineHeight: 1.38,
-                        color: '#18221b',
+                        fontSize: 'clamp(14px, 1.2vw, 17.5px)',
+                        lineHeight: 1.48,
+                        color: '#141e17',
                         fontWeight: 600,
                       }}
                     >
@@ -191,7 +193,7 @@ export default function HistoryTimeline() {
                 ))}
               </div>
             ) : (
-              <div style={{ fontSize: '12px', opacity: 0.7 }}>{t.comingSoon}</div>
+              <div style={{ fontSize: 'clamp(14px, 1.2vw, 17px)', opacity: 0.7 }}>{t.comingSoon}</div>
             )}
           </div>
         ),
@@ -203,7 +205,7 @@ export default function HistoryTimeline() {
     <section id="history" className={styles.section} style={{ padding: '4rem 0 5rem' }}>
       <div
         style={{
-          width: 'min(96vw, 1680px)',
+          width: 'min(96vw, 1720px)',
           margin: '0 auto',
           padding: '0 0.5rem',
           boxSizing: 'border-box',
@@ -221,7 +223,7 @@ export default function HistoryTimeline() {
           autoplay={false}
           label={t.historyJourney || 'Perjalanan OSMIS'}
           style={{
-            minHeight: 'clamp(640px, 84vh, 920px)',
+            minHeight: 'clamp(680px, 86vh, 960px)',
           }}
         />
       </div>

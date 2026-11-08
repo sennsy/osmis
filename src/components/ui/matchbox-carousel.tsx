@@ -379,18 +379,18 @@ function Arrow({ dir, onClick }: { dir: -1 | 1; onClick: () => void }) {
 
 type G = ReturnType<typeof layout>;
 
-/** Box size and spacing from the container — scaled up so the open tray is large and easy to read. */
+/** Box size and spacing from the container — scaled up so the open tray is large and easy to read on desktop. */
 function layout(W: number, H: number, view: string) {
-  const tilt = view === "flat" ? 0 : view === "low" ? 48 : 24;
+  const tilt = view === "flat" ? 0 : view === "low" ? 48 : 14;
   const up = W / H < 0.88;
   const fore = Math.cos((tilt * Math.PI) / 180);
   let bw: number, bd: number;
   if (up) {
-    bd = Math.max(120, Math.min((H * 0.78) / (1.92 * fore), (W * 0.88) / 0.72));
+    bd = Math.max(120, Math.min((H * 0.78) / (1.92 * fore), (W * 0.88) / 0.74));
     bw = bd * 0.74;
   } else {
-    bw = Math.max(140, Math.min(W * 0.45, (H * 0.76) / 0.72, (W * 0.92) / 1.92));
-    bd = bw * 0.72;
+    bw = Math.max(160, Math.min(W * 0.46, (H * 0.82) / 0.78, (W * 0.94) / 1.92));
+    bd = bw * 0.78;
   }
   const m = Math.max(bw, bd);
   const slide = m * 0.95;
@@ -399,14 +399,14 @@ function layout(W: number, H: number, view: string) {
     bw,
     bd,
     m,
-    t: m * 0.17,
+    t: m * 0.16,
     slide,
     P: bw * 1.14,
     x0: up ? W / 2 : W / 2 - slide / 2,
     y0: up ? -slide / 2 : 0,
     cy: H * (up ? 0.43 : 0.44),
     tilt,
-    persp: Math.max(W, H) * 2.2,
+    persp: Math.max(W, H) * 2.4,
     e: Math.max(1.5, m * 0.012),
   };
 }
