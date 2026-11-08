@@ -206,13 +206,14 @@ export default function PricingSection4() {
         }
         .ps3-grid {
           display: grid;
-          grid-template-columns: 1fr;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
           gap: 1.5rem;
           margin: 0 auto;
           background: linear-gradient(180deg, rgba(235, 231, 220, 0.72) 0%, rgba(224, 219, 206, 0.85) 100%);
           padding: 1.25rem;
           border-radius: 22px;
           border: 1px solid rgba(23, 56, 38, 0.1);
+          align-items: stretch;
         }
         [data-theme='dark'] .ps3-grid {
           background: linear-gradient(180deg, rgba(17, 24, 39, 0.75) 0%, rgba(11, 15, 25, 0.9) 100%);
@@ -229,6 +230,7 @@ export default function PricingSection4() {
         .ps3-card-wrapper {
           display: flex;
           height: 100%;
+          min-width: 0;
         }
         .ps3-card {
           position: relative;
@@ -411,36 +413,83 @@ export default function PricingSection4() {
         }
         @media (max-width: 767px) {
           .ps3-root {
-            padding: 3.5rem 1rem 3rem;
+            padding: 3rem 0.65rem 2.5rem;
           }
           .ps3-header {
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.25rem;
           }
           .ps3-heading {
-            font-size: clamp(1.75rem, 6.5vw, 2.25rem);
+            font-size: clamp(1.65rem, 6.2vw, 2.15rem);
           }
           .ps3-subheading {
-            font-size: 0.94rem;
-            line-height: 1.58;
+            font-size: 0.88rem;
+            line-height: 1.5;
           }
           .ps3-grid {
-            padding: 1rem;
-            gap: 1.15rem;
-            border-radius: 18px;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            padding: 0.5rem;
+            gap: 0.5rem;
+            border-radius: 16px;
+            align-items: stretch;
+          }
+          .ps3-card {
+            border-radius: 12px;
+          }
+          .ps3-card-default {
+            padding-top: 0;
+          }
+          .ps3-card-popular {
+            transform: none !important;
           }
           .ps3-card-content {
-            padding: 1.35rem 1.25rem 0.75rem;
+            padding: 0.85rem 0.65rem 0.45rem;
           }
           .ps3-card-footer {
-            padding: 0.75rem 1.25rem 1.35rem;
+            padding: 0.45rem 0.65rem 0.85rem;
           }
           .ps3-plan-title {
-            font-size: 1.55rem;
+            font-size: clamp(1.15rem, 4.4vw, 1.35rem);
+            margin-bottom: 0.35rem;
+          }
+          .ps3-plan-desc {
+            font-size: clamp(0.68rem, 2.65vw, 0.78rem);
+            line-height: 1.42;
+            margin-bottom: 0.65rem;
+          }
+          .ps3-divider {
+            padding-top: 0.6rem;
+            margin-top: 0.2rem;
+          }
+          .ps3-includes-heading {
+            font-size: clamp(0.64rem, 2.5vw, 0.74rem);
+            margin-bottom: 0.45rem;
+            line-height: 1.3;
+          }
+          .ps3-includes-list {
+            gap: 0.4rem;
+          }
+          .ps3-includes-item {
+            font-size: clamp(0.65rem, 2.5vw, 0.75rem);
+            line-height: 1.36;
+            gap: 0.35rem;
+            align-items: flex-start;
+          }
+          .ps3-check-badge {
+            width: 15px;
+            height: 15px;
+            margin-top: 2px;
+            margin-right: 0 !important;
+          }
+          .ps3-check-badge svg {
+            width: 10px;
+            height: 10px;
           }
           .ps3-cta-btn {
-            min-height: 48px;
-            font-size: 0.95rem;
-            padding: 0.85rem 1rem;
+            min-height: 36px;
+            font-size: clamp(0.66rem, 2.5vw, 0.76rem);
+            padding: 0.5rem 0.45rem;
+            border-radius: 8px;
+            line-height: 1.2;
           }
         }
       `}</style>
@@ -482,7 +531,7 @@ export default function PricingSection4() {
         animationNum={1}
         timelineRef={pricingRef}
         customVariants={revealVariants}
-        className="ps3-grid grid md:grid-cols-2 gap-4 mx-auto bg-gradient-to-b from-neutral-100 to-neutral-200 sm:p-3 rounded-lg"
+        className="ps3-grid grid grid-cols-2 gap-4 mx-auto bg-gradient-to-b from-neutral-100 to-neutral-200 sm:p-3 rounded-lg"
       >
         {plans.map((plan, index) => (
           <TimelineContent

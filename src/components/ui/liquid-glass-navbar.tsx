@@ -57,15 +57,14 @@ const DEFAULT_ITEMS: LiquidNavItem[] = [
 const PAD = 14
 
 const NIMBUS_CSS = `
-.nimbus-nav{--n-tint:rgba(248,246,240,.68);--n-fg:#1a1a1a;--n-fg-soft:rgba(26,26,26,.65);--n-rim:rgba(214,159,48,.55);
+.nimbus-nav{--n-tint:rgba(248,246,240,.76);--n-fg:#1a1a1a;--n-fg-soft:rgba(26,26,26,.65);--n-rim:rgba(214,159,48,.55);
 position:relative;display:inline-flex;align-items:center;gap:2px;padding:6px;border-radius:999px;isolation:isolate;
-font-family:var(--font-mono),'JetBrains Mono',ui-monospace,monospace;-webkit-font-smoothing:antialiased;user-select:none;-webkit-tap-highlight-color:transparent}
-.nimbus-nav[data-tone="dark"]{--n-tint:rgba(11,15,25,.65);--n-fg:#f0f6fc;--n-fg-soft:rgba(240,246,252,.66);--n-rim:rgba(0,255,136,.38)}
+font-family:var(--font-mono),'JetBrains Mono',ui-monospace,monospace;-webkit-font-smoothing:antialiased;user-select:none;-webkit-tap-highlight-color:transparent;transform:translateZ(0)}
+.nimbus-nav[data-tone="dark"]{--n-tint:rgba(11,15,25,.74);--n-fg:#f0f6fc;--n-fg-soft:rgba(240,246,252,.66);--n-rim:rgba(0,255,136,.38)}
 .nimbus-glass{position:absolute;inset:0;border-radius:inherit;z-index:-2;overflow:hidden;background:var(--n-tint);
--webkit-backdrop-filter:blur(14px) saturate(1.25) brightness(1.04);backdrop-filter:blur(14px) saturate(1.25) brightness(1.04);
+-webkit-backdrop-filter:blur(10px) saturate(1.2);backdrop-filter:blur(10px) saturate(1.2);
 box-shadow:inset 0 1px 1px var(--n-rim),inset 0 0 0 1px rgba(46,89,66,.22),0 12px 32px -14px rgba(46,89,66,.35),0 2px 6px rgba(0,0,0,.08)}
 .nimbus-nav[data-tone="dark"] .nimbus-glass{box-shadow:inset 0 1px 1px var(--n-rim),inset 0 0 0 1px rgba(0,255,136,.18),0 12px 32px -14px rgba(0,255,136,.25),0 2px 8px rgba(0,0,0,.35)}
-.nimbus-nav[data-refract="on"] .nimbus-glass{-webkit-backdrop-filter:url(#nimbus-refract) blur(4px) saturate(1.2) brightness(1.06);backdrop-filter:url(#nimbus-refract) blur(4px) saturate(1.2) brightness(1.06)}
 .nimbus-water{position:absolute;left:${-PAD}px;top:${-PAD}px;z-index:-1;pointer-events:none}
 .nimbus-nav[data-gl="off"] .nimbus-water{display:none}
 .nimbus-drop{display:none;position:absolute;top:6px;bottom:6px;left:0;border-radius:999px;z-index:-1;pointer-events:none;will-change:transform,width;
@@ -76,7 +75,7 @@ background:radial-gradient(120% 140% at 30% 0%,rgba(0,255,136,.32),rgba(255,230,
 box-shadow:inset 0 1px 1px rgba(0,255,136,.75),inset 0 -2px 6px rgba(255,230,0,.22),inset 0 0 0 1px rgba(0,255,136,.4),0 6px 16px -6px rgba(0,255,136,.4)}
 .nimbus-nav[data-gl="off"] .nimbus-drop{display:block}
 .nimbus-item{position:relative;z-index:1;display:inline-flex;align-items:center;gap:7px;height:38px;padding:0 14px;border:0;border-radius:999px;background:none;color:var(--n-fg-soft);
-font-family:inherit;font-weight:700;font-size:11.5px;line-height:1;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;cursor:pointer;transition:color .25s}
+font-family:inherit;font-weight:700;font-size:11.5px;line-height:1;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;cursor:pointer;transition:color .25s;white-space:nowrap}
 .nimbus-item:hover,.nimbus-item[aria-current="page"]{color:var(--n-fg)}
 .nimbus-item:focus-visible{outline:2px solid var(--osmis-green, #2e5942);outline-offset:2px}
 .nv-ico{position:relative;display:inline-flex;flex:none;color:var(--osmis-green, #2e5942)}
@@ -108,13 +107,18 @@ background:linear-gradient(90deg,rgba(255,255,255,0),var(--osmis-yellow,#d69f30)
 @keyframes nvWave{0%{transform:none}20%{transform:rotate(-15deg)}40%{transform:rotate(12deg)}60%{transform:rotate(-8deg)}80%{transform:rotate(4deg)}100%{transform:translateY(-1px) scale(1.08)}}
 .nimbus-nav[data-compact="true"] .nimbus-item{padding:0 12px}
 .nimbus-nav[data-compact="true"] .nimbus-label{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-@media (max-width:767px){.nimbus-nav{max-width:100%;justify-content:center}.nimbus-nav .nimbus-item{min-width:44px;min-height:42px;justify-content:center}}
-@media (max-width:520px){.nimbus-nav:not([data-compact="false"]) .nimbus-item{padding:0 12px}.nimbus-nav:not([data-compact="false"]) .nimbus-label{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}}
+@media (max-width:767px){
+  .nimbus-nav{max-width:calc(100vw - 16px);padding:4px;gap:1px;justify-content:center}
+  .nimbus-nav .nimbus-item{height:30px;padding:0 6.5px;font-size:8.8px;gap:3px;letter-spacing:.035em}
+  .nimbus-nav .nv-ico svg{width:12.5px;height:12.5px}
+  .nimbus-glass{-webkit-backdrop-filter:blur(8px) saturate(1.15);backdrop-filter:blur(8px) saturate(1.15);background:rgba(248,246,240,.88)}
+  .nimbus-nav[data-tone="dark"] .nimbus-glass{background:rgba(11,15,25,.88)}
+}
 @media (prefers-reduced-motion:reduce){.nv-ico svg,.nv-ico::before,.nv-ico::after,.nv-door{animation:none!important;transition:none}}
 `
 
 const VERT = `attribute vec2 a;void main(){gl_Position=vec4(a,0.,1.);}`
-const FRAG = `precision highp float;
+const FRAG = `precision mediump float;
 uniform vec2 uRes;uniform float uDpr;uniform float uTime;uniform vec4 uPill;
 uniform vec4 uBlob[6];uniform float uSy[6];uniform vec4 uRip[6];uniform vec3 uMouse;uniform float uDark;uniform float uAmb;
 float sdRB(vec2 p,vec2 b,float r){vec2 q=abs(p)-b+r;return length(max(q,0.))+min(max(q.x,q.y),0.)-r;}
@@ -125,13 +129,15 @@ float pillD(vec2 p){vec2 h=uPill.zw*.5;return sdRB(p-uPill.xy-h,h,h.y);}
 float lens(float d,float w){float t=clamp(-d/w,0.,1.);return sqrt(1.-(1.-t)*(1.-t));}
 float waves(vec2 p){float w=0.;
 for(int i=0;i<6;i++){vec4 R=uRip[i];if(R.w>0.){float x=length(p-R.xy)-R.z*240.;w+=R.w*exp(-R.z*1.7)*sin(x*.3)*exp(-x*x/700.);}}
-vec2 m=p-uMouse.xy;w+=uMouse.z*3.6*exp(-dot(m,m)/1000.);
-w+=uAmb*(sin(p.x*.05+uTime*1.2)*.45+sin(p.x*.13-uTime*.85+p.y*.2)*.25);return w;}
+if(uMouse.z>.01){vec2 m=p-uMouse.xy;w+=uMouse.z*3.6*exp(-dot(m,m)/1000.);}
+if(uAmb>.01){w+=uAmb*(sin(p.x*.05+uTime*1.2)*.45+sin(p.x*.13-uTime*.85+p.y*.2)*.25);}return w;}
 float H(vec2 p){float dp=pillD(p);return lens(dp,uPill.w*.36)*2.4+lens(dropD(p),11.)*7.5+waves(p)*smoothstep(0.,7.,-dp);}
-float caus(vec2 p,float t){vec2 q=p;float c=0.;for(int i=0;i<3;i++){q+=vec2(sin(q.y*1.1+t),cos(q.x*1.3-t*.7))*.6;c+=1./(1.+16.*abs(sin(q.x)*sin(q.y)));}return c/3.;}
+float caus(vec2 p,float t){vec2 q=p;float c=0.;for(int i=0;i<2;i++){q+=vec2(sin(q.y*1.1+t),cos(q.x*1.3-t*.7))*.6;c+=1./(1.+16.*abs(sin(q.x)*sin(q.y)));}return c*.5;}
 void main(){
 vec2 p=vec2(gl_FragCoord.x,uRes.y*uDpr-gl_FragCoord.y)/uDpr;
-float dp=pillD(p);float dd=dropD(p);
+float dp=pillD(p);
+if(dp>2.){gl_FragColor=vec4(0.);return;}
+float dd=dropD(p);
 float h0=H(p);vec3 n=normalize(vec3(h0-H(p+vec2(1.,0.)),h0-H(p+vec2(0.,1.)),1.));
 vec3 V=vec3(0.,0.,1.);
 float spec=pow(max(dot(reflect(-normalize(vec3(-.45,-.8,.85)),n),V),0.),70.);
@@ -143,6 +149,7 @@ float sh=smoothstep(9.,-9.,dropD(p-vec2(0.,5.)))*(1.-dm)*pm*(.11+.07*uDark);
 vec3 c=vec3(.08,.22,.15)*sh;float a=sh;
 float pa=clamp(pm*(fres*.5+spec*.9+spec2),0.,1.);
 c=mix(vec3(1.),irid,.55*fres)*pa+c*(1.-pa);a=pa+a*(1.-pa);
+if(dm>.001){
 float th=lens(dd,11.);
 float cs=caus((p+n.xy*th*18.)*.085,uTime*.9);
 vec3 tint=mix(vec3(.82,.93,.86),vec3(.15,.85,.52),uDark);
@@ -155,6 +162,7 @@ la=clamp(cres*.7+smoothstep(.6,1.,cs)*.28*th*dm,0.,1.);dc=vec3(1.,.94,.72)*la+dc
 la=clamp(dm*(spec*1.2+spec2*.5),0.,1.);dc=vec3(1.)*la+dc*(1.-la);da=la+da*(1.-la);
 la=dm*smoothstep(-2.,0.,dd)*.4;dc=mix(vec3(1.),irid,.45)*la+dc*(1.-la);da=la+da*(1.-la);
 c=dc+c*(1.-da);a=da+a*(1.-da);
+}
 gl_FragColor=vec4(c,a);
 }`
 
@@ -173,7 +181,7 @@ function makeState() {
     rips: [] as Rip[],
     t: { x: 0, cy: 0, q: 0, r: 21 },
     q: 0,
-    mouse: { x: 0, y: 0, s: 0, on: false },
+    mouse: { x: 0, y: 0, s: 0, on: false, activeUntil: 0 },
     moving: false,
     split: false,
     ready: false,
@@ -184,12 +192,20 @@ function makeState() {
     raf: 0,
     last: 0,
     time: 0,
+    dpr: 1.25,
     glc: null as null | { gl: WebGLRenderingContext; u: Record<string, WebGLUniformLocation | null> },
   }
 }
 
 function initGL(canvas: HTMLCanvasElement) {
-  const gl = canvas.getContext("webgl", { premultipliedAlpha: true, alpha: true, antialias: false }) as WebGLRenderingContext | null
+  const gl = canvas.getContext("webgl", {
+    premultipliedAlpha: true,
+    alpha: true,
+    antialias: false,
+    depth: false,
+    stencil: false,
+    powerPreference: "low-power",
+  }) as WebGLRenderingContext | null
   if (!gl) return null
   const sh = (type: number, src: string) => {
     const s = gl.createShader(type)!
@@ -217,12 +233,6 @@ function initGL(canvas: HTMLCanvasElement) {
   return { gl, u }
 }
 
-function supportsRefraction() {
-  if (typeof window === "undefined" || typeof CSS === "undefined") return false
-  const ua = navigator.userAgent
-  return /Chrome\/|Chromium\/|Edg\//.test(ua) && !/Firefox\//.test(ua) && !!(CSS as any).supports?.("backdrop-filter", "url(#a)")
-}
-
 export function LiquidNavbar({
   items = DEFAULT_ITEMS,
   defaultActive = 0,
@@ -244,7 +254,6 @@ export function LiquidNavbar({
   const audio = React.useRef<AudioContext | null>(null)
   const st = React.useRef(makeState())
   const [gl, setGl] = React.useState<"on" | "off">("on")
-  const [refract, setRefract] = React.useState(false)
   const [fx, setFx] = React.useState({ i: -1, n: 0 })
   const dark = tone === "dark" ? 1 : 0
   const darkRef = React.useRef(dark)
@@ -258,7 +267,7 @@ export function LiquidNavbar({
     const r = T.r * (1 - 0.3 * thin)
     if (s.glc) {
       const { gl: g, u } = s.glc
-      const dpr = Math.min(window.devicePixelRatio || 1, 2)
+      const dpr = s.dpr
       g.viewport(0, 0, g.drawingBufferWidth, g.drawingBufferHeight)
       g.uniform2f(u.uRes, s.w + PAD * 2, s.h + PAD * 2)
       g.uniform1f(u.uDpr, dpr)
@@ -277,7 +286,7 @@ export function LiquidNavbar({
       g.uniform4fv(u.uRip, rips)
       g.uniform3f(u.uMouse, s.mouse.x, s.mouse.y, s.mouse.s)
       g.uniform1f(u.uDark, darkRef.current)
-      g.uniform1f(u.uAmb, s.reduce ? 0 : 1)
+      g.uniform1f(u.uAmb, s.moving || s.rips.length > 0 ? 1 : 0)
       g.clearColor(0, 0, 0, 0)
       g.clear(g.COLOR_BUFFER_BIT)
       g.drawArrays(g.TRIANGLES, 0, 3)
@@ -352,9 +361,10 @@ export function LiquidNavbar({
       if (s.split || !s.reduce) s.rips.push({ x: T.x, y: T.cy, age: 0, amp: s.split ? 1.2 : 0.7 })
     }
     s.rips.forEach((p) => (p.age += dt))
-    s.rips = s.rips.filter((p) => p.age < 2.4)
-    const target = s.mouse.on ? 1 : 0
-    s.mouse.s += (target - s.mouse.s) * Math.min(1, dt * 7)
+    s.rips = s.rips.filter((p) => p.age < 1.8)
+    const mouseActive = s.mouse.on && now < s.mouse.activeUntil
+    const target = mouseActive ? 1 : 0
+    s.mouse.s += (target - s.mouse.s) * Math.min(1, dt * 8)
   }, [])
 
   const loop = React.useCallback(() => {
@@ -366,8 +376,9 @@ export function LiquidNavbar({
       s.last = now
       step(dt, now)
       draw()
-      const busy = s.moving || s.rips.length || s.sats.length || s.mouse.s > 0.01
-      if (s.visible && (!s.reduce || busy)) s.raf = requestAnimationFrame(tick)
+      const mouseActive = (s.mouse.on && now < s.mouse.activeUntil) || s.mouse.s > 0.015
+      const busy = s.moving || s.rips.length > 0 || s.sats.length > 0 || mouseActive || Math.abs(s.t.q - s.q) > 0.25
+      if (s.visible && busy) s.raf = requestAnimationFrame(tick)
       else s.raf = 0
     }
     s.raf = requestAnimationFrame(tick)
@@ -398,7 +409,9 @@ export function LiquidNavbar({
     T.x = nx
     const cv = canvasRef.current
     if (cv) {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2)
+      const isMob = typeof window !== "undefined" && window.innerWidth < 768
+      const dpr = Math.min(window.devicePixelRatio || 1, isMob ? 1.15 : 1.35)
+      s.dpr = dpr
       const W = s.w + PAD * 2, Hh = s.h + PAD * 2
       if (cv.width !== Math.round(W * dpr) || cv.height !== Math.round(Hh * dpr)) {
         cv.width = Math.round(W * dpr)
@@ -407,23 +420,22 @@ export function LiquidNavbar({
         cv.style.height = `${Hh}px`
       }
     }
+    draw()
     loop()
-  }, [current, loop])
+  }, [current, draw, loop])
 
   React.useEffect(() => {
-    setRefract(supportsRefraction())
     const s = st.current
-    const isMobile = typeof window !== "undefined" && window.innerWidth < 768
     s.reduce = !!window.matchMedia?.("(prefers-reduced-motion: reduce)").matches
     const cv = canvasRef.current
-    // Adaptive performance: use WebGL on desktop, smooth CSS drop on mobile
-    s.glc = cv && !isMobile ? initGL(cv) : null
+    // Enable WebGL 3D liquid droplet on both desktop and mobile (on-demand rendering = 0% idle cost)
+    s.glc = cv ? initGL(cv) : null
     if (!s.glc) setGl("off")
     const lost = (e: Event) => { e.preventDefault(); s.glc = null; setGl("off") }
     cv?.addEventListener("webglcontextlost", lost)
-    const io = new IntersectionObserver(([e]) => { s.visible = e.isIntersecting; if (s.visible) loop() })
+    const io = new IntersectionObserver(([e]) => { s.visible = e.isIntersecting; if (s.visible) { draw(); loop() } })
     if (navRef.current) io.observe(navRef.current)
-    const vis = () => { s.visible = document.visibilityState === "visible"; if (s.visible) loop() }
+    const vis = () => { s.visible = document.visibilityState === "visible"; if (s.visible) { draw(); loop() } }
     document.addEventListener("visibilitychange", vis)
     return () => {
       cv?.removeEventListener("webglcontextlost", lost)
@@ -432,7 +444,7 @@ export function LiquidNavbar({
       cancelAnimationFrame(s.raf)
       s.raf = 0
     }
-  }, [loop])
+  }, [draw, loop])
 
   React.useLayoutEffect(() => { measure() }, [measure, items.length, compact])
   const measureRef = React.useRef(measure)
@@ -446,7 +458,7 @@ export function LiquidNavbar({
     if (navRef.current) ro.observe(navRef.current)
     return () => ro.disconnect()
   }, [])
-  React.useEffect(() => { loop() }, [tone, loop])
+  React.useEffect(() => { draw(); loop() }, [tone, draw, loop])
 
   const local = (clientX: number, clientY: number) => {
     const r = navRef.current!.getBoundingClientRect()
@@ -512,6 +524,7 @@ export function LiquidNavbar({
     s.mouse.x = p.x
     s.mouse.y = p.y
     s.mouse.on = true
+    s.mouse.activeUntil = performance.now() + 180
     loop()
   }
 
@@ -522,7 +535,6 @@ export function LiquidNavbar({
       data-tone={tone}
       data-gl={gl}
       data-compact={compact === undefined ? undefined : String(compact)}
-      data-refract={refract ? "on" : "off"}
       aria-label="Main"
       onKeyDown={onKeyDown}
       onPointerMove={onMove}
@@ -531,13 +543,6 @@ export function LiquidNavbar({
       style={style}
     >
       <style dangerouslySetInnerHTML={{ __html: NIMBUS_CSS }} />
-      <svg width="0" height="0" style={{ position: "absolute" }} aria-hidden="true">
-        <filter id="nimbus-refract" x="0" y="0" width="100%" height="100%" colorInterpolationFilters="sRGB">
-          <feTurbulence type="fractalNoise" baseFrequency="0.006 0.02" numOctaves="2" seed="7" result="noise" />
-          <feGaussianBlur in="noise" stdDeviation="2" result="soft" />
-          <feDisplacementMap in="SourceGraphic" in2="soft" scale="60" xChannelSelector="R" yChannelSelector="G" />
-        </filter>
-      </svg>
       <span className="nimbus-glass" aria-hidden="true" />
       <canvas className="nimbus-water" ref={canvasRef} aria-hidden="true" />
       <span className="nimbus-drop" ref={dropRef} aria-hidden="true" />

@@ -4,20 +4,21 @@
   left: 0;
   width: 100%;
   z-index: 1000;
-  transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  transition: background-color 0.3s ease, padding 0.3s ease;
   background: transparent;
   padding: 0.9rem 0;
+  transform: translateZ(0);
 }
 
 .scrolled {
-  background-color: rgba(248, 246, 240, 0.82);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  background-color: rgba(248, 246, 240, 0.86);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   padding: 0.45rem 0;
 }
 
 [data-theme='dark'] .scrolled {
-  background-color: rgba(11, 15, 25, 0.82);
+  background-color: rgba(11, 15, 25, 0.86);
 }
 
 .scrolled::after {
@@ -76,13 +77,19 @@
   gap: 0.85rem;
 }
 
+.liquidNavWrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .actions {
   display: flex;
   align-items: center;
   gap: 0.6rem;
   background: var(--card-bg);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   padding: 0.48rem 0.95rem;
   border-radius: 999px;
   border: 1px solid var(--border-color);
@@ -102,7 +109,7 @@
   align-items: center;
   justify-content: center;
   opacity: 0.82;
-  transition: all 0.2s ease;
+  transition: opacity 0.2s ease, color 0.2s ease, background-color 0.2s ease;
   font-size: 0.76rem;
   font-weight: 700;
   padding: 0.25rem 0.45rem;
@@ -120,8 +127,8 @@
   background: none;
   border: none;
   padding: 0;
-  min-width: 40px;
-  min-height: 40px;
+  min-width: 34px;
+  min-height: 34px;
   border-radius: 999px;
   cursor: pointer;
   display: inline-flex;
@@ -188,171 +195,64 @@
   transform: translateY(0);
 }
 
-.mobileToggle {
-  display: none;
-}
-
-.mobileMenu {
-  display: none;
-}
-
 @media (max-width: 860px) {
-  .desktopNav {
-    display: none;
-  }
-  
-  .mobileToggle {
-    display: flex;
-    align-items: center;
-    gap: 0.35rem;
+  .navbar {
+    padding: 0.45rem 0;
   }
 
-  .mobileToggle .matraNavLogo,
-  .mobileActions .matraNavLogo {
-    width: 24px;
-    height: 24px;
+  .scrolled {
+    padding: 0.35rem 0;
+  }
+
+  .container {
+    padding: 0 0.75rem;
+    flex-wrap: wrap;
+    row-gap: 0.4rem;
+    column-gap: 0.5rem;
+  }
+
+  .logo {
+    order: 1;
+  }
+
+  .logo a {
+    font-size: clamp(1.2rem, 4.8vw, 1.45rem);
+    padding: 0.15rem 0.3rem;
+  }
+
+  .desktopNav {
+    order: 2;
+    display: contents;
+  }
+
+  .actions {
+    order: 2;
+    gap: 0.35rem;
+    padding: 0.25rem 0.6rem;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  .liquidNavWrap {
+    order: 3;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .matraTriggerBtn {
+    min-width: 28px;
+    min-height: 28px;
+  }
+
+  .matraNavLogo {
+    width: 22px;
+    height: 22px;
   }
 
   .matraTriggerBtn[data-tooltip]::after {
     display: none;
   }
-  
-  .mobileMenu {
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    background-color: var(--bg-color);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    padding: 1.5rem 2rem 2rem;
-    border-bottom: 1px solid var(--border-color);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.18);
-  }
-  
-  .mobileNavLinks {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    margin-bottom: 1.5rem;
-  }
-  
-  .mobileNavLinks a {
-    font-family: var(--font-display);
-    font-size: 1.35rem;
-    border-bottom: 1px solid var(--border-color);
-    padding: 0.65rem 0;
-    display: block;
-  }
-  
-  .mobileActions {
-    display: flex;
-    align-items: center;
-    gap: 1.25rem;
-    padding-top: 0.85rem;
-    border-top: 1px solid var(--border-color);
-  }
 }
 
-@media (max-width: 767px) {
-  .navbar {
-    padding: 0.6rem 0;
-  }
-
-  .scrolled {
-    padding: 0.45rem 0;
-  }
-
-  .container {
-    padding: 0 1rem;
-    gap: 0.5rem;
-  }
-
-  .logo a {
-    font-size: clamp(1.25rem, 5.2vw, 1.5rem);
-    padding: 0.25rem 0.35rem;
-    min-height: 44px;
-  }
-
-  .mobileToggle {
-    gap: 0.25rem;
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 999px;
-    padding: 0.2rem 0.35rem;
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-  }
-
-  .mobileToggle .iconBtn,
-  .mobileToggle .matraTriggerBtn {
-    min-width: 40px;
-    min-height: 40px;
-    padding: 0.35rem;
-    border-radius: 999px;
-  }
-
-  .mobileMenu {
-    padding: 1.15rem 1.15rem 1.5rem;
-    max-height: calc(100dvh - 60px);
-    overflow-y: auto;
-  }
-
-  .mobileNavLinks {
-    gap: 0.35rem;
-    margin-bottom: 1.15rem;
-  }
-
-  .mobileNavLinks a {
-    font-size: 1.2rem;
-    padding: 0.7rem 0.25rem;
-    min-height: 44px;
-    display: flex;
-    align-items: center;
-  }
-
-  .mobileActions {
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 0.75rem;
-    padding-top: 0.85rem;
-  }
-
-  .mobileActions .iconBtn {
-    min-height: 44px;
-    padding: 0.45rem 0.85rem;
-    border: 1px solid var(--border-color);
-    border-radius: 999px;
-    background: var(--card-bg);
-    font-size: 0.82rem;
-  }
-
-  .mobileActions .matraTriggerBtn {
-    min-width: 44px;
-    min-height: 44px;
-  }
-}
-
-@media (max-width: 359px) {
-  .container {
-    padding: 0 0.75rem;
-  }
-
-  .logo a {
-    font-size: 1.18rem;
-  }
-
-  .mobileToggle {
-    padding: 0.15rem 0.25rem;
-    gap: 0.15rem;
-  }
-
-  .mobileToggle .iconBtn,
-  .mobileToggle .matraTriggerBtn {
-    min-width: 38px;
-    min-height: 38px;
-  }
-}
 

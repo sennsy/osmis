@@ -185,6 +185,7 @@ export function MatchboxCarousel({
   const half = Math.floor((N - 1) / 2);
   const current = items[index];
 
+  const isMobile = box.w < 640;
   const boxes = items.map((it, i) => {
     const k = offset(i, pos.shown, N, half);
     // Boxes wrapping round from one end to the other jump instead of sliding across.
@@ -193,7 +194,7 @@ export function MatchboxCarousel({
     const amount = open ? 1 : 0;
     // Sideways boxes push their right-hand neighbours along to make room for the tray.
     const x = g.x0 + k * g.P + (!g.up && k > 0 ? g.slide * amount : 0) + drag.offset;
-    const far = Math.abs(k) > 2;
+    const far = Math.abs(k) > (isMobile ? 1 : 2);
     const tint = it.tint || TINTS[i % TINTS.length];
     const out = active ? g.slide * amount : 0;
     const speed = active && !open ? CLOSE : OPEN;
@@ -213,29 +214,39 @@ export function MatchboxCarousel({
           width: g.bw,
           height: g.bd,
           transformStyle: "preserve-3d",
+          willChange: far ? "auto" : "transform, opacity",
           transform: `translate3d(${x - g.bw / 2}px, ${g.y0 - g.bd / 2}px, 0)`,
           transition: jump || drag.offset ? "none" : `transform ${moving ? SHIFT : OPEN}ms ${EASE}, opacity .4s`,
           opacity: far ? 0 : 1,
+          visibility: far ? "hidden" : "visible",
           cursor: active ? "default" : "pointer",
           pointerEvents: far ? "none" : "auto",
         }}
       >
-        <div
-          style={{
-            position: "absolute",
-            left: -g.bw * 0.05,
-            top: -g.bd * 0.02,
-            width: g.bw * 1.1 + (g.up ? 0 : out),
-            height: g.bd * 1.08 + (g.up ? out : 0),
-            borderRadius: g.m * 0.04,
-            background: "rgba(48,32,18,.30)",
-            filter: `blur(${g.m * 0.035}px)`,
-            transform: `translateZ(0.5px) translate(${g.bw * 0.02}px, ${g.bd * 0.05}px)`,
-            transition: `width ${speed}ms ${EASE}, height ${speed}ms ${EASE}`,
-          }}
-        />
-        <Tray g={g} it={it} out={out} speed={speed} active={active} wasDrag={drag.wasDrag} />
-        <Sleeve g={g} it={it} n={i + 1} tint={tint} />
+        {!far && (
+          <>
+            <div
+              style={{
+                position: "absolute",
+                left: -g.bw * 0.05,
+                top: -g.bd * 0.02,
+                width: g.bw * 1.1 + (g.up ? 0 : out),
+                height: g.bd * 1.08 + (g.up ? out : 0),
+                borderRadius: g.m * 0.04,
+                background: isMobile
+                  ? "radial-gradient(ellipse at center, rgba(48,32,18,.28) 0%, rgba(48,32,18,.12) 60%, transparent 80%)"
+                  : "rgba(48,32,18,.30)",
+                filter: isMobile ? "none" : `blur(${g.m * 0.035}px)`,
+                transform: `translateZ(0.5px) translate(${g.bw * 0.02}px, ${g.bd * 0.05}px)`,
+                transition: `width ${speed}ms ${EASE}, height ${speed}ms ${EASE}`,
+              }}
+            />
+            {Math.abs(k) <= 1 && (
+              <Tray g={g} it={it} out={out} speed={speed} active={active} wasDrag={drag.wasDrag} />
+            )}
+            <Sleeve g={g} it={it} n={i + 1} tint={tint} />
+          </>
+        )}
       </div>
     );
   });
@@ -267,8 +278,8 @@ export function MatchboxCarousel({
       style={{
         position: "relative",
         width: "100%",
-        aspectRatio: box.w < 640 ? "3 / 4.6" : "16 / 9.2",
-        minHeight: box.w < 640 ? 640 : 760,
+        aspectRatio: box.w < 640 ? "3 / 3.75" : "16 / 9.2",
+        minHeight: box.w < 640 ? 460 : 760,
         overflow: "visible",
         background: table,
         borderRadius: 0,

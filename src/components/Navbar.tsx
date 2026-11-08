@@ -5,14 +5,13 @@ import { useTheme } from 'next-themes';
 import { usePathname, useRouter } from 'next/navigation';
 import { useLanguage } from './LanguageProvider';
 import Link from 'next/link';
-import { Sun, Moon, Globe, Menu, X } from 'lucide-react';
+import { Sun, Moon, Globe } from 'lucide-react';
 import LiveClock from './LiveClock';
 import { LiquidNavbar, NimbusIcons, type LiquidNavItem } from './ui/liquid-glass-navbar';
 import styles from './Navbar.module.css';
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeNavIdx, setActiveNavIdx] = useState(0);
   const { theme, setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
@@ -131,13 +130,15 @@ export default function Navbar() {
         </div>
         
         <div className={styles.desktopNav}>
-          <LiquidNavbar
-            items={liquidItems}
-            active={activeNavIdx}
-            onChange={handleLiquidSelect}
-            tone={liquidTone}
-            sound={true}
-          />
+          <div className={styles.liquidNavWrap}>
+            <LiquidNavbar
+              items={liquidItems}
+              active={activeNavIdx}
+              onChange={handleLiquidSelect}
+              tone={liquidTone}
+              sound={true}
+            />
+          </div>
           
           <div className={styles.actions}>
             <button onClick={handleLanguageChange} className={styles.iconBtn} aria-label="Change Language" title="Ganti Bahasa (ID / EN / AR)">
@@ -174,105 +175,7 @@ export default function Navbar() {
             </button>
           </div>
         </div>
-
-        <div className={styles.mobileToggle}>
-          <button
-            type="button"
-            onClick={() => {
-              const current = theme === 'system' ? resolvedTheme : theme;
-              setTheme(current === 'dark' ? 'light' : 'dark');
-            }}
-            className={styles.iconBtn}
-            aria-label="Toggle Theme"
-            title="Ubah Tema Terang / Gelap"
-          >
-            {mounted && (currentTheme === 'dark' ? <Moon size={18} /> : <Sun size={18} />)}
-          </button>
-          <button
-            type="button"
-            onClick={handleMatraTrigger}
-            className={styles.matraTriggerBtn}
-            aria-label="Matra AI — AI Assistant"
-            title="Matra AI — AI Assistant"
-          >
-            <img
-              src="/matra_logo.jpg"
-              alt="Matra AI"
-              width={24}
-              height={24}
-              className={styles.matraNavLogo}
-              draggable={false}
-            />
-          </button>
-          <button
-            type="button"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className={styles.iconBtn}
-            aria-label={mobileMenuOpen ? "Tutup Menu" : "Buka Menu"}
-            aria-expanded={mobileMenuOpen}
-          >
-            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
-        </div>
       </div>
-
-      {/* Mobile Menu */}
-      {mobileMenuOpen && (
-        <div className={styles.mobileMenu}>
-          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.25rem' }}>
-            <LiquidNavbar
-              items={liquidItems}
-              active={activeNavIdx}
-              onChange={(i, item) => {
-                setMobileMenuOpen(false);
-                handleLiquidSelect(i, item);
-              }}
-              tone={liquidTone}
-              compact={true}
-              sound={true}
-            />
-          </div>
-          <ul className={styles.mobileNavLinks}>
-            {navLinks.map((link, idx) => (
-              <li key={idx}>
-                <Link href={link.href} onClick={() => setMobileMenuOpen(false)} className="mono-font">
-                  {link.name.toUpperCase()}
-                </Link>
-              </li>
-            ))}
-          </ul>
-          <div className={styles.mobileActions}>
-            <button onClick={handleLanguageChange} className={styles.iconBtn}>
-              <Globe size={18} /> <span className="mono-font" style={{ marginLeft: 6 }}>{t.langName}</span>
-            </button>
-            <button onClick={() => {
-              const current = theme === 'system' ? resolvedTheme : theme;
-              setTheme(current === 'dark' ? 'light' : 'dark');
-            }} className={styles.iconBtn}>
-              {mounted && (currentTheme === 'dark' ? <><Moon size={18} /> <span style={{ marginLeft: 6 }}>Dark</span></> : <><Sun size={18} /> <span style={{ marginLeft: 6 }}>Light</span></>)}
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setMobileMenuOpen(false);
-                handleMatraTrigger();
-              }}
-              className={styles.matraTriggerBtn}
-              aria-label="Matra AI — AI Assistant"
-              title="Matra AI — AI Assistant"
-            >
-              <img
-                src="/matra_logo.jpg"
-                alt="Matra AI"
-                width={24}
-                height={24}
-                className={styles.matraNavLogo}
-                draggable={false}
-              />
-            </button>
-          </div>
-        </div>
-      )}
     </nav>
   );
 }

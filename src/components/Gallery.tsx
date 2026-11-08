@@ -26,6 +26,7 @@ export default function Gallery() {
 
   const [isDarkTheme, setIsDarkTheme] = useState(false);
   const [folderWidth, setFolderWidth] = useState(320);
+  const [isMobileView, setIsMobileView] = useState(false);
 
   // Lightbox state: holds the active list of Drive IDs and the selected index
   const [lightboxState, setLightboxState] = useState<{
@@ -47,11 +48,14 @@ export default function Gallery() {
     });
 
     const handleResize = () => {
-      if (window.innerWidth < 420) {
-        setFolderWidth(Math.min(300, window.innerWidth - 40));
-      } else if (window.innerWidth < 768) {
-        setFolderWidth(310);
+      const vw = window.innerWidth;
+      if (vw < 768) {
+        setIsMobileView(true);
+        // Fit 2 folders per row cleanly with 0.75rem container padding and 0.65rem grid gap
+        const twoColWidth = Math.floor((vw - 38) / 2);
+        setFolderWidth(Math.max(136, Math.min(220, twoColWidth)));
       } else {
+        setIsMobileView(false);
         setFolderWidth(330);
       }
     };
@@ -149,7 +153,7 @@ export default function Gallery() {
                 files={folder.files}
                 action="more"
                 labelPlacement="bottom-left"
-                defaultOpen={idx === 0}
+                defaultOpen={!isMobileView && idx === 0}
                 width={folderWidth}
                 appear={true}
                 appearDelay={idx * 110}

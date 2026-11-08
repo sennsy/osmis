@@ -222,42 +222,42 @@ const CSS =
   ".dsh-th span{font-size:9.5px;line-height:1.2;text-align:center;font-weight:600;color:color-mix(in oklab,var(--color-foreground,#1a1a1a) 82%,transparent);max-width:82px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}" +
   ".dsh-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}" +
   "@media (max-width:767px){" +
-  ".dsh-root{min-height:660px;height:100svh!important;overflow:hidden}" +
-  ".dsh-canvas{position:relative;left:auto;top:auto;width:100%;height:100%;transform:none;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px 14px 14px;overflow:hidden}" +
-  ".dsh-arc{width:140%;height:auto;left:-20%;top:-20px;max-width:none}" +
-  ".dsh-pager{left:10px;top:96px;z-index:5;gap:6px}" +
-  ".dsh-dot{width:28px;height:22px}" +
-  ".dsh-dot i{width:5px;height:5px;border-radius:99px}" +
-  ".dsh-dot[aria-current] i{height:20px;width:5px;background:var(--osmis-green,#2e5942)}" +
-  ".dsh-plates{position:relative;left:auto;top:auto;width:min(36vw,138px);height:min(36vw,138px);margin-top:0;flex-shrink:0}" +
-  ".dsh-orbit>img{width:100%;height:100%}" +
-  ".dsh-head{position:relative;left:auto;top:auto;width:100%;max-width:100%;height:86px;margin-top:6px;flex-shrink:0}" +
-  ".dsh-hd{text-align:center;transform:none;padding:0 28px}" +
-  ".dsh-eye{font-size:10.5px;margin:0 0 3px}" +
-  ".dsh-t1{font-size:clamp(16px,4.8vw,22px)!important;white-space:normal;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}" +
-  ".dsh-t2{font-size:clamp(14px,4.2vw,18px)!important;margin-top:2px}" +
-  ".dsh-acts{position:relative;left:auto;top:auto;margin-top:6px;flex-shrink:0}" +
-  ".dsh-acts .dsh-btn{min-height:40px;padding:8px 16px;font-size:12px}" +
-  ".dsh-card{position:relative;left:auto;top:auto;width:100%;max-width:420px;margin-top:8px;padding:12px 14px;border-radius:16px;flex-shrink:0}" +
-  ".dsh-tabs{margin-bottom:8px;padding-bottom:6px}" +
-  ".dsh-tab{min-height:34px;padding:4px 8px;font-size:12px}" +
-  ".dsh-rate{height:44px;margin:0 0 6px 2px}" +
-  ".dsh-badge{width:38px;height:44px}" +
-  ".dsh-num{font-size:24px;top:3px}" +
-  ".dsh-chef{font-size:13.5px}" +
-  ".dsh-kit{font-size:10px;margin:2px 0 6px}" +
-  ".dsh-scroll{max-height:92px}" +
-  ".dsh-more{min-height:36px;padding:7px 10px;margin-top:8px;font-size:10.5px}" +
-  ".dsh-react{margin-top:8px}" +
-  ".dsh-strip{position:relative;left:auto;top:auto;width:100%;max-width:420px;height:48px;margin-top:8px;display:flex;align-items:center;justify-content:space-between;gap:8px;z-index:5;flex-shrink:0}" +
-  ".dsh-arrow{width:42px;height:42px;border-radius:999px;background:color-mix(in oklab,var(--color-foreground,#1a1a1a) 8%,transparent);border:1px solid color-mix(in oklab,var(--color-foreground,#1a1a1a) 14%,transparent)}" +
-  ".dsh-win{flex:1;width:auto;height:44px;mask-image:none;-webkit-mask-image:none;overflow-x:auto;scrollbar-width:none}" +
+  ".dsh-root{position:sticky;top:0;min-height:0;height:100svh!important;overflow:hidden}" +
+  ".dsh-canvas{position:relative;left:auto;top:auto;width:100%;height:100%;transform:none;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:82px 14px 12px;overflow:hidden}" +
+  ".dsh-arc{width:135%;height:auto;left:-17.5%;top:10px;max-width:none}" +
+  ".dsh-pager{left:10px;top:110px;z-index:5;gap:6px}" +
+  ".dsh-dot{width:24px;height:20px}" +
+  ".dsh-dot i{width:4px;height:4px;border-radius:99px}" +
+  ".dsh-dot[aria-current] i{height:18px;width:4px;background:var(--osmis-green,#2e5942)}" +
+  ".dsh-plates{position:relative;left:auto;top:auto;width:min(30vw,116px);height:min(30vw,116px);margin-top:0;flex-shrink:0}" +
+  ".dsh-orbit>img{width:100%;height:100%;filter:drop-shadow(0 8px 12px rgba(0,0,0,.16))}" +
+  ".dsh-head{position:relative;left:auto;top:auto;width:100%;max-width:100%;height:70px;margin-top:4px;flex-shrink:0}" +
+  ".dsh-hd{text-align:center;transform:none;padding:0 24px}" +
+  ".dsh-eye{font-size:10px;margin:0 0 2px}" +
+  ".dsh-t1{font-size:clamp(15px,4.5vw,20px)!important;white-space:normal;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}" +
+  ".dsh-t2{font-size:clamp(13px,4vw,17px)!important;margin-top:2px}" +
+  ".dsh-acts{position:relative;left:auto;top:auto;margin-top:4px;flex-shrink:0}" +
+  ".dsh-acts .dsh-btn{min-height:36px;padding:7px 15px;font-size:11.5px;box-shadow:0 4px 12px -4px rgba(0,0,0,.2)}" +
+  ".dsh-card{position:relative;left:auto;top:auto;width:100%;max-width:420px;margin-top:6px;padding:10px 12px;border-radius:14px;flex-shrink:0;-webkit-backdrop-filter:none;backdrop-filter:none;background:color-mix(in oklab,var(--color-background,#f8f6f0) 94%,transparent);box-shadow:0 8px 20px -12px rgba(0,0,0,.18)}" +
+  ".dsh-tabs{margin-bottom:6px;padding-bottom:5px}" +
+  ".dsh-tab{min-height:30px;padding:3px 6px;font-size:11.5px}" +
+  ".dsh-rate{height:38px;margin:0 0 4px 2px}" +
+  ".dsh-badge{width:34px;height:38px}" +
+  ".dsh-num{font-size:21px;top:3px}" +
+  ".dsh-chef{font-size:13px}" +
+  ".dsh-kit{font-size:9.5px;margin:1px 0 5px}" +
+  ".dsh-scroll{max-height:84px}" +
+  ".dsh-more{min-height:32px;padding:6px 10px;margin-top:6px;font-size:10px}" +
+  ".dsh-react{margin-top:6px}" +
+  ".dsh-strip{position:relative;left:auto;top:auto;width:100%;max-width:420px;height:42px;margin-top:6px;display:flex;align-items:center;justify-content:space-between;gap:6px;z-index:5;flex-shrink:0}" +
+  ".dsh-arrow{width:38px;height:38px;border-radius:999px;background:color-mix(in oklab,var(--color-foreground,#1a1a1a) 8%,transparent);border:1px solid color-mix(in oklab,var(--color-foreground,#1a1a1a) 14%,transparent)}" +
+  ".dsh-win{flex:1;width:auto;height:40px;mask-image:none;-webkit-mask-image:none;overflow-x:auto;scrollbar-width:none}" +
   ".dsh-win::-webkit-scrollbar{display:none}" +
-  ".dsh-track{position:relative;transform:none!important;height:44px;align-items:center;gap:6px}" +
-  ".dsh-th{width:auto;height:40px;padding:0;flex:none}" +
-  ".dsh-th .dsh-btn{width:auto;height:36px;padding:0 10px;border-radius:999px;flex-direction:row;gap:6px;background:color-mix(in oklab,var(--color-foreground,#1a1a1a) 5%,transparent)}" +
-  ".dsh-th img{width:22px;height:22px}" +
-  ".dsh-th span{font-size:10px;-webkit-line-clamp:1;max-width:110px;white-space:nowrap}" +
+  ".dsh-track{position:relative;transform:none!important;height:40px;align-items:center;gap:6px}" +
+  ".dsh-th{width:auto;height:36px;padding:0;flex:none}" +
+  ".dsh-th .dsh-btn{width:auto;height:34px;padding:0 9px;border-radius:999px;flex-direction:row;gap:5px;background:color-mix(in oklab,var(--color-foreground,#1a1a1a) 5%,transparent)}" +
+  ".dsh-th img{width:20px;height:20px;filter:none}" +
+  ".dsh-th span{font-size:9.5px;-webkit-line-clamp:1;max-width:105px;white-space:nowrap}" +
   "}" +
   "@media (prefers-reduced-motion:reduce){.dsh-track,.dsh-dot,.dsh-dot i,.dsh-th .dsh-btn,.dsh-th img,.dsh-like{transition:none}}"
 
@@ -358,7 +358,8 @@ export function DishOrbitCarousel({
       }
     }
     // Writes the band's path only; no layout is read.
-    const drawArc = () => arcRef.current?.setAttribute("d", arcPath(arc.current.a0, arc.current.a1, ORBIT_X, ORBIT_Y, ORBIT_R, 118))
+    const arcSteps = typeof window !== "undefined" && window.innerWidth < 768 ? 24 : 48
+    const drawArc = () => arcRef.current?.setAttribute("d", arcPath(arc.current.a0, arc.current.a1, ORBIT_X, ORBIT_Y, ORBIT_R, 118, arcSteps))
     const rest = arcRest(to)
     const tint = dishes[to] ? dishes[to].accent : "transparent"
     if (tlRef.current) tlRef.current.progress(1).kill()
