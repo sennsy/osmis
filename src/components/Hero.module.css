@@ -1,360 +1,346 @@
 .hero {
   position: relative;
-  height: 100vh;
+  min-height: 100svh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+  overflow: hidden;
+  padding: clamp(5.5rem, 9vh, 7rem) 1.5rem clamp(1.75rem, 3.5vh, 2.75rem);
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+/* ───────────────────── ARCH / DOME GATEWAY PORTAL ───────────────────── */
+.archWrapper {
+  position: relative;
+  width: 100%;
+  max-width: 660px;
+  min-height: clamp(390px, 56vh, 540px);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  text-align: center;
-  overflow: hidden;
-  padding: 0 2rem;
+  margin: auto 0;
+  padding: clamp(3rem, 6vh, 4.75rem) clamp(1.5rem, 4vw, 3.25rem) clamp(2.25rem, 4.5vh, 3.5rem);
 }
 
-.content {
-  z-index: 10;
+.archDome {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px 999px 0 0;
+  /* Light mode: --osmis-green at 5% opacity + subtle top-center radial glow */
+  background:
+    radial-gradient(
+      80% 65% at 50% 18%,
+      color-mix(in srgb, var(--osmis-green) 7%, transparent) 0%,
+      transparent 75%
+    ),
+    color-mix(in srgb, var(--osmis-green) 5%, transparent);
+  color: var(--osmis-green);
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1;
+}
+
+[data-theme='dark'] .archDome {
+  /* Dark mode: --osmis-green at 8% opacity */
+  background:
+    radial-gradient(
+      80% 65% at 50% 18%,
+      color-mix(in srgb, var(--osmis-green) 11%, transparent) 0%,
+      transparent 75%
+    ),
+    color-mix(in srgb, var(--osmis-green) 8%, transparent);
+}
+
+.archSvg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none;
+}
+
+.archStrokeOuter {
+  opacity: 0.15;
+}
+
+.archStrokeInner {
+  opacity: 0.1;
+}
+
+.archKeystone {
+  color: var(--osmis-yellow);
+  opacity: 0.45;
+}
+
+/* Watermark Logo Ma'had inside the Arch */
+.watermark {
+  position: absolute;
+  top: 46%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: clamp(240px, 42vw, 410px);
+  height: auto;
+  object-fit: contain;
+  opacity: 0.11;
+  pointer-events: none;
+  user-select: none;
+}
+
+[data-theme='dark'] .watermark {
+  opacity: 0.09;
+}
+
+/* ───────────────────── CENTERED IDENTITY ZONE ───────────────────── */
+.identityCard {
+  position: relative;
+  z-index: 5;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.5rem;
-  padding: 4rem;
-  margin-bottom: 8vh;
-  /* Modern Glass Box */
-  border: 1px solid var(--border-color);
-  border-radius: 24px;
-  background-color: var(--card-bg);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  box-shadow: 0 8px 32px 0 rgba(0,0,0,0.05);
+  gap: 1.15rem;
+  animation: heroCardFadeUp 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-[data-theme='dark'] .content {
-  box-shadow: 0 8px 32px 0 rgba(0, 255, 136, 0.05);
+@keyframes heroCardFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .halftoneContainer {
   width: 100%;
-  max-width: 720px;
-  margin: 0 auto 0.25rem;
+  max-width: 560px;
+  margin: 0 auto;
   position: relative;
+  animation: wordmarkFloat 3.4s ease-in-out infinite;
 }
 
-.title {
-  font-size: clamp(2.5rem, 12vw, 10rem);
-  line-height: 0.9;
-  letter-spacing: -0.04em;
-  color: var(--text-color);
-  margin-bottom: -1rem;
-  text-transform: uppercase;
-  /* Apple large text + Genshin Impact cinematic scale */
+/* Stabilized slow float: max amplitude ±3px (≤ 4px), duration 3.4s (≥ 2.5s) */
+@keyframes wordmarkFloat {
+  0%,
+  100% {
+    transform: translateY(-3px);
+  }
+  50% {
+    transform: translateY(3px);
+  }
 }
 
-[data-theme='dark'] .halftoneContainer {
-  width: 100%;
-  max-width: 720px;
-  margin: 0 auto 0.25rem;
-  position: relative;
+.archRule {
+  width: min(82%, 380px);
+  height: 1px;
+  background-color: color-mix(in srgb, var(--osmis-green) 22%, transparent);
+  margin: 0.15rem 0;
 }
 
-.title {
-  /* Cyberpunk glitch hint */
-  text-shadow: 2px 2px 0px rgba(0, 255, 136, 0.5), -2px -2px 0px rgba(255, 230, 0, 0.5);
-}
-
-.subtitle {
-  font-family: var(--font-mono);
-  font-size: clamp(1rem, 2vw, 1.5rem);
-  letter-spacing: 0.3em;
-  opacity: 0.9;
+/* Black/dark contrast pill → ORGANISASI MA'HAD IMAM SYAFI'I */
+.orgBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   background-color: var(--text-color);
   color: var(--bg-color);
-  padding: 0.2rem 1rem;
-  /* Cyberpunk tech label style */
-  clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
-}
-
-.est {
-  font-size: 1rem;
+  font-size: clamp(0.72rem, 1.1vw, 0.84rem);
+  font-weight: 700;
   letter-spacing: 0.2em;
-  opacity: 0.5;
-  border-bottom: 1px dashed var(--sketch-line);
-  padding-bottom: 0.5rem;
+  line-height: 1.3;
+  padding: 0.45rem 1.25rem;
+  border-radius: 9999px;
 }
 
-.motto {
-  margin-top: 2rem;
-  font-style: italic;
-  font-size: clamp(1.2rem, 3vw, 2.5rem);
+/* Period label: EST. 2018 · 26 — 27 */
+.periodMeta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  font-size: clamp(0.9rem, 1.35vw, 1.08rem);
+  font-weight: 700;
+  letter-spacing: 0.18em;
   color: var(--osmis-green);
-  opacity: 0.9;
+  margin-top: 0.15rem;
 }
 
-.periodBadge {
-  margin-top: 2rem;
-  font-size: 1.5rem;
+.metaDot {
+  color: var(--osmis-yellow);
+  font-weight: 700;
 }
 
-.divisionLogos {
+.periodYears {
+  color: var(--osmis-green);
+  position: relative;
+}
+
+.periodYears::after {
+  content: '';
   position: absolute;
-  bottom: 4.5rem; /* Place lower, above the scroll button but below the sketch box */
-  left: 50%;
-  transform: translateX(-50%);
+  left: 0;
+  right: 0;
+  bottom: -4px;
+  height: 2px;
+  background-color: var(--osmis-yellow);
+  opacity: 0.75;
+}
+
+/* ───────────────────── DIVISION ICONS ROW ───────────────────── */
+.divisionLogos {
+  position: relative;
+  z-index: 5;
   display: flex;
-  gap: 1.5rem;
-  z-index: 10;
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
-  max-width: 360px; /* Forces wrap after 4 items (assuming ~330px width for 4 items) */
+  gap: 1rem;
+  margin-top: 1.75rem;
+  margin-bottom: 1.25rem;
 }
 
-.divLogoWrapper {
-  display: flex;
+.divLogoButton {
+  display: inline-flex;
   justify-content: center;
   align-items: center;
-  width: 64px;
-  height: 64px;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px dashed var(--sketch-line);
+  width: 58px;
+  height: 58px;
   border-radius: 50%;
-  transition: transform 0.3s ease, background 0.3s ease;
-  backdrop-filter: blur(2px);
+  background-color: color-mix(in srgb, var(--osmis-green) 4%, transparent);
+  border: 1px solid color-mix(in srgb, var(--osmis-green) 18%, transparent);
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.25s ease, border-color 0.25s ease, background-color 0.25s ease;
 }
 
-.divLogoWrapper:hover {
-  transform: translateY(-5px);
-  background: rgba(255, 255, 255, 0.3);
+.divLogoButton:hover {
+  transform: scale(1.07);
+  border-color: var(--osmis-yellow);
+  background-color: color-mix(in srgb, var(--osmis-green) 9%, transparent);
+}
+
+.divLogoButton:focus-visible {
+  outline: 2px solid var(--osmis-yellow);
+  outline-offset: 3px;
 }
 
 .divLogo {
-  width: 38px;
-  height: 38px;
+  width: 34px;
+  height: 34px;
   object-fit: contain;
-  opacity: 0.8;
-  transition: opacity 0.3s;
+  opacity: 0.85;
+  transition: opacity 0.25s ease;
 }
 
-.divLogoWrapper:hover .divLogo {
+.divLogoButton:hover .divLogo {
   opacity: 1;
 }
 
+/* ───────────────────── SCROLL CTA ───────────────────── */
 .scrollBtn {
-  position: absolute;
-  bottom: 1.5rem; /* Moved lower to accommodate division logos */
-  left: 50%;
-  transform: translateX(-50%);
+  position: relative;
+  z-index: 5;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.85rem;
   background: none;
   border: none;
   color: var(--text-color);
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
   cursor: pointer;
-  opacity: 0.6;
-  transition: opacity 0.3s, transform 0.3s;
-  z-index: 10;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  animation: scrollPulse 2s ease-in-out infinite;
+  transition: color 0.25s ease;
 }
 
 .scrollBtn:hover {
-  opacity: 1;
-  transform: translate(-50%, -10px);
   color: var(--osmis-green);
 }
 
-/* Decorative crosshairs (Tech aesthetic) */
-.scrollBtn::before, .scrollBtn::after {
-  content: '+';
-  position: absolute;
-  font-family: var(--font-mono);
-  opacity: 0.3;
-}
-.scrollBtn::before { left: -30px; }
-.scrollBtn::after { right: -30px; }
-
-/* Decor */
-.gridLines {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  /* Blueprint Grid is already in globals.css, so we make this a radial gradient vignette */
-  background: radial-gradient(circle at center, transparent 30%, var(--bg-color) 100%);
-  z-index: 1;
-  pointer-events: none;
+.scrollCross {
+  color: var(--osmis-yellow);
+  opacity: 0.85;
 }
 
-.hexDecoration {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 90vw;
-  height: 90vw;
-  max-width: 1000px;
-  max-height: 1000px;
-  background-image: url('data:image/svg+xml,%3Csvg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"%3E%3Cpolygon points="50,5 95,27.5 95,72.5 50,95 5,72.5 5,27.5" fill="none" stroke="currentColor" stroke-width="0.1" opacity="0.15" stroke-dasharray="1 1"/%3E%3C/svg%3E');
-  background-size: cover;
-  z-index: 0;
-  pointer-events: none;
-  animation: slowSpin 120s linear infinite;
+@keyframes scrollPulse {
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 
-.watermark {
+.srOnly {
   position: absolute;
-  top: 45%; /* Shifted up slightly to match the content box */
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 50vw;
-  max-width: 600px;
-  z-index: 1; /* Di bawah konten yang z-index 10 */
-  pointer-events: none;
-  transition: opacity 1.5s ease-in-out;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
-/* ==================== MOBILE OVERHAUL ==================== */
+/* ───────────────────── RESPONSIVE (MOBILE-FIRST) ───────────────────── */
 @media (max-width: 768px) {
   .hero {
-    padding: 0 1rem;
-    min-height: 85vh; /* Reduced vertical footprint */
-    justify-content: flex-start;
-    padding-top: 25vh; /* Push it down a bit natively */
+    padding: 5.25rem 1rem 1.75rem;
+    min-height: 92svh;
   }
-  .content {
-    padding: 2rem 1.5rem;
-    width: 100%;
-    margin-bottom: 6vh;
-    border-radius: 16px;
-    gap: 1rem;
-  }
-  .halftoneContainer {
-  width: 100%;
-  max-width: 720px;
-  margin: 0 auto 0.25rem;
-  position: relative;
-}
 
-.title {
-    font-size: clamp(2rem, 15vw, 4rem); /* Kept big but not overwhelming */
-    margin-bottom: -0.5rem;
+  .archWrapper {
+    max-width: 440px;
+    min-height: 350px;
+    padding: 2.5rem 1.15rem 2rem;
   }
-  .subtitle {
+
+  .orgBadge {
+    font-size: 0.7rem;
+    letter-spacing: 0.13em;
+    padding: 0.4rem 0.95rem;
+  }
+
+  .periodMeta {
     font-size: 0.85rem;
-    padding: 0.3rem 0.8rem;
-    letter-spacing: 0.15em;
+    letter-spacing: 0.14em;
   }
-  .motto {
-    font-size: 1.25rem;
-    margin-top: 1rem;
-  }
+
+  /* Division icons wrap to 2 rows of 3 max on mobile */
   .divisionLogos {
-    max-width: 320px;
-    gap: 1rem;
-    bottom: 5.5rem;
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    gap: 0.85rem 1.1rem;
+    justify-content: center;
   }
-  .divLogoWrapper {
-    width: 50px;
-    height: 50px;
+
+  .divLogoButton {
+    width: 52px;
+    height: 52px;
   }
+
   .divLogo {
     width: 30px;
     height: 30px;
   }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .identityCard,
+  .halftoneContainer,
   .scrollBtn {
-    bottom: 1.5rem;
-  }
-  .watermark {
-    width: 80vw;
+    animation: none;
   }
 }
-
-.videoWatermark {
-  position: absolute;
-  top: 45%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 90vw;
-  max-width: 800px;
-  height: 90vh;
-  object-fit: contain;
-  z-index: 1;
-  pointer-events: none;
-  transition: opacity 1.5s ease-in-out;
-}
-
-.visible {
-  opacity: 0.5;
-}
-
-.hidden {
-  opacity: 0;
-}
-
-@keyframes slowSpin {
-  0% { transform: translate(-50%, -50%) rotate(0deg); }
-  100% { transform: translate(-50%, -50%) rotate(360deg); }
-}
-
-.typewriter {
-  overflow: hidden;
-  border-right: .15em solid var(--osmis-green);
-  white-space: nowrap;
-  margin: 0 auto;
-  animation: 
-    typingLoop 12s infinite,
-    blink-caret .75s step-end infinite;
-}
-
-@keyframes typingLoop {
-  0% { width: 0; animation-timing-function: steps(40, end); }
-  25% { width: 100%; } /* Finishes typing in 3s */
-  85% { width: 100%; animation-timing-function: steps(40, end); } /* Stays until 10.2s */
-  100% { width: 0; } /* Erases in last 1.8s */
-}
-
-@keyframes blink-caret {
-  from, to { border-color: transparent }
-  50% { border-color: var(--osmis-green); }
-}
-
-.curveLine {
-  position: absolute;
-  left: 0;
-  bottom: -4px;
-  width: 100%;
-  height: 12px;
-  fill: none;
-  stroke: var(--osmis-yellow);
-  stroke-width: 8;
-  stroke-linecap: round;
-  stroke-dasharray: 150;
-  stroke-dashoffset: 150;
-  animation: drawCurveLoop 12s infinite;
-  z-index: -1;
-  opacity: 0.8;
-  overflow: visible;
-}
-
-[data-theme='dark'] .curveLine {
-  filter: drop-shadow(0 0 4px var(--osmis-yellow));
-}
-
-@keyframes drawCurveLoop {
-  0%, 25% { stroke-dashoffset: 150; animation-timing-function: ease-in-out; } /* Invisible while typing */
-  35% { stroke-dashoffset: 0; } /* Finishes drawing slightly after text finishes */
-  75% { stroke-dashoffset: 0; animation-timing-function: ease-in-out; } /* Stays visible until 9s */
-  85%, 100% { stroke-dashoffset: 150; } /* Erases before text erases */
-}
-
-@media (max-width: 768px) {
-  .content {
-    padding: 2rem 1rem;
-    border: none;
-    box-shadow: none;
-    background-color: transparent;
-    backdrop-filter: none;
-  }
-}
-
-
-

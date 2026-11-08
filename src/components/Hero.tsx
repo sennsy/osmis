@@ -1,131 +1,188 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from 'react';
+import React from 'react';
 import { useLanguage } from './LanguageProvider';
-import { useTheme } from 'next-themes';
 import { organization } from '../data/organization';
 import { toArabicNumerals } from '../utils/arabicNumerals';
 import { HalftoneWordmarkFooter } from './ui/halftone-wordmark-footer';
 import styles from './Hero.module.css';
 
+interface DivisionItem {
+  id: string;
+  nameKey?: string;
+  name: string;
+  icon?: string;
+}
+
 export default function Hero() {
   const { t, language } = useLanguage();
-  const { resolvedTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-  const [showAnimation, setShowAnimation] = useState(false);
-  const heroRef = useRef<HTMLElement>(null);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  const isDark = mounted && resolvedTheme === 'dark';
-
-  useEffect(() => {
-    if (isDark) {
-      setShowAnimation(false);
-      return;
-    }
-
-    let timer: NodeJS.Timeout;
-    const observer = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting) {
-        setShowAnimation(true);
-        clearTimeout(timer);
-        timer = setTimeout(() => {
-          setShowAnimation(false);
-        }, 5000);
-      }
-    }, { threshold: 0.3 });
-
-    if (heroRef.current) observer.observe(heroRef.current);
-    return () => {
-      observer.disconnect();
-      clearTimeout(timer);
-    };
-  }, [isDark]);
-
-  const scrollToNext = () => {
-    const nextSection = document.getElementById('introduction');
-    if (nextSection) {
-      nextSection.scrollIntoView({ behavior: 'smooth' });
+  const scrollToSection = (sectionId: string) => {
+    const target = document.getElementById(sectionId);
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
+  const estYear = language === 'ar' ? '٢٠١٨' : '2018';
+  const periodLabel = language === 'ar' ? toArabicNumerals('26 — 27') : '26 — 27';
+  const divisions = organization.divisions as DivisionItem[];
+
   return (
-    <section className={styles.hero} ref={heroRef}>
-      <div className={styles.content}>
-        {/* Interactive Halftone Wordmark "OSMIS" (Stabilized Spring Physics + Gentle Shockwave) */}
-        <div className={styles.halftoneContainer} title="Sentuh atau klik tulisan OSMIS untuk efek gelombang titik!">
-          <HalftoneWordmarkFooter
-            heroMode={true}
-            wordmark={t.osmisName || "OSMIS"}
-            preset={isDark ? "osmisDark" : "osmisLight"}
-            dotGap={6}
-            radius={120}
-            crop={0.92}
-            grain={0}
-            interactive={true}
-            height="clamp(115px, 16vw, 190px)"
+    <section id="hero" className={styles.hero}>
+      {/* Monumental Arch / Dome Gateway Portal */}
+      <div className={styles.archWrapper}>
+        <div className={styles.archDome} aria-hidden="true">
+          {/* Architectural 1px SVG Arch Frame (Outer & Inner Gateway Lines) */}
+          <svg
+            className={styles.archSvg}
+            viewBox="0 0 640 760"
+            fill="none"
+            preserveAspectRatio="none"
+            aria-hidden="true"
+          >
+            {/* Outer Arch Line */}
+            <path
+              d="M 1 760 L 1 320 A 319 319 0 0 1 639 320 L 639 760"
+              stroke="currentColor"
+              strokeWidth="1"
+              vectorEffect="non-scaling-stroke"
+              className={styles.archStrokeOuter}
+            />
+            {/* Inner Architectural Inset Arch Line */}
+            <path
+              d="M 22 760 L 22 322 A 298 298 0 0 1 618 322 L 618 760"
+              stroke="currentColor"
+              strokeWidth="1"
+              vectorEffect="non-scaling-stroke"
+              className={styles.archStrokeInner}
+            />
+            {/* Keystone / Crown Axis Tick at Top of Dome */}
+            <line
+              x1="320"
+              y1="1"
+              x2="320"
+              y2="22"
+              stroke="currentColor"
+              strokeWidth="1"
+              vectorEffect="non-scaling-stroke"
+              className={styles.archKeystone}
+            />
+            {/* Base Threshold Line */}
+            <line
+              x1="0"
+              y1="759"
+              x2="640"
+              y2="759"
+              stroke="currentColor"
+              strokeWidth="1"
+              vectorEffect="non-scaling-stroke"
+              className={styles.archStrokeInner}
+            />
+          </svg>
+
+          {/* Watermark Logo Ma'had layered behind the OSMIS wordmark */}
+          <img
+            src="/logo_utama.png"
+            alt=""
+            aria-hidden="true"
+            className={styles.watermark}
+            draggable={false}
+            onContextMenu={(e) => e.preventDefault()}
           />
         </div>
 
-        <h1 className="sr-only" style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0,0,0,0)' }}>
-          {t.osmisName} — {t.orgNameLong}
-        </h1>
+        {/* Centered Hero Identity Zone inside the Arch */}
+        <div className={styles.identityCard}>
+          <h1 className={styles.srOnly}>
+            {t.osmisName} — {t.orgNameLong}
+          </h1>
 
-        <h2 className={`${styles.subtitle} mono-font`}>{t.orgNameLong.toUpperCase()}</h2>
-        <p className={`${styles.est} mono-font`}>{t.est} {language === 'ar' ? '٢٠١٨' : '2018'}</p>
-        
-        <div className={styles.motto}>
-          <p className={`${styles.typewriter} display-font`}>"{t.heroSubtitle}"</p>
-        </div>
-
-        <div className={styles.periodBadge} style={{ position: 'relative', display: 'inline-block' }}>
-          <span className="mono-font">{language === 'ar' ? toArabicNumerals('26 - 27') : '26 — 27'}</span>
-          <svg className={styles.curveLine} viewBox="0 0 100 20" preserveAspectRatio="none">
-            <path d="M 5,15 Q 50,0 95,15" />
-          </svg>
-        </div>
-      </div>
-
-      <div className={styles.divisionLogos}>
-        {organization.divisions.map((div) => (
-          <div key={div.id} className={styles.divLogoWrapper} title={(div as any).nameKey ? (t as any)[(div as any).nameKey] : div.name}>
-            {(div as any).icon && (
-              <img src={(div as any).icon} alt={(div as any).nameKey ? (t as any)[(div as any).nameKey] : div.name} className={styles.divLogo} />
-            )}
+          {/* Stabilized Halftone Wordmark "OSMIS" */}
+          <div
+            className={styles.halftoneContainer}
+            title="Sentuh atau klik tulisan OSMIS"
+          >
+            <HalftoneWordmarkFooter
+              heroMode={true}
+              wordmark={t.osmisName || 'OSMIS'}
+              dotGap={5}
+              radius={85}
+              crop={0.92}
+              grain={0}
+              interactive={true}
+              height="clamp(110px, 15vw, 180px)"
+            />
           </div>
-        ))}
+
+          {/* Architectural Divider Rule */}
+          <div className={styles.archRule} aria-hidden="true" />
+
+          {/* Solid Dark/Contrast Badge Pill: ORGANISASI MA'HAD IMAM SYAFI'I */}
+          <div className={`${styles.orgBadge} mono-font`}>
+            {t.orgNameLong.toUpperCase()}
+          </div>
+
+          {/* Period Label: EST. 2018 · 26 — 27 */}
+          <p className={`${styles.periodMeta} mono-font`}>
+            <span>
+              {t.est} {estYear}
+            </span>
+            <span className={styles.metaDot} aria-hidden="true">
+              ·
+            </span>
+            <span className={styles.periodYears}>{periodLabel}</span>
+          </p>
+        </div>
       </div>
-      
-      <button className={styles.scrollBtn} onClick={scrollToNext}>
-        <span className="mono-font">[ {t.heroScroll} ]</span>
+
+      {/* Division Icons Row (Kufic Calligraphy) below the Arch */}
+      <nav
+        className={styles.divisionLogos}
+        aria-label="Divisi OSMIS"
+      >
+        {divisions.map((div) => {
+          const translationKey = div.nameKey as keyof typeof t | undefined;
+          const label =
+            translationKey && typeof t[translationKey] === 'string'
+              ? (t[translationKey] as string)
+              : div.name;
+          return (
+            <button
+              key={div.id}
+              type="button"
+              className={styles.divLogoButton}
+              title={label}
+              aria-label={label}
+              onClick={() => scrollToSection('divisions')}
+            >
+              {div.icon && (
+                <img
+                  src={div.icon}
+                  alt={label}
+                  className={styles.divLogo}
+                  draggable={false}
+                />
+              )}
+            </button>
+          );
+        })}
+      </nav>
+
+      {/* Scroll CTA: + [ GULIR KE BAWAH ] + */}
+      <button
+        type="button"
+        className={`${styles.scrollBtn} mono-font`}
+        onClick={() => scrollToSection('introduction')}
+      >
+        <span className={styles.scrollCross} aria-hidden="true">
+          +
+        </span>
+        <span>[ {t.heroScroll} ]</span>
+        <span className={styles.scrollCross} aria-hidden="true">
+          +
+        </span>
       </button>
-      
-      {/* Decorative Elements */}
-      <div className={styles.gridLines}></div>
-      <div className={styles.hexDecoration}></div>
-      
-      {!isDark && (
-        <img
-          src="/video_utama.gif"
-          className={styles.videoWatermark}
-          style={{ opacity: showAnimation ? 0.5 : 0 }}
-          alt="Video Utama"
-          draggable={false}
-          onContextMenu={(e) => e.preventDefault()}
-          onError={() => setShowAnimation(false)}
-        />
-      )}
-      <img 
-        src="/logo_utama.png" 
-        alt="Watermark OSMIS" 
-        className={styles.watermark}
-        draggable={false}
-        onContextMenu={(e) => e.preventDefault()}
-        style={{ opacity: isDark || !showAnimation ? 0.5 : 0 }}
-      />
     </section>
   );
 }

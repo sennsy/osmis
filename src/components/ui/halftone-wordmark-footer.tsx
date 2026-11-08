@@ -85,16 +85,16 @@ export function hwfStep(
   const d2 = dx * dx + dy * dy
   if (r > 0 && d2 < r * r) {
     const d = Math.sqrt(d2) + 0.001
-    const f = (1 - d / r) * 1.25
+    const f = (1 - d / r) * 0.55
     vx += (dx / d) * f
     vy += (dy / d) * f
   }
-  const maxV = 8
+  const maxV = 3.5
   vx = Math.max(-maxV, Math.min(maxV, vx))
   vy = Math.max(-maxV, Math.min(maxV, vy))
-  // Stabilized spring physics with symmetrical damping to prevent runaway shaking
-  vx = (vx + (hx - x) * 0.08) * 0.80
-  vy = (vy + (hy - y) * 0.08) * 0.80
+  // Stabilized spring physics with symmetrical damping to keep wordmark legible
+  vx = (vx + (hx - x) * 0.10) * 0.78
+  vy = (vy + (hy - y) * 0.10) * 0.78
   return [x + vx, y + vy, vx, vy]
 }
 
@@ -197,10 +197,29 @@ export default function HalftoneWordmarkFooter({
     let dots = new Float32Array(0)
     let count = 0
     let grainTile = null as HTMLCanvasElement | null
-    const ink = hwfHex(opts.current.colors.ink) || [46, 89, 66]
-    const warm = hwfHex(opts.current.colors.warm) || [214, 159, 48]
+    let ink = hwfHex(opts.current.colors.ink) || [46, 89, 66]
+    let warm = hwfHex(opts.current.colors.warm) || [214, 159, 48]
+    let resolvedInkHex = opts.current.colors.ink
+
+    const syncCssVarColors = () => {
+      if (!opts.current.heroMode) return
+      const cs = window.getComputedStyle(document.documentElement)
+      const greenVar = cs.getPropertyValue("--osmis-green").trim()
+      const yellowVar = cs.getPropertyValue("--osmis-yellow").trim()
+      const parsedInk = hwfHex(greenVar)
+      const parsedWarm = hwfHex(yellowVar)
+      if (parsedInk) {
+        ink = parsedInk
+        resolvedInkHex = greenVar
+      }
+      if (parsedWarm) {
+        warm = parsedWarm
+      }
+    }
+    syncCssVarColors()
 
     const layout = () => {
+      syncCssVarColors()
       const o = opts.current
       const rect = root.getBoundingClientRect()
       w = Math.max(280, Math.round(rect.width))
@@ -319,7 +338,7 @@ export default function HalftoneWordmarkFooter({
             const d = Math.sqrt(dx * dx + dy * dy) + 0.001
             const band = 1 - Math.min(1, Math.abs(d - ringR) / 26)
             if (band > 0) {
-              const f = band * 3.2 * (1 - ringAge / 900)
+              const f = band * 1.4 * (1 - ringAge / 900)
               vx += (dx / d) * f
               vy += (dy / d) * f
             }
@@ -341,14 +360,14 @@ export default function HalftoneWordmarkFooter({
           dots[j + 2] = vx
           dots[j + 3] = vy
         }
-        const k = hwfWarmth(x, y, hx, hy, 28)
+        const k = hwfWarmth(x, y, hx, hy, 22)
         ctx.fillStyle =
           k > 0.02
             ? "rgb(" +
               Math.round(ink[0] + (warm[0] - ink[0]) * k) + "," +
               Math.round(ink[1] + (warm[1] - ink[1]) * k) + "," +
               Math.round(ink[2] + (warm[2] - ink[2]) * k) + ")"
-            : o.colors.ink
+            : resolvedInkHex
         ctx.beginPath()
         ctx.arc(x, y, dots[j + 6], 0, 6.2832)
         ctx.fill()
@@ -420,6 +439,14 @@ export default function HalftoneWordmarkFooter({
       if (visible) wake()
     })
     io.observe(root)
+    const mo = new MutationObserver(() => {
+      syncCssVarColors()
+      wake()
+    })
+    mo.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-theme", "style", "class"],
+    })
     let alive = true
     if (document.fonts && document.fonts.ready) {
       document.fonts.ready.then(() => {
@@ -434,6 +461,7 @@ export default function HalftoneWordmarkFooter({
       cancelAnimationFrame(raf)
       ro.disconnect()
       io.disconnect()
+      mo.disconnect()
       root.removeEventListener("pointermove", onMove)
       root.removeEventListener("pointerleave", onLeave)
       root.removeEventListener("pointerdown", onDown)
